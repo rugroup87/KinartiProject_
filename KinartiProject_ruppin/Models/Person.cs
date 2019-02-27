@@ -7,6 +7,7 @@ namespace KinartiProject_ruppin.Models
 {
     public class Person
     {
+
         public string Department { get; set; }
         public string Password { get; set; }
 
@@ -16,9 +17,13 @@ namespace KinartiProject_ruppin.Models
             Password = password;               
         }
 
+        public Person()
+        {
+                
+        }
         public string UserVadilation(string department, string password)
         {
-            DBservices dbs = new DBservices();
+            DBServices dbs = new DBServices();
             string user = dbs.UserVadilation(department, password);
             return user;
         }
