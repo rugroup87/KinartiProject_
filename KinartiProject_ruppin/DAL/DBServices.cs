@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Data;
 using System.Text;
-using WebApplication1.Models;
+//using KinartiProject_ruppin.Models;
 
 namespace KinartiProject_ruppin.DAL
 {
@@ -15,8 +15,9 @@ namespace KinartiProject_ruppin.DAL
         public SqlDataAdapter da;
         public DataTable dt;
 
-        public DBservices()
+        public DBServices()
         {
+
         }
 
         //--------------------------------------------------------------------------------------------------
