@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Log-In</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $('#login').on('click', function () {
+                uri = "../api/persons?department=" + $("#department").val() + "&password=" + $("#password").val()
+                ajaxCall("GET", uri, "", success, error);
+
+            });
+        });
+
+        //function success(data) {
+        //    if (data != "") {
+        //        window.location.replace("update.html?department=" + data);
+        //    }
+        function success(data) {
+            if (data != "") {
+                window.location.replace("Dashboard.html");
+            }
+            else {
+                swal("Error!", "Department or Password incorrect", "error");
+                $("#department").val() = "";
+                $("#password").val() = "";
+            }
+        }
+
+        function error() {
+
+        }
+    </script>
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            /*background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/yFbEFAv/mountains-motion-background_bvfnn_hzx__F0000.png);*/
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            font-family: "Lato", "Aril", sans-serif;
+        }
+
+        h1 {
+            color: #ddd;
+            text-transform: uppercase;
+            font-weight: 400;
+            text-rendering: optimizeLegibility;
+            margin: 0 0 25px 0;
+            font-size: 16px;
+        }
+
+        input {
+            display: inline-block;
+            background: none;
+            border: none;
+            outline: none;
+            color: #ddd;
+            border-bottom: 1px solid #ddd;
+            border-radius: 0;
+        }
+
+        .login-box {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .input-area {
+            margin: 0px 0px 12px;
+            padding: 8px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 5px;
+            color: #fff;
+            background: none;
+            border: 1px solid #ddd;
+            font-weight: 300;
+            text-transform: uppercase;
+            box-shadow: 1px 1px 5px #000;
+            transition: ease-in 0.2s;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+            .btn:hover {
+                background-color: #ddd;
+                color: #333;
+            }
+
+        i {
+            color: #ddd;
+            margin: 0 5px 0 0;
+        }
+
+        .question {
+            display: inline-block;
+            color: #ddd;
+            font-size: 12px;
+        }
+
+        .reg-btn {
+            color: #ddd;
+            margin-left: 5px;
+            font-size: 12px;
+        }
+
+        .question-box {
+            text-align: center;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .success-box {
+            position: absolute;
+            background-color: rgba(0,0,0,0.4);
+            width: 360px;
+            text-align: center;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: none;
+        }
+
+            .success-box h1 {
+                color: #ddd;
+                margin-top: 6%;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="form-group">
+            <label for="department"> department</label>
+            <input type="text" class="form-control" id="department" placeholder="Enter your department" required
+                   pattern="^[a-z\u0590-\u05fe]+$"
+                   oninvalid="this.setCustomValidity('Names should be contain only letters')"
+                   oninput="this.setCustomValidity('')">
+        </div>
+    
+        <div class="input-section">
+            <i class="fas fa-lock"></i>
+            <input class="input-area" type="password" value="123456Abs" id="password" placeholder="Password" required
+                   pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+                   oninvalid="this.setCustomValidity('Password must contain 8 or more characters, at least one number, one uppercase and lowercase letter')"
+                   oninput="this.setCustomValidity('')">
+        </div>
+     
+        <input type="submit" class="btn" value="Log-In" id="login">
+        <div class="question-box">
+            <p class="question">Not a memeber?</p><a class="reg-btn" href="insert.html">Register</a>
+        </div>
+    </div>
+    <div class="success-box">
+        <h1>You have been logged in!</h1>
+    </div>
+</body>
+</html>
