@@ -6,16 +6,14 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Data;
 using System.Text;
-using WebApplication1.Models;
+using KinartiProject_ruppin.Models;
 
-namespace KinartiProject_ruppin.DAL
-{
     public class DBServices
     {
         public SqlDataAdapter da;
         public DataTable dt;
 
-        public DBservices()
+        public DBServices()
         {
         }
 
@@ -44,6 +42,61 @@ namespace KinartiProject_ruppin.DAL
             return cmd;
         }
 
+        //---------------------------------------------------------------------------------
+        // Create Project Table
+        //---------------------------------------------------------------------------------
+
+        public List<Project> GetAllProject()
+        {
+
+            SqlConnection con;
+            List<Project> lp = new List<Project>();
+
+            try
+            {
+
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+
+            try
+            {
+                String selectSTR = "SELECT * FROM Project ";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                //int PID = Convert.ToInt32(cmd.ExecuteScalar());
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+                    
+                    Project p = new Project();
+                    p.ProjectNum = Convert.ToSingle(dr["projectNum "]);
+                    p.ProjectName = Convert.ToString(dr["projectName "]);
+                    p.ProdStartDate = Convert.ToDateTime(dr["prodStartDate"]);
+                    p.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
+                    p.ProjectStatus = Convert.ToString(dr["projectStatus "]);
+                    p.Comment = Convert.ToString(dr["comment "]);
+                    p.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
+                    lp.Add(p);
+                }
+                return lp;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+
+        }
+
 
 
 
@@ -53,4 +106,3 @@ namespace KinartiProject_ruppin.DAL
 
 
     }
-}
