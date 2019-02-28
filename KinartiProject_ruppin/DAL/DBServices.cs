@@ -98,12 +98,65 @@ using KinartiProject_ruppin.Models;
 
         }
 
+    public List<Item> GetProjectItems(float projNum)
+    {
 
+        SqlConnection con;
+        List<Item> Pi = new List<Item>();
 
+        try
+        {
 
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
 
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
 
+        }
 
+        try
+        {
+            String selectSTR = "SELECT * FROM Item where projectNum = " + projNum;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            //int PID = Convert.ToInt32(cmd.ExecuteScalar());
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+
+                Item I = new Item();
+                I.ItemNum = Convert.ToString(dr["itemNum"]);
+                I.ItemName = Convert.ToString(dr["itemName"]);
+                I.ItemStatus = Convert.ToString(dr["itemStatus"]);
+                I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
+                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
+                //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
+                //I.Comment = Convert.ToString(dr["comment "]);
+                //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
+                Pi.Add(I);
+            }
+            return Pi;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
 
     }
+
+
+
+
+
+
+
+
+
+}
