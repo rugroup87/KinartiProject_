@@ -78,14 +78,30 @@ using KinartiProject_ruppin.Models;
                  // read first field from the row into the list collection
                     
                     Project p = new Project();
-                    p.ProjectNum = Convert.ToSingle(dr["projectNum "]);
-                    p.ProjectName = Convert.ToString(dr["projectName "]);
-                    p.ProdStartDate = Convert.ToDateTime(dr["prodStartDate"]);
-                    p.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
-                    p.ProjectStatus = Convert.ToString(dr["projectStatus "]);
-                    p.Comment = Convert.ToString(dr["comment "]);
-                    p.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
-                    lp.Add(p);
+                    p.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                    p.ProjectName = Convert.ToString(dr["projectName"]);
+                    if (!DBNull.Value.Equals(dr["prodStartDate"]))
+                {
+                    p.ProdStartDate = Convert.ToString(dr["prodStartDate"]);
+                }
+                if (!DBNull.Value.Equals(dr["supplyDate"]))
+                {
+                    p.SupplyDate = Convert.ToString(dr["supplyDate"]);
+                }
+                if (!DBNull.Value.Equals(dr["projectStatus"]))
+                {
+                    p.ProjectStatus = Convert.ToString(dr["projectStatus"]);
+                }
+                if (!DBNull.Value.Equals(dr["comment"]))
+                {
+                    p.Comment = Convert.ToString(dr["comment"]);
+                }
+                if (!DBNull.Value.Equals(dr["prodEntranceDate"]))
+                {
+                    p.ProdEntranceDate = Convert.ToString(dr["prodEntranceDate"]);
+                }
+
+                lp.Add(p);
                 }
                 return lp;
             }
