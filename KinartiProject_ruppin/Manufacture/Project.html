@@ -1,9 +1,17 @@
 ﻿<!DOCTYPE html>
-<html>
+<html dir="rtl">
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> <!--dataTables-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <!--This Is The Menu CSS-->
     <style>
+
+        /*This Is The Menu CSS*/
         body {
             margin: 0;
             font-family: 'Montserrat', sans-serif;
@@ -119,9 +127,118 @@
                     content: none;
                 }
         }
+
+        table.dataTable tbody > tr.selected,
+        table.dataTable tbody > tr > .selected {
+            background-color: #A2D3F6;
+        }
     </style>
+
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
+    <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
+    <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
+    <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            ajaxCall("GET", "../api/project", "", getSuccessProject, errorProject);
+            //var dataSet = [
+            //    ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
+            //    ["Tatyana Fitzpatrick", "Regional Director", "London", "1965", "2010/03/17", "$385,750"]
+            //];
+
+        });
+
+        function getSuccessProject(projectList) {
+
+            var columnDefs = [{
+                title: "מס' פרוייקט",
+                data: 'ProjectNum',
+                render: function (data, type, row, meta) {
+                    return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName +">" + data + '</a>'
+                }
+            }, {
+                title: "שם",
+                data: 'ProjectName',
+                //render: function (data, type, row, meta) {                       
+                //    return '<a href=Item.html?"' + data + '">' + data + '</a>'                     
+                //    }
+                }, {
+                title: "ת. תחילת ייצור",
+                data: 'ProdStartDate',
+                defaultContent: ""
+
+            }, {
+                title: "ת. אספקה",
+                data: 'SupplyDate',
+                defaultContent: ""
+            }, {
+                title: "סטטוס פרוייקט",
+                data: 'ProjectStatus',
+                defaultContent: ""
+            }, {
+                title: "הערות",
+                data: 'Comment',
+                defaultContent: ""
+            }, {
+                title: "ת. כניסה לעבודה",
+                data: 'ProdEntranceDate',
+                defaultContent: ""
+            }
+            ];
+
+            var myTable;
+
+            myTable = $('#example').DataTable({
+                "sPaginationType": "simple_numbers",
+                data: projectList,
+                columns: columnDefs,
+                dom: 'Bfrtip',        // Needs button container
+                select: 'single',
+                responsive: true,
+                altEditor: true,     // Enable altEditor
+                buttons: [{
+                    text: 'Add',
+                    name: 'add'        // do not change name
+                },
+                {
+                    extend: 'selected', // Bind to Selected row
+                    text: 'Edit',
+                    name: 'edit'        // do not change name
+                },
+                {
+                    extend: 'selected', // Bind to Selected row
+                    text: 'Delete',
+                    name: 'delete'      // do not change name
+                }]
+            });
+
+            //$('#example tbody').on('click', 'td', function () {
+            //    if ($(this).hasClass('selected')) {
+            //        $(this).removeClass('selected');
+            //    },
+            //$('#example tbody').on('click', 'td', function () {
+            //    alert(myTable.cell(this).data);
+            //});
+}
+        function errorProject(err) {
+            swal("Error: " + err);
+        }
+
+
+
+
+    </script>
 </head>
 <body>
+
+    <!--This Is The Menu HTML-->
+
     <header>
         <div class="container">
             <div class="logo-box">
@@ -131,7 +248,7 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="">home</a></li>
+                    <li><a href="">בית</a></li>
                     <li><a href="">work</a></li>
                     <li><a href="">product</a></li>
                     <li><a href="">about</a></li>
@@ -140,5 +257,10 @@
             </nav>
         </div>
     </header>
+    <br />
+    <!--This Is The DataTable HTML-->
+    <div class="container">
+        <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
+    </div>
 </body>
 </html>

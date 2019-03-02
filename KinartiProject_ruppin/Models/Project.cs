@@ -10,13 +10,64 @@ namespace KinartiProject_ruppin.Models
     {
         public float ProjectNum { get; set; }
         public string ProjectName { get; set; }
-        public DateTime ProdStartDate { get; set; }
-        public DateTime SupplyDate { get; set; }
+        //private Nullable<DateTime> prodstartdate;
+        //public Nullable<DateTime> ProdStartDate
+        //{
+        //    get
+        //    {
+        //        if (prodstartdate == null)
+        //        {
+        //            DateTime? prodstartdate = null;
+        //            return prodstartdate;
+        //        }
+        //        else
+        //        {
+        //            return prodstartdate;
+        //        }
+        //    }
+        //    set
+        //    {
+        //        string tempDate = value.Value.ToShortDateString();
+        //        prodstartdate = DateTime.ParseExact(tempDate, "dd/MM/yyyy", null);
+        //    }
+        //}
+        private string prodstartdate;
+        public string ProdStartDate
+        {
+            get
+            {
+                return prodstartdate;
+            }
+            set => prodstartdate = value;
+        }
+        //Item [] ItemArr;
+        private string supplydate;
+        public string SupplyDate
+        {
+            get
+            {
+                return supplydate;
+            }
+            set
+            {
+                supplydate = value.Substring(0, 10);
+            }
+        }
+
         public string ProjectStatus { get; set; }
         public string Comment { get; set; }
-        public DateTime ProdEntranceDate { get; set; }
+        //public DateTime ProdEntranceDate { get; set; }
+        private string prodrntrancedate;
+        public string ProdEntranceDate
+        {
+            get
+            {
+                return prodrntrancedate;
+            }
+            set => prodrntrancedate = value.Substring(0, 10);
+        }
 
-        public Project(float _projectNum, string _projectName, DateTime _prodStartDate, DateTime _supplyDate, string _projectStatus, string _comment, DateTime _prodEntranceDate)
+        public Project(float _projectNum, string _projectName, string _prodStartDate, string _supplyDate, string _projectStatus, string _comment, string _prodEntranceDate, Item[] itemarr)
         {
             this.ProjectNum = _projectNum;
             this.ProjectName = _projectName;
@@ -25,6 +76,7 @@ namespace KinartiProject_ruppin.Models
             this.ProjectStatus = _projectStatus;
             this.Comment = _comment;
             this.ProdEntranceDate = _prodEntranceDate;
+            //ItemArr = itemarr;
         }
 
         public Project()
