@@ -10,11 +10,18 @@ namespace KinartiProject_ruppin.Controllers
     {
         [HttpGet]
         [Route("api/GetProjectItems")]
-        public IEnumerable<Item> Get(float projNum)
+        public IEnumerable<Item> Get(string ProjectNum)
         {
             Item I = new Item();
             List<Item> ItemList = new List<Item>();
-            ItemList = I.GetProjectItems(projNum);
+            if(ProjectNum != "all")
+            {
+                ItemList = I.GetProjectItems(float.Parse(ProjectNum));
+            }
+            else
+            {
+                ItemList = I.GetAllProjectItems();
+            }
             return ItemList;
         }
     }

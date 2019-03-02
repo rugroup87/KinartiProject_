@@ -12,14 +12,18 @@ namespace KinartiProject_ruppin.Models
         public string ItemStatus { get; set; }
         public double ItemCompletedPercentage { get; set; }
         public int ItemGroupCount { get; set; }
+        public float ProjectNum { get; set; }
+        public string ProjectName { get; set; }
 
-        public Item(string itemnum, string itemname, string itemstatus, double itemcompletedpercentage, int itemgroupcount)
+        public Item(string itemnum, string itemname, string itemstatus, double itemcompletedpercentage, int itemgroupcount, float projectnum, string projectname)
         {
             ItemNum = itemnum;
             ItemName = itemname;
             ItemStatus = itemstatus;
             ItemCompletedPercentage = itemcompletedpercentage;
             ItemGroupCount = itemgroupcount;
+            ProjectNum = projectnum;
+            ProjectName = projectname;
         }
         public Item()
         {
@@ -33,5 +37,14 @@ namespace KinartiProject_ruppin.Models
             Pi = dbs.GetProjectItems(projNum);
             return Pi;
         }
+
+        public List<Item> GetAllProjectItems()
+        {
+            DBServices dbs = new DBServices();
+            List<Item> Pi = new List<Item>();
+            Pi = dbs.GetAllProjectItems();
+            return Pi;
+        }
     }
+    
 }

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html dir="rtl">
 <head>
     <meta charset="utf-8" />
     <title></title>
@@ -132,8 +132,20 @@
         table.dataTable tbody > tr > .selected {
             background-color: #A2D3F6;
         }
+        tr{
+            text-align:center;
+        }
+        #ProjName {
+            text-align: center;
+            color: #000000;
+            text-shadow: 0 0px 2px #000000;
+            font-size:20px;
+            font-family:monospace;
+        }
     </style>
 
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
@@ -142,46 +154,123 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
+
+
+
     <script>
+
+        var SelectedProject;
+
+
         $(document).ready(function () {
 
-            var dataSet = [
-                ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
-                ["Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750"],
-                ["Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000"],
-                ["Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "6224", "2012/03/29", "$433,060"],
-                ["Airi Satou", "Accountant", "Tokyo", "5407", "2008/11/28", "$162,700"],
-                ["Brielle Williamson", "Integration Specialist", "New York", "4804", "2012/12/02", "$372,000"],
-                ["Herrod Chandler", "Sales Assistant", "San Francisco", "9608", "2012/08/06", "$137,500"],
-                ["Rhona Davidson", "Integration Specialist", "Tokyo", "6200", "2010/10/14", "$327,900"],
-                ["Colleen Hurst", "Javascript Developer", "San Francisco", "2360", "2009/09/15", "$205,500"],
-                ["Sonya Frost", "Software Engineer", "Edinburgh", "1667", "2008/12/13", "$103,600"],
-                ["Jena Gaines", "Office Manager", "London", "3814", "2008/12/19", "$90,560"],
-                ["Quinn Flynn", "Support Lead", "Edinburgh", "9497", "2013/03/03", "$342,000"],
-                ["Charde Marshall", "Regional Director", "San Francisco", "6741", "2008/10/16", "$470,600"],
-                ["Haley Kennedy", "Senior Marketing Designer", "London", "3597", "2012/12/18", "$313,500"],
-                ["Tatyana Fitzpatrick", "Regional Director", "London", "1965", "2010/03/17", "$385,750"]
-            ];
+            if (getQueryVariable("ProjectNum") != "all" || getQueryVariable("ProjectNum") == false) {
+                // + getQueryVariable("ProjectNum")
+                uri = "../api/GetProjectItems?ProjectNum=111.1";
+                ajaxCall("GET", uri, "", successGetProjectItems, errorGetProjectItems);
+            }
+            else {
 
-            var columnDefs = [{
-                title: "Name"
-            }, {
-                title: "Position"
-            }, {
-                title: "Office"
-            }, {
-                title: "Extn."
-            }, {
-                title: "Start date"
-            }, {
-                title: "Salary"
-            }];
+                uri = "../api/GetProjectItems?ProjectNum=all";
+                ajaxCall("GET", uri, "", successGetProjectItems, errorGetProjectItems);
+            }
 
+            var dataSet = [];
+
+        });
+
+        
+                //title: "שם",
+                //data: 'ProjectName',
+                //render: function (data, type, row, meta) {                       
+                //    return '<a href="' + data + '">' + data + '</a>'                     
+                //    }
+                //},
+
+        function successGetProjectItems(itemslist) {
+
+            if (getQueryVariable("ProjectNum") == "all") {
+                //$("#ProjName p").text(
+                var columnDefs = [{
+                    title: "שם פרוייקט",
+                    data: "ProjectName",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "מ'ס פריט",
+                    data: 'ItemNum',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "שם פריט",
+                    data: 'ItemName',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "מ'ס קבוצות",
+                    data: 'ItemGroupCount',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "אחוז השלמה",
+                    data: 'ItemCompletedPercentage',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "סטטוס פריט",
+                    data: 'ItemStatus',
+                    "className": "dt-center",
+                    "targets": "_all"
+                    }
+                ];
+            }
+            else {
+                $("#ProjName p").text(getQueryVariable("ProjectNum") + getQueryVariable("ProjectName"));
+                var columnDefs = [{
+                    title: "מ'ס פריט",
+                    data: 'ItemNum',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "שם פריט",
+                    data: 'ItemName',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "מ'ס קבוצות",
+                    data: 'ItemGroupCount',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "אחוז השלמה",
+                    data: 'ItemCompletedPercentage',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "סטטוס פריט",
+                    data: 'ItemStatus',
+                    "className": "dt-center",
+                    "targets": "_all"
+                }
+                ];
+            }
+            
             var myTable;
-
             myTable = $('#example').DataTable({
-                "sPaginationType": "full_numbers",
-                data: dataSet,
+                "sPaginationType": "simple_numbers",
+                "language": {
+                    "search": "חיפוש:",
+                    "loadingRecords": "Loading...",
+                    "processing": "Processing...",
+                    "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
+                    "infoPostFix": "עמודות",
+                    "paginate":
+                    {
+                        "previous": "הקודם",
+                        "next": "הבא",
+                    }
+                },
+                data: itemslist,
                 columns: columnDefs,
                 dom: 'Bfrtip',        // Needs button container
                 select: 'single',
@@ -202,9 +291,20 @@
                     name: 'delete'      // do not change name
                 }]
             });
+        }
+        function errorGetProjectItems(itemslist) {
 
+        }
 
-        });
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) { return pair[1]; }
+            }
+            return (false);
+        }
 
     </script>
 </head>
@@ -221,16 +321,19 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="">בית</a></li>
-                    <li><a href="">work</a></li>
-                    <li><a href="">product</a></li>
-                    <li><a href="">about</a></li>
+                    <li><a href="Project.html">פרוייקטים</a></li>
+                    <li><a href="Item.html?ProjectNum=all&name=two">פריטים</a></li>
+                    <li><a href="">מסלולים</a></li>
+                    <li><a href="">קבוצות מוכנות</a></li>
                     <li><a href="">contact</a></li>
                 </ul>
             </nav>
         </div>
     </header>
     <br />
+    <div id="ProjName">
+        <p></p>
+    </div>
     <!--This Is The DataTable HTML-->
     <div class="container">
         <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
