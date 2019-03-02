@@ -46,10 +46,45 @@ using KinartiProject_ruppin.Models;
         //---------------------------------------------------------------------------------
         // Create Project Table
         //---------------------------------------------------------------------------------
-
-        public List<Project> GetAllProject()
+    public List<string> GetAllStatus(string relateTo)
+    {
+        SqlConnection con;
+        //Status s = new Status();
+        List<string> ls = new List<string>();
+        try
         {
 
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT * FROM STATUS WHERE relateTO like '" + relateTo + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+                ls.Add(Convert.ToString(dr["statusName"]));
+            }
+            return ls;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+    }
+
+    public List<Project> GetAllProject()
+        {
             SqlConnection con;
             List<Project> lp = new List<Project>();
 
@@ -109,7 +144,6 @@ using KinartiProject_ruppin.Models;
             {
                 // write to log
                 throw (ex);
-
             }
 
         }
@@ -219,6 +253,29 @@ using KinartiProject_ruppin.Models;
             throw (ex);
 
         }
+
+    }
+
+    public void StatusChange(string projectStatus, float projectNum)
+    {
+        SqlConnection con = connect("KinartiConnectionString");
+
+        String selectStr = String.Format("SELECT * FROM Project WHERE projectNum= {0}", projectNum); // create the select that will be used by the adapter to select data from the DB
+
+        SqlDataAdapter da = new SqlDataAdapter(selectStr, con); // create the data adapter
+
+        SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(da);
+
+        DataSet ds = new DataSet(); // create a DataSet and give it a name (not mandatory) as defualt it will be the same name as the DB
+
+        da.Fill(ds, "Project");       // Fill the datatable (in the dataset), using the Select command
+
+        //dt = ds.Tables[0]; // point to the cars table , which is the only table in this case
+
+        //dt.Rows[PersonId]["active"] = activity;
+        ds.Tables["Project"].Rows[0]["projectStatus"] = projectStatus;
+        da.Update(ds, "Project");
+        con.Close();
 
     }
 
