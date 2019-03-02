@@ -164,9 +164,9 @@
 
         $(document).ready(function () {
 
-            if (getQueryVariable("ProjectNum") != "all" || getQueryVariable("ProjectNum") == false) {
-                // + getQueryVariable("ProjectNum")
-                uri = "../api/GetProjectItems?ProjectNum=111.1";
+            if (getQueryVariable("ProjectNum") != "all") {
+                // 
+                uri = "../api/GetProjectItems?ProjectNum=" + getQueryVariable("ProjectNum");
                 ajaxCall("GET", uri, "", successGetProjectItems, errorGetProjectItems);
             }
             else {
