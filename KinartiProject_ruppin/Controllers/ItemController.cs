@@ -13,7 +13,8 @@ namespace KinartiProject_ruppin.Controllers
         public IEnumerable<Item> Get(string ProjectNum)
         {
             Item I = new Item();
-            List<Item> ItemList = new List<Item>();
+            //List<Item> ItemList = new List<Item>();
+            Item[] ItemList;
             if(ProjectNum != "all")
             {
                 ItemList = I.GetProjectItems(float.Parse(ProjectNum));

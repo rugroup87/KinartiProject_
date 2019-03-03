@@ -114,7 +114,7 @@ using KinartiProject_ruppin.Models;
 
         }
 
-    public List<Item> GetProjectItems(float projNum)
+    public Item[] GetProjectItems(float projNum)
     {
 
         SqlConnection con;
@@ -156,7 +156,7 @@ using KinartiProject_ruppin.Models;
                 //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
                 Pi.Add(I);
             }
-            return Pi;
+            return Pi.ToArray();
         }
         catch (Exception ex)
         {
@@ -167,7 +167,7 @@ using KinartiProject_ruppin.Models;
 
     }
 
-    public List<Item> GetAllProjectItems()
+    public Item[] GetAllProjectItems()
     {
 
         SqlConnection con;
@@ -211,7 +211,7 @@ using KinartiProject_ruppin.Models;
                 //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
                 Pi.Add(I);
             }
-            return Pi;
+            return Pi.ToArray();
         }
         catch (Exception ex)
         {

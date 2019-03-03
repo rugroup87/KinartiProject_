@@ -30,20 +30,20 @@ namespace KinartiProject_ruppin.Models
 
         }
 
-        public List<Item> GetProjectItems(float projNum)
+        public Item[] GetProjectItems(float projNum)
         {
             DBServices dbs = new DBServices();
-            List<Item> Pi = new List<Item>();
-            Pi = dbs.GetProjectItems(projNum);
-            return Pi;
+            //List<Item> Pi = new List<Item>();
+            //Pi = dbs.GetProjectItems(projNum);
+            return dbs.GetProjectItems(projNum);
         }
 
-        public List<Item> GetAllProjectItems()
+        public Item[] GetAllProjectItems()
         {
             DBServices dbs = new DBServices();
-            List<Item> Pi = new List<Item>();
-            Pi = dbs.GetAllProjectItems();
-            return Pi;
+            //List<Item> Pi = new List<Item>();
+            //Pi = dbs.GetAllProjectItems();
+            return dbs.GetAllProjectItems();
         }
     }
     
