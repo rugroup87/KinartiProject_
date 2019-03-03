@@ -167,7 +167,8 @@
     <script>
 
         var urlParams = new URLSearchParams(window.location.search);
-        
+        var myTable;
+
 
         $(document).ready(function () {
 
@@ -281,7 +282,6 @@
                 ];
             }
             
-            var myTable;
             myTable = $('#example').DataTable({
                 "sPaginationType": "simple_numbers",
                 "language": {
