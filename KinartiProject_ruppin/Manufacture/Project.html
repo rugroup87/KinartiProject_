@@ -136,7 +136,6 @@
         tr {
             text-align: center;
         }
-
     </style>
 
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
@@ -150,6 +149,7 @@
 
     <script>
         $(document).ready(function () {
+            var myTable;
             StatusArr = [];
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
@@ -220,8 +220,6 @@
             }
             ];
 
-            var myTable;
-
             myTable = $('#example').DataTable({
                 "sPaginationType": "simple_numbers",
                 "language": {
@@ -258,51 +256,53 @@
                 }]
             });
 
-            // the function creates a dropdown list box
-            function createSelect(selItem) {
-
-                var sel = "<select>";
-                for (var i = 0; i < StatusArr.length; ++i) {
-                    if (StatusArr[i] == selItem) {
-                        sel += "<option selected value = '" + StatusArr[i] + "' >" + StatusArr[i] + "</option>";
-                    }
-                    else {
-                        sel += "<option  value = '" + StatusArr[i] + "' >" + StatusArr[i] + "</option>";
-                    }
-                }
-                sel += "</select>";
-                return sel;
-            }
-
-            $("#example select").on("change", function () {
-                //Get the value from the select box
-                // תפסיסה של סטטוס הפרוייקט שאליו השתנה
-                //var newStatus = $(this).val();
-                //תפסיסה של השורה בה הסטטוס השתנה
-                //var rowIntable = $(this).closest('tr');
-                var projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
-                var indexSpace = $(this).val().indexOf(" ");
-                if (indexSpace == -1) {
-                    ajaxCall("PUT", "../api/project?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
-                }
-                else {
-                    ajaxCall("PUT", "../api/project?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
-                }
-            });
-
-            function updateSuccessStatus() {
-                //swal("Updated Successfuly!", "Activity Changed", "success");
-            }
-            function errorUpdateStatus(err) {
-                //swal("Error: " + err);
-            }
-
         }
-
-
 
         function errorProject(err) {
             swal("Error: " + err);
+        }
+
+        // the function creates a dropdown list box
+        function createSelect(selItem) {
+
+            var sel = "<select>";
+            for (var i = 0; i < StatusArr.length; ++i) {
+                if (StatusArr[i] == selItem) {
+                    sel += "<option selected value = '" + StatusArr[i] + "' >" + StatusArr[i] + "</option>";
+                }
+                else {
+                    sel += "<option  value = '" + StatusArr[i] + "' >" + StatusArr[i] + "</option>";
+                }
+            }
+            sel += "</select>";
+            return sel;
+        }
+
+        $(document).on("change", "#example select", function () {
+
+            //Get the value from the select box
+            // תפסיסה של סטטוס הפרוייקט שאליו השתנה
+            //var newStatus = $(this).val();
+            //תפסיסה של השורה בה הסטטוס השתנה
+
+            var rowIntable = $(this).closest('tr');
+            var projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
+            var indexSpace = $(this).val().indexOf(" ");
+            if (indexSpace == -1) {
+            ajaxCall("GET", "../api/projectstatus/?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
+            }
+            else {
+                ajaxCall("GET", "../api/project?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
+            }
+                        //uri = "../api/projectstatus/?projectStatus=TempStatproj&projectNum=4"
+            //ajaxCall("GET", uri, "", updateSuccessStatus, errorUpdateStatus);
+        });
+
+        function updateSuccessStatus() {
+            //swal("Updated Successfuly!", "Activity Changed", "success");
+        }
+        function errorUpdateStatus(err) {
+            //swal("Error: " + err);
         }
 
     </script>

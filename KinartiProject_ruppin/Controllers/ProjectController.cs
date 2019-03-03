@@ -21,16 +21,16 @@ namespace KinartiProject_ruppin.Controllers
             return projectList;
         }
 
-        [HttpPut]
-        [Route("api/project")]
-        public void Put(string projectStatus, float projectNum)
+        [HttpGet]
+        [Route("api/projectstatus")]
+        public void Get(string projectStatus, float projectNum)
         {
             Project p = new Project();
             p.StatusChange(projectStatus, projectNum);
         }
-        [HttpPut]
-        [Route("api/project")]
-        public void Put(string projectStatus, float projectNum, int indexSpace)
+        [HttpGet]
+        [Route("api/projectstatus")]
+        public void Get(string projectStatus, float projectNum, int indexSpace)
         {
             Project p = new Project();
             p.StatusChangeSpace(projectStatus, projectNum, indexSpace);
