@@ -21,11 +21,10 @@ namespace KinartiProject_ruppin.Models
         {
                 
         }
-        //public string UserVadilation(string department, string password)
-        //{
-        //    DBServices dbs = new DBServices();
-        //    string user = dbs.UserVadilation(department, password);
-        //    return user;
-        //}
+        public string UserValidation(string department, string password)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.UserValidation(department, password);
+        }
     }
 }

@@ -256,6 +256,26 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    public string UserValidation(string department, string password)
+    {
+        string returnedUser = "NoUser";
+        SqlConnection con;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Person where department='" + department + "' and personPassword='" + password + "'";
     public void StatusChange(string projectStatus, float projectNum)
     {
         SqlConnection con = connect("KinartiConnectionString");
@@ -270,6 +290,24 @@ using KinartiProject_ruppin.Models;
 
         da.Fill(ds, "Project");       // Fill the datatable (in the dataset), using the Select command
 
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+                // read first field from the row into the list collection
+                returnedUser = Convert.ToString(dr["department"]);
+            }
+            return returnedUser;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
         //dt = ds.Tables[0]; // point to the cars table , which is the only table in this case
 
         //dt.Rows[PersonId]["active"] = activity;

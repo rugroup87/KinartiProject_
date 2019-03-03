@@ -21,27 +21,26 @@
 
             $('#login').on('click', function () {
                 uri = "../api/persons?department=" + $("#department").val() + "&password=" + $("#password").val()
-                ajaxCall("GET", uri, "", success, error);
-
+                ajaxCall("GET", uri, "", successLogin, errorLogin);
+               
             });
         });
-
-        //function success(data) {
-        //    if (data != "") {
-        //        window.location.replace("update.html?department=" + data);
-        //    }
-        function success(data) {
-            if (data != "") {
+           
+        
+        function successLogin(data) {
+            if (data != "NoUser")
+            {
                 window.location.replace("Dashboard.html");
             }
-            else {
+            else
+            {
                 swal("Error!", "Department or Password incorrect", "error");
                 $("#department").val() = "";
                 $("#password").val() = "";
             }
         }
 
-        function error() {
+        function errorLogin() {
 
         }
     </script>
@@ -155,8 +154,8 @@
 <body>
     <div class="login-box">
         <div class="form-group">
-            <label for="department"> department</label>
-            <input type="text" class="form-control" id="department" placeholder="Enter your department" required
+            <label for="department">מחלקה</label>
+            <input type="text" class="form-control" id="department" value="pro" placeholder="Enter your department" required
                    pattern="^[a-z\u0590-\u05fe]+$"
                    oninvalid="this.setCustomValidity('Names should be contain only letters')"
                    oninput="this.setCustomValidity('')">
@@ -164,7 +163,7 @@
     
         <div class="input-section">
             <i class="fas fa-lock"></i>
-            <input class="input-area" type="password" value="123456Abs" id="password" placeholder="Password" required
+            <input class="input-area" type="password" value="123" id="password" placeholder="Password" required
                    pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
                    oninvalid="this.setCustomValidity('Password must contain 8 or more characters, at least one number, one uppercase and lowercase letter')"
                    oninput="this.setCustomValidity('')">
