@@ -132,6 +132,10 @@
         table.dataTable tbody > tr > .selected {
             background-color: #A2D3F6;
         }
+
+        tr {
+            text-align: center;
+        }
     </style>
 
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
@@ -145,14 +149,23 @@
 
     <script>
         $(document).ready(function () {
-
+            var myTable;
+            StatusArr = [];
+            var statusRelateTo = "Project";
+            uri = "../api/status?relateTo=" + statusRelateTo;
+            ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
             ajaxCall("GET", "../api/project", "", getSuccessProject, errorProject);
-            //var dataSet = [
-            //    ["Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800"],
-            //    ["Tatyana Fitzpatrick", "Regional Director", "London", "1965", "2010/03/17", "$385,750"]
-            //];
 
         });
+
+        function getSuccessStatus(statusArr) {
+            StatusArr = statusArr;
+        }
+
+        function errorStatus(err) {
+            swal("Error: " + err);
+        }
+
 
         function getSuccessProject(projectList) {
 
@@ -160,42 +173,67 @@
                 title: "מס' פרוייקט",
                 data: 'ProjectNum',
                 render: function (data, type, row, meta) {
-                    return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName +">" + data + '</a>'
-                }
+                    return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
+                },
+                "className": "dt-center",
+                "targets": "_all"
             }, {
                 title: "שם",
                 data: 'ProjectName',
-                //render: function (data, type, row, meta) {                       
-                //    return '<a href=Item.html?"' + data + '">' + data + '</a>'                     
-                //    }
-                }, {
+                render: function (data, type, row, meta) {
+                    return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + data + ">" + data + '</a>'
+                },
+                "className": "dt-center",
+                "targets": "_all"
+            }, {
                 title: "ת. תחילת ייצור",
                 data: 'ProdStartDate',
-                defaultContent: ""
-
+                defaultContent: "",
+                "className": "dt-center",
+                "targets": "_all"
             }, {
                 title: "ת. אספקה",
                 data: 'SupplyDate',
-                defaultContent: ""
+                defaultContent: "",
+                "className": "dt-center",
+                "targets": "_all"
             }, {
                 title: "סטטוס פרוייקט",
                 data: 'ProjectStatus',
-                defaultContent: ""
+                defaultContent: "",
+                "className": "dt-center",
+                id: "ProjectStatus",
+                "targets": "_all",
+                render: function (data) { return createSelect(data); }
             }, {
                 title: "הערות",
                 data: 'Comment',
-                defaultContent: ""
+                defaultContent: "",
+                "className": "dt-center",
+                "targets": "_all"
             }, {
                 title: "ת. כניסה לעבודה",
                 data: 'ProdEntranceDate',
-                defaultContent: ""
+                defaultContent: "",
+                "className": "dt-center",
+                "targets": "_all"
             }
             ];
 
-            var myTable;
-
             myTable = $('#example').DataTable({
                 "sPaginationType": "simple_numbers",
+                "language": {
+                    "search": "חיפוש:",
+                    "loadingRecords": "Loading...",
+                    "processing": "Processing...",
+                    "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
+                    "infoPostFix": "עמודות",
+                    "paginate":
+                    {
+                        "previous": "הקודם",
+                        "next": "הבא",
+                    }
+                },
                 data: projectList,
                 columns: columnDefs,
                 dom: 'Bfrtip',        // Needs button container
@@ -218,20 +256,54 @@
                 }]
             });
 
-            //$('#example tbody').on('click', 'td', function () {
-            //    if ($(this).hasClass('selected')) {
-            //        $(this).removeClass('selected');
-            //    },
-            //$('#example tbody').on('click', 'td', function () {
-            //    alert(myTable.cell(this).data);
-            //});
-}
+        }
+
         function errorProject(err) {
             swal("Error: " + err);
         }
 
+        // the function creates a dropdown list box
+        function createSelect(selItem) {
 
+            var sel = "<select>";
+            for (var i = 0; i < StatusArr.length; ++i) {
+                if (StatusArr[i] == selItem) {
+                    sel += "<option selected value = '" + StatusArr[i] + "' >" + StatusArr[i] + "</option>";
+                }
+                else {
+                    sel += "<option  value = '" + StatusArr[i] + "' >" + StatusArr[i] + "</option>";
+                }
+            }
+            sel += "</select>";
+            return sel;
+        }
 
+        $(document).on("change", "#example select", function () {
+
+            //Get the value from the select box
+            // תפסיסה של סטטוס הפרוייקט שאליו השתנה
+            //var newStatus = $(this).val();
+            //תפסיסה של השורה בה הסטטוס השתנה
+
+            var rowIntable = $(this).closest('tr');
+            var projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
+            var indexSpace = $(this).val().indexOf(" ");
+            if (indexSpace == -1) {
+            ajaxCall("GET", "../api/projectstatus/?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
+            }
+            else {
+                ajaxCall("GET", "../api/project?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
+            }
+                        //uri = "../api/projectstatus/?projectStatus=TempStatproj&projectNum=4"
+            //ajaxCall("GET", uri, "", updateSuccessStatus, errorUpdateStatus);
+        });
+
+        function updateSuccessStatus() {
+            //swal("Updated Successfuly!", "Activity Changed", "success");
+        }
+        function errorUpdateStatus(err) {
+            //swal("Error: " + err);
+        }
 
     </script>
 </head>
@@ -248,10 +320,10 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="">בית</a></li>
-                    <li><a href="">work</a></li>
-                    <li><a href="">product</a></li>
-                    <li><a href="">about</a></li>
+                    <li><a href="Project.html">פרוייקטים</a></li>
+                    <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
+                    <li><a href="">מסלולים</a></li>
+                    <li><a href="">קבוצות מוכנות</a></li>
                     <li><a href="">contact</a></li>
                 </ul>
             </nav>
