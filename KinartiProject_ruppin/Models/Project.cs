@@ -53,7 +53,6 @@ namespace KinartiProject_ruppin.Models
                 supplydate = value.Substring(0, 10);
             }
         }
-
         public string ProjectStatus { get; set; }
         public string Comment { get; set; }
         //public DateTime ProdEntranceDate { get; set; }
@@ -89,6 +88,18 @@ namespace KinartiProject_ruppin.Models
             List<Project> lp = new List<Project>();
             lp = dbs.GetAllProject();
             return lp;
+        }
+
+        public void StatusChange(string projectStatus, float projectNum)
+        {
+            DBServices dbs = new DBServices();
+            dbs.StatusChange(projectStatus, projectNum);
+        }
+
+        public void StatusChangeSpace(string projectStatus, float projectNum, int indexSpace)
+        {
+            DBServices dbs = new DBServices();
+            dbs.StatusChange(projectStatus.Insert(indexSpace," "), projectNum);
         }
 
 
