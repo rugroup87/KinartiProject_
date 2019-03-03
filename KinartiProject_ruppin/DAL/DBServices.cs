@@ -276,19 +276,6 @@ using KinartiProject_ruppin.Models;
         try
         {
             String selectSTR = "SELECT * FROM Person where department='" + department + "' and personPassword='" + password + "'";
-    public void StatusChange(string projectStatus, float projectNum)
-    {
-        SqlConnection con = connect("KinartiConnectionString");
-
-        String selectStr = String.Format("SELECT * FROM Project WHERE projectNum= {0}", projectNum); // create the select that will be used by the adapter to select data from the DB
-
-        SqlDataAdapter da = new SqlDataAdapter(selectStr, con); // create the data adapter
-
-        SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(da);
-
-        DataSet ds = new DataSet(); // create a DataSet and give it a name (not mandatory) as defualt it will be the same name as the DB
-
-        da.Fill(ds, "Project");       // Fill the datatable (in the dataset), using the Select command
 
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -308,6 +295,20 @@ using KinartiProject_ruppin.Models;
 
         }
     }
+
+    public void StatusChange(string projectStatus, float projectNum)
+    {
+        SqlConnection con = connect("KinartiConnectionString");
+
+        String selectStr = String.Format("SELECT * FROM Project WHERE projectNum= {0}", projectNum); // create the select that will be used by the adapter to select data from the DB
+
+        SqlDataAdapter da = new SqlDataAdapter(selectStr, con); // create the data adapter
+
+        SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(da);
+
+        DataSet ds = new DataSet(); // create a DataSet and give it a name (not mandatory) as defualt it will be the same name as the DB
+
+        da.Fill(ds, "Project");       // Fill the datatable (in the dataset), using the Select command
         //dt = ds.Tables[0]; // point to the cars table , which is the only table in this case
 
         //dt.Rows[PersonId]["active"] = activity;
