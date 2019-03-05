@@ -10,63 +10,108 @@ namespace KinartiProject_ruppin.Models
     {
         public float ProjectNum { get; set; }
         public string ProjectName { get; set; }
-        //private Nullable<DateTime> prodstartdate;
-        //public Nullable<DateTime> ProdStartDate
+
+        //private string prodstartdate;
+        //public string ProdStartDate
         //{
         //    get
         //    {
-        //        if (prodstartdate == null)
-        //        {
-        //            DateTime? prodstartdate = null;
-        //            return prodstartdate;
-        //        }
-        //        else
-        //        {
-        //            return prodstartdate;
-        //        }
+        //        return prodstartdate;
         //    }
-        //    set
-        //    {
-        //        string tempDate = value.Value.ToShortDateString();
-        //        prodstartdate = DateTime.ParseExact(tempDate, "dd/MM/yyyy", null);
-        //    }
+        //    set => prodstartdate = value;
         //}
-        private string prodstartdate;
-        public string ProdStartDate
-        {
-            get
-            {
-                return prodstartdate;
-            }
-            set => prodstartdate = value;
-        }
         //Item [] ItemArr;
-        private string supplydate;
-        public string SupplyDate
+        private Nullable<DateTime> prodstartdate;
+        public Nullable<DateTime> ProdStartDate
         {
             get
             {
-                return supplydate;
+                if (prodstartdate == null)
+                {
+                    DateTime? prodstartdate = null;
+                    return prodstartdate;
+                }
+                else
+                {
+                    return prodstartdate;
+                }
             }
             set
             {
-                supplydate = value.Substring(0, 10);
+                prodstartdate = value;
             }
         }
-        public string ProjectStatus { get; set; }
-        public string Comment { get; set; }
-        //public DateTime ProdEntranceDate { get; set; }
-        private string prodrntrancedate;
-        public string ProdEntranceDate
+
+        //private string supplydate;
+        //public string SupplyDate
+        //{
+        //    get
+        //    {
+        //        return supplydate;
+        //    }
+        //    set
+        //    {
+        //        supplydate = value.Substring(0, 10);
+        //    }
+        //}
+        private Nullable<DateTime> supplydate;
+        public Nullable<DateTime> SupplyDate
         {
             get
             {
-                return prodrntrancedate;
+                if (supplydate == null)
+                {
+                    DateTime? supplydate = null;
+                    return supplydate;
+                }
+                else
+                {
+                    return supplydate;
+                }
             }
-            set => prodrntrancedate = value.Substring(0, 10);
+            set
+            {
+                supplydate = value;
+            }
         }
 
-        public Project(float _projectNum, string _projectName, string _prodStartDate, string _supplyDate, string _projectStatus, string _comment, string _prodEntranceDate, Item[] itemarr)
+        public string ProjectStatus { get; set; }
+        public string Comment { get; set; }
+
+        private Nullable<DateTime> prodrentrancedate;
+        public Nullable<DateTime> ProdEntranceDate
+        {
+            get
+            {
+                if (prodrentrancedate == null)
+                {
+                    DateTime? prodrentrancedate = null;
+                    return prodrentrancedate;
+                }
+                else
+                {
+                    return prodrentrancedate;
+                }
+            }
+            set
+            {
+                //string tempDate = value.Value.ToShortDateString();
+                //prodstartdate = DateTime.ParseExact(tempDate, "dd/MM/yyyy", null);
+                prodrentrancedate = value;
+            }
+        }
+        //private string prodrntrancedate;
+        //public string ProdEntranceDate
+        //{
+        //    get
+        //    {
+        //        return prodrntrancedate;
+        //    }
+        //    set => prodrntrancedate = value.Substring(0, 10);
+        //}
+
+
+        public Project(float _projectNum, string _projectName, DateTime _prodStartDate, DateTime _supplyDate, string _projectStatus, string _comment, DateTime _prodEntranceDate)
         {
             this.ProjectNum = _projectNum;
             this.ProjectName = _projectName;
@@ -81,6 +126,7 @@ namespace KinartiProject_ruppin.Models
         public Project()
         {
         }
+
 
         public List<Project> GetAllProject()
         {

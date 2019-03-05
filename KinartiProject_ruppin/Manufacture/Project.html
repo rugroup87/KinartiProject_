@@ -190,13 +190,52 @@
                 data: 'ProdStartDate',
                 defaultContent: "",
                 "className": "dt-center",
-                "targets": "_all"
+                    "targets": "_all",
+                    render: function (data) {
+                        if (data !== null) {
+                            var javascriptProdStartDate = new Date(data);
+                            //אם שעה מלאה עם ארבע ספרות למשל 10:27
+                            if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes()!=0) {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            //אם השעה חצות בדיוק נהפוך את זה מ 0:0 ל 00:00
+                            else if (javascriptProdStartDate.getHours() == 0) {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:0" + javascriptProdStartDate.getMinutes() + "  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                                //אם השעה היא חצות וכמה דקות נהפוך את זה מ 0:32 ל 00:32
+                            else if (javascriptProdStartDate.getMinutes() == 0) {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:" + javascriptProdStartDate.getMinutes() + "0  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            // אם הדקות 0 נוסיף אפס שיהיה בדקות 00
+                            else {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "0  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            //javascriptProdStartDate = javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear() +
+                            //    "  " + javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes();
+                            return javascriptProdStartDate;
+                        } else {
+                            return "";
+                        }
+                    }
             }, {
                 title: "ת. אספקה",
                 data: 'SupplyDate',
                 defaultContent: "",
                 "className": "dt-center",
-                "targets": "_all"
+                    "targets": "_all",
+                    render: function (data) {
+                        if (data !== null) {
+                            var javascriptSupplyDate = new Date(data);
+                            javascriptSupplyDate = javascriptSupplyDate.getDate() + "/" + (javascriptSupplyDate.getMonth() + 1) + "/" + javascriptSupplyDate.getFullYear();
+                            return javascriptSupplyDate;
+                        } else {
+                            return "";
+                        }
+                    }
             }, {
                 title: "סטטוס פרוייקט",
                 data: 'ProjectStatus',
@@ -216,8 +255,17 @@
                 data: 'ProdEntranceDate',
                 defaultContent: "",
                 "className": "dt-center",
-                "targets": "_all"
-            }
+                "targets": "_all",
+                    render: function (data) {
+                        if (data !== null) {
+                            var javascriptProdEntranceDate = new Date(data);
+                            javascriptProdEntranceDate = javascriptProdEntranceDate.getDate() + "/" + (javascriptProdEntranceDate.getMonth() + 1) + "/" + javascriptProdEntranceDate.getFullYear();
+                            return javascriptProdEntranceDate;
+                        } else {
+                            return "";
+                        }
+                    }
+                }
             ];
 
             myTable = $('#example').DataTable({
@@ -278,6 +326,16 @@
             return sel;
         }
 
+        //function createDate(obj) {
+            //if (obj !== null) {
+            //    var javascriptDate = new Date(obj);
+            //    javascriptDate = javascriptDate.getMonth() + 1 + "/" + javascriptDate.getDate() + "/" + javascriptDate.getFullYear();
+            //    return javascriptDate;
+            //var javascriptDate = new Date(oObj.aData[0]);
+            //javascriptDate = javascriptDate.getDate() + "/" + javascriptDate.getMonth() + "/" + javascriptDate.getFullYear();
+            //return "<div class= date>" + javascriptDate + "<div>";
+        //}
+
         $(document).on("change", "#example select", function () {
 
             //Get the value from the select box
@@ -289,13 +347,11 @@
             var projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
             var indexSpace = $(this).val().indexOf(" ");
             if (indexSpace == -1) {
-            ajaxCall("GET", "../api/projectstatus/?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
+                ajaxCall("GET", "../api/projectstatus/?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
             }
             else {
-                ajaxCall("GET", "../api/project?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
+                ajaxCall("GET", "../api/projectstatus?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
             }
-                        //uri = "../api/projectstatus/?projectStatus=TempStatproj&projectNum=4"
-            //ajaxCall("GET", uri, "", updateSuccessStatus, errorUpdateStatus);
         });
 
         function updateSuccessStatus() {

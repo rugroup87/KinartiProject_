@@ -117,11 +117,13 @@ using KinartiProject_ruppin.Models;
                     p.ProjectName = Convert.ToString(dr["projectName"]);
                     if (!DBNull.Value.Equals(dr["prodStartDate"]))
                 {
-                    p.ProdStartDate = Convert.ToString(dr["prodStartDate"]);
+                    p.ProdStartDate = Convert.ToDateTime(dr["prodStartDate"]);
+                    //p.ProdStartDate = Convert.ToString(dr["prodStartDate"]);
                 }
                 if (!DBNull.Value.Equals(dr["supplyDate"]))
                 {
-                    p.SupplyDate = Convert.ToString(dr["supplyDate"]);
+                    p.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
+                    //p.SupplyDate = Convert.ToString(dr["supplyDate"]);
                 }
                 if (!DBNull.Value.Equals(dr["projectStatus"]))
                 {
@@ -133,7 +135,7 @@ using KinartiProject_ruppin.Models;
                 }
                 if (!DBNull.Value.Equals(dr["prodEntranceDate"]))
                 {
-                    p.ProdEntranceDate = Convert.ToString(dr["prodEntranceDate"]);
+                    p.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
                 }
 
                 lp.Add(p);

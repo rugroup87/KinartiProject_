@@ -28,6 +28,7 @@ namespace KinartiProject_ruppin.Controllers
             Project p = new Project();
             p.StatusChange(projectStatus, projectNum);
         }
+
         [HttpGet]
         [Route("api/projectstatus")]
         public void Get(string projectStatus, float projectNum, int indexSpace)
