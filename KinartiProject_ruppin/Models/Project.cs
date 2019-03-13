@@ -136,10 +136,16 @@ namespace KinartiProject_ruppin.Models
             return lp;
         }
 
-        public void StatusChange(string projectStatus, float projectNum)
+        //public void StatusChange(string projectStatus, float projectNum)
+        //{
+        //    DBServices dbs = new DBServices();
+        //    dbs.StatusChange(projectStatus, projectNum);
+        //}
+
+        public void StatusChange(Objectdata obj)
         {
             DBServices dbs = new DBServices();
-            dbs.StatusChange(projectStatus, projectNum);
+            dbs.StatusChange(obj.projectStatus, obj.projNumStatus);
         }
 
         public void StatusChangeSpace(string projectStatus, float projectNum, int indexSpace)
@@ -148,6 +154,11 @@ namespace KinartiProject_ruppin.Models
             dbs.StatusChange(projectStatus.Insert(indexSpace," "), projectNum);
         }
 
+        public int UpdateProject()
+        {
+            DBServices dbs = new DBServices();
+            return dbs.UpdateProject(this);
+        }
 
 
     }

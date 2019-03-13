@@ -136,26 +136,132 @@
         tr {
             text-align: center;
         }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+
+        @media (min-width: 768px) {
+            .col-sm-3 {
+                width: 100%;
+            }
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .modal-content {
+                -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+                box-shadow: 0 5px 150px rgba(0,0,0,.5);
+            }
+        }
+
+
+        button.close {
+            -webkit-appearance: none;
+            padding-left: 10px;
+            cursor: pointer;
+            background: 0 0;
+            border: 0;
+        }
+
+        @media (min-width: 992px) {
+            .col-md-3 {
+                width: 50%;
+            }
+        }
+
+
+        .modal-header {
+            background-color: #31708f;
+            height: 80px;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .modal-body {
+            background-color: darksalmon;
+            height: 500px;
+            position: relative;
+            padding: 15px;
+        }
+
+        pre {
+            display: block;
+            padding-right: 9.5px;
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+            word-break: break-all;
+            word-wrap: break-word;
+            background-color: #f5f5f5;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            height: inherit;
+        }
+
+        .modal-footer {
+            background-color: red;
+            height: 50px;
+            padding: 15px;
+            text-align: right;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .modal-title {
+            margin: 0;
+            line-height: 1.42857143;
+            text-align: center;
+        }
+
+        #hProjNum, #hProjName {
+            display: inline-block;
+            padding-right: 2%;
+        }
     </style>
 
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!--<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  bootstrap-->
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
     <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
     <script src="../Scripts/ajaxCalls.js"></script>
 
     <script>
         $(document).ready(function () {
+            //$("#altEditor-modal").hide();
             var myTable;
             StatusArr = [];
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
             ajaxCall("GET", "../api/project", "", getSuccessProject, errorProject);
-
         });
 
         function getSuccessStatus(statusArr) {
@@ -190,52 +296,52 @@
                 data: 'ProdStartDate',
                 defaultContent: "",
                 "className": "dt-center",
-                    "targets": "_all",
-                    render: function (data) {
-                        if (data !== null) {
-                            var javascriptProdStartDate = new Date(data);
-                            //אם שעה מלאה עם ארבע ספרות למשל 10:27
-                            if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes()!=0) {
-                                javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "  " +
-                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                            }
-                            //אם השעה חצות בדיוק נהפוך את זה מ 0:0 ל 00:00
-                            else if (javascriptProdStartDate.getHours() == 0) {
-                                javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:0" + javascriptProdStartDate.getMinutes() + "  " +
-                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                            }
-                                //אם השעה היא חצות וכמה דקות נהפוך את זה מ 0:32 ל 00:32
-                            else if (javascriptProdStartDate.getMinutes() == 0) {
-                                javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:" + javascriptProdStartDate.getMinutes() + "0  " +
-                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                            }
-                            // אם הדקות 0 נוסיף אפס שיהיה בדקות 00
-                            else {
-                                javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "0  " +
-                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                            }
-                            //javascriptProdStartDate = javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear() +
-                            //    "  " + javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes();
-                            return javascriptProdStartDate;
-                        } else {
-                            return "";
+                "targets": "_all",
+                render: function (data) {
+                    if (data !== null) {
+                        var javascriptProdStartDate = new Date(data);
+                        //אם שעה מלאה עם ארבע ספרות למשל 10:27
+                        if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes() != 0) {
+                            javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "  " +
+                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
                         }
+                        //אם השעה חצות בדיוק נהפוך את זה מ 0:0 ל 00:00
+                        else if (javascriptProdStartDate.getHours() == 0) {
+                            javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:0" + javascriptProdStartDate.getMinutes() + "  " +
+                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                        }
+                        //אם השעה היא חצות וכמה דקות נהפוך את זה מ 0:32 ל 00:32
+                        else if (javascriptProdStartDate.getMinutes() == 0) {
+                            javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:" + javascriptProdStartDate.getMinutes() + "0  " +
+                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                        }
+                        // אם הדקות 0 נוסיף אפס שיהיה בדקות 00
+                        else {
+                            javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "0  " +
+                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                        }
+                        //javascriptProdStartDate = javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear() +
+                        //    "  " + javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes();
+                        return javascriptProdStartDate;
+                    } else {
+                        return "";
                     }
+                }
             }, {
                 title: "ת. אספקה",
                 data: 'SupplyDate',
                 defaultContent: "",
                 "className": "dt-center",
-                    "targets": "_all",
-                    render: function (data) {
-                        if (data !== null) {
-                            var javascriptSupplyDate = new Date(data);
-                            javascriptSupplyDate = javascriptSupplyDate.getDate() + "/" + (javascriptSupplyDate.getMonth() + 1) + "/" + javascriptSupplyDate.getFullYear();
-                            return javascriptSupplyDate;
-                        } else {
-                            return "";
-                        }
+                "targets": "_all",
+                render: function (data) {
+                    if (data !== null) {
+                        var javascriptSupplyDate = new Date(data);
+                        javascriptSupplyDate = javascriptSupplyDate.getDate() + "/" + (javascriptSupplyDate.getMonth() + 1) + "/" + javascriptSupplyDate.getFullYear();
+                        return javascriptSupplyDate;
+                    } else {
+                        return "";
                     }
+                }
             }, {
                 title: "סטטוס פרוייקט",
                 data: 'ProjectStatus',
@@ -256,16 +362,16 @@
                 defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all",
-                    render: function (data) {
-                        if (data !== null) {
-                            var javascriptProdEntranceDate = new Date(data);
-                            javascriptProdEntranceDate = javascriptProdEntranceDate.getDate() + "/" + (javascriptProdEntranceDate.getMonth() + 1) + "/" + javascriptProdEntranceDate.getFullYear();
-                            return javascriptProdEntranceDate;
-                        } else {
-                            return "";
-                        }
+                render: function (data) {
+                    if (data !== null) {
+                        var javascriptProdEntranceDate = new Date(data);
+                        javascriptProdEntranceDate = javascriptProdEntranceDate.getDate() + "/" + (javascriptProdEntranceDate.getMonth() + 1) + "/" + javascriptProdEntranceDate.getFullYear();
+                        return javascriptProdEntranceDate;
+                    } else {
+                        return "";
                     }
                 }
+            }
             ];
 
             myTable = $('#example').DataTable({
@@ -295,7 +401,14 @@
                 {
                     extend: 'selected', // Bind to Selected row
                     text: 'Edit',
-                    name: 'edit'        // do not change name
+                    name: 'edittt',    // do not change name
+                    action: function (nButton, oConfig, oFlash) {
+                        editForm(oConfig);
+                    }
+
+                    //action: function (e, dt, node, config) {
+                    //    alert('Activated!');
+                    //}
                 },
                 {
                     extend: 'selected', // Bind to Selected row
@@ -304,6 +417,15 @@
                 }]
             });
 
+            //myTable.on('click', 'button.edit-task', function () {
+            //    alert('Activated!');
+            //});
+
+            //$("myTable.buttons()").click(function() {
+            //    str = "alert('Hello')";
+            //    $('#altEditor-modal').append(str);
+
+            //});
         }
 
         function errorProject(err) {
@@ -327,13 +449,13 @@
         }
 
         //function createDate(obj) {
-            //if (obj !== null) {
-            //    var javascriptDate = new Date(obj);
-            //    javascriptDate = javascriptDate.getMonth() + 1 + "/" + javascriptDate.getDate() + "/" + javascriptDate.getFullYear();
-            //    return javascriptDate;
-            //var javascriptDate = new Date(oObj.aData[0]);
-            //javascriptDate = javascriptDate.getDate() + "/" + javascriptDate.getMonth() + "/" + javascriptDate.getFullYear();
-            //return "<div class= date>" + javascriptDate + "<div>";
+        //if (obj !== null) {
+        //    var javascriptDate = new Date(obj);
+        //    javascriptDate = javascriptDate.getMonth() + 1 + "/" + javascriptDate.getDate() + "/" + javascriptDate.getFullYear();
+        //    return javascriptDate;
+        //var javascriptDate = new Date(oObj.aData[0]);
+        //javascriptDate = javascriptDate.getDate() + "/" + javascriptDate.getMonth() + "/" + javascriptDate.getFullYear();
+        //return "<div class= date>" + javascriptDate + "<div>";
         //}
 
         $(document).on("change", "#example select", function () {
@@ -342,31 +464,69 @@
             // תפסיסה של סטטוס הפרוייקט שאליו השתנה
             //var newStatus = $(this).val();
             //תפסיסה של השורה בה הסטטוס השתנה
+            //var rowIntable = $(this).closest('tr');
 
-            var rowIntable = $(this).closest('tr');
-            var projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
-            var indexSpace = $(this).val().indexOf(" ");
-            if (indexSpace == -1) {
-                ajaxCall("GET", "../api/projectstatus/?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
+            var oData = {
+                projectStatus: $(this).val(),
+                projNumStatus: myTable.row($(this).closest('tr')).data().ProjectNum
             }
-            else {
-                ajaxCall("GET", "../api/projectstatus?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
-            }
+
+            ajaxCall("PUT", "../api/project", JSON.stringify(oData), updateSuccessStatus, errorUpdateStatus);
+
+            //oData.projectStatus = $(this).val();
+            //oData.projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
+            //var indexSpace = $(this).val().indexOf(" ");
+            //if (indexSpace == -1) {
+            //    ajaxCall("GET", "../api/projectstatus?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
+            //}
+            //else {
+            //    ajaxCall("GET", "../api/projectstatus?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
+            //}
         });
 
         function updateSuccessStatus() {
-            //swal("Updated Successfuly!", "Activity Changed", "success");
         }
-        function errorUpdateStatus(err) {
-            //swal("Error: " + err);
+        function errorUpdateStatus() {
+        }
+
+        $(document).on("click", "#closeWindowsButton", function () {
+            $("#altEditor-modal").remove();
+        });
+        $(document).on("click", "#closeWindowsX", function () {
+            $("#altEditor-modal").remove();
+        });
+
+        $(document).on("click", "#saveEditForm", function () {
+            Project = {
+                ProjectNum: $("#hProjNum").text(),
+                //ProjectName: $("#hProjName").text(),
+                //ProdStartDate: $("#prodStartDateID"),
+                //SupplyDate: $("#supplyDateID"),
+                //ProjectStatus: $("#projectStatusID"),
+                Comment: $("#commentID").val(),
+                ProdEntranceDate: $("#prodEntranceDateID")
+            }
+
+            ajaxCall("PUT", "../api/project/UpdateProject", JSON.stringify(Project), successUpdatesProject, errorUpdatesProject);
+        });
+
+
+        function successUpdatesProject() {
+            swal("השינוי נשמר", "כעת ניתן לצאת מהחלון", "success");
+        }
+        function errorUpdatesProject() {
+        }
+
+        function editForm(dt) {
+            var data_row = dt.row({ selected: true }).data();
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' id='prodStartDateID' name='ת. תחילת ייצור' placeholder='ת. תחילת ייצור' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProdStartDate + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='ת. אספקה' placeholder='ת. אספקה' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.SupplyDate + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProjectStatus + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='form-control  form-control-sm' value= '" + data_row.ProdEntranceDate + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm' value= '" + data_row.Comment + "'></textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>Close</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>Save Changes</button> </div> </div> </div> </div></div>";
+            $('#containerID').append(str);
+ 
         }
 
     </script>
 </head>
 <body>
-
-    <!--This Is The Menu HTML-->
-
     <header>
         <div class="container">
             <div class="logo-box">
@@ -386,8 +546,8 @@
         </div>
     </header>
     <br />
-    <!--This Is The DataTable HTML-->
-    <div class="container">
+
+    <div class="container" id="containerID">
         <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
     </div>
 </body>

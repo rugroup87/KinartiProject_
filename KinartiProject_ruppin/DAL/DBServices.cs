@@ -320,7 +320,62 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    public string BuildUpdateCommand(Project project)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
 
+        StringBuilder sb = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("UPDATE Project SET comment  = '{0}', prodEntranceDate  = '{1}' where projectNum  = '{2}'", project.Comment, project.ProdEntranceDate.ToString(),project.ProjectNum.ToString());
+
+        command = sb.ToString();
+        return command;
+    }
+
+
+    public int UpdateProject(Project project)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildUpdateCommand(project);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
 
 
 
