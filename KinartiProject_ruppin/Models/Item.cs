@@ -14,6 +14,7 @@ namespace KinartiProject_ruppin.Models
         public int ItemGroupCount { get; set; }
         public float ProjectNum { get; set; }
         public string ProjectName { get; set; }
+        List<Part> ItemParts = new List<Part>();
 
         public Item(string itemnum, string itemname, string itemstatus, double itemcompletedpercentage, int itemgroupcount, float projectnum, string projectname)
         {
@@ -24,6 +25,13 @@ namespace KinartiProject_ruppin.Models
             ItemGroupCount = itemgroupcount;
             ProjectNum = projectnum;
             ProjectName = projectname;
+        }
+        public Item(string itemnum, string itemname,List<Part> itemparts, string itemstatus = "עוד לא התחיל")
+        {
+            ItemNum = itemnum;
+            ItemName = itemname;
+            ItemStatus = itemstatus;
+            itemparts = ItemParts;
         }
         public Item()
         {

@@ -318,9 +318,73 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    public void AddNewProjectToDB(Project NewPorj)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
 
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
 
+        String cStr = BuildNewProjectCommand(NewPorj);      // helper method to build the insert string
 
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
+
+    public string BuildNewProjectCommand(Project NewPorj)
+    {
+        //int[] temp = new int[person.Hobbies.Length];
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        StringBuilder sb3 = new StringBuilder();
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewPorj.ProjectNum, NewPorj.ProjectName, NewPorj.ProdStartDate, NewPorj.ProjectStatus );
+        command = sb.ToString();
+        //sb2.AppendFormat("DELETE FROM Hobbies_for_persons WHERE id = {0} ", person.ID);
+        //String prefix = "INSERT INTO Hobbies_for_persons (id, Hobbie_id) ";
+        //command = sb.ToString() + sb2.ToString() + prefix + "Values";
+        //for (int i = 0; i < person.Hobbies.Length; i++)
+        //{
+        //    sb3.AppendFormat("({0}, {1})", person.ID, person.Hobbies[i] + 1);
+        //    if (i < (person.Hobbies.Length - 1))
+        //    {
+        //        sb3.Append(",");
+        //    }
+        //}
+        //command += sb3.ToString();
+
+        return command;
+    }
 
 
 }
