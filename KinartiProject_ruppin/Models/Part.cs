@@ -8,11 +8,15 @@ namespace KinartiProject_ruppin.Models
     public class Part
     {
         public string PartID { get; set; }
+        public string PartBarCode { get; set; }
         public string PartNum { get; set; }
         public string PartName { get; set; }
+        public string PartKantim { get; set; }
+        public string PartFirstMachine { get; set; }
+        public string PartSecondMachine { get; set; }
         public int PartSetNumber { get; set; }
         public string PartStatus { get; set; }
-        public string PartQuantity { get; set; }
+        public int PartQuantity { get; set; }
         public string PartMaterial { get; set; }
         public string PartColor { get; set; }
         public int PartLength { get; set; }

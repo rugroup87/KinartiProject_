@@ -334,7 +334,7 @@ using KinartiProject_ruppin.Models;
         return command;
     }
 
-    public void AddNewProjectToDB(Project NewPorj)
+    public void AddNewDataToDB(Project NewData)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -349,7 +349,7 @@ using KinartiProject_ruppin.Models;
             throw (ex);
         }
 
-        String cStr = BuildNewProjectCommand(NewPorj);      // helper method to build the insert string
+        String cStr = BuildNewDataCommand(NewData);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -415,7 +415,25 @@ using KinartiProject_ruppin.Models;
 
     }
 
-    public string BuildNewProjectCommand(Project NewPorj)
+    public string BuildNewDataCommand(Project NewData)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        StringBuilder sb3 = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewData.ProjectNum, NewData.ProjectName, NewData.ProdStartDate, NewData.ProjectStatus );
+        sb2.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName,  itemStatus)", NewData.ProjectNum, NewData.NewItem.ItemNum, NewData.NewItem.ItemName, NewData.NewItem.ItemStatus);
+        //sb3.AppendFormat("INSERT INTO Part ()",)
+        command = sb.ToString();
+
+        return command;
+    }
+
+    public string BuildNewItemCommand(Item NewItem)
     {
         //int[] temp = new int[person.Hobbies.Length];
         String command;
@@ -425,7 +443,7 @@ using KinartiProject_ruppin.Models;
         StringBuilder sb2 = new StringBuilder();
         StringBuilder sb3 = new StringBuilder();
         // use a string builder to create the dynamic string
-        sb.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewPorj.ProjectNum, NewPorj.ProjectName, NewPorj.ProdStartDate, NewPorj.ProjectStatus );
+        //sb.AppendFormat("INSERT INTO Item (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewItem.ProjectNum, NewItem.ProjectName, NewItem.ProdStartDate, NewItem.ProjectStatus);
         command = sb.ToString();
         //sb2.AppendFormat("DELETE FROM Hobbies_for_persons WHERE id = {0} ", person.ID);
         //String prefix = "INSERT INTO Hobbies_for_persons (id, Hobbie_id) ";
@@ -442,6 +460,4 @@ using KinartiProject_ruppin.Models;
 
         return command;
     }
-
-
 }

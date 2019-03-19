@@ -41,19 +41,6 @@ namespace KinartiProject_ruppin.Models
                 prodstartdate = value;
             }
         }
-
-        //private string supplydate;
-        //public string SupplyDate
-        //{
-        //    get
-        //    {
-        //        return supplydate;
-        //    }
-        //    set
-        //    {
-        //        supplydate = value.Substring(0, 10);
-        //    }
-        //}
         private Nullable<DateTime> supplydate;
         public Nullable<DateTime> SupplyDate
         {
@@ -103,16 +90,17 @@ namespace KinartiProject_ruppin.Models
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ExcelFile ProjFile = new ExcelFile();
-        Item NewItem = new Item();
+        public Item NewItem = new Item();
 
-
-        public Project(float _projectNum, string _projectName, string _prodStartDate, string _projectStatus = "תרם התחיל")
+        public Project(float _projectNum, string _projectName, string _prodStartDate, Item item, string _projectStatus = "תרם התחיל")
         {
+            //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
             ProjectNum = _projectNum;
             ProjectName = _projectName;
-            ProdStartDate = _prodStartDate;
+            ProdStartDate = DateTime.Parse(_prodStartDate);
+            NewItem = item;
             ProjectStatus = _projectStatus;
-            AddNewProjectToDB();
+            AddNewDataToDB();
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -166,10 +154,10 @@ namespace KinartiProject_ruppin.Models
         }
 
         /// //////////////////////////////////////////////////////////////////////////////////
-        public void AddNewProjectToDB()
+        public void AddNewDataToDB()
         {
             DBServices dbs = new DBServices();
-            dbs.AddNewProjectToDB(this);
+            dbs.AddNewDataToDB(this);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
