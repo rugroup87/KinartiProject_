@@ -30,7 +30,7 @@ namespace KinartiProject_ruppin.Models
             int rowCount = excelRange.Rows.Count;
             int colCount = excelRange.Columns.Count;
 
-            Project NewProject = new Project(excelRange.Cells[2, 1].Value2, excelRange.Cells[2, 2].Value2, fileuploaddate);
+            Project NewProject = new Project(excelRange.Cells[2, 1].Value2, excelRange.Cells[2, 2].Value2, DateTime.Parse(fileuploaddate));
 
             //Reading step by step cols and rows.
             for (int i = 2; i <= rowCount; i++)

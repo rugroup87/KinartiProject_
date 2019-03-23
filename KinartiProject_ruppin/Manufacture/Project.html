@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
     <!--This Is The Menu CSS-->
+
     <style>
 
         /*This Is The Menu CSS*/
@@ -137,6 +138,10 @@
             text-align: center;
         }
 
+        /*td{
+            max-height: 4px;
+        }*/
+
         .form-control {
             display: block;
             width: 100%;
@@ -169,7 +174,14 @@
         }
 
         @media (min-width: 768px) {
-            .modal-content {
+            .modal-dialog {
+                width: 600px;
+                margin: 20px auto;
+            }
+        }
+
+            @media (min-width: 768px) {
+                .modal-content {
                 -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 box-shadow: 0 5px 150px rgba(0,0,0,.5);
             }
@@ -187,58 +199,75 @@
         @media (min-width: 992px) {
             .col-md-3 {
                 width: 50%;
+            }            
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                width: 90%;
             }
         }
-
-
+        
         .modal-header {
-            background-color: #31708f;
-            height: 80px;
-            padding: 15px;
-            border-bottom: 1px solid #e5e5e5;
-            text-align: center;
-        }
+                background-color: #d7d7d7;
+                height: 80px;
+                padding: 15px;
+                border-bottom: 1px solid #e5e5e5;
+                text-align: center;
+            }
 
-        .modal-body {
-            background-color: darksalmon;
-            height: 500px;
-            position: relative;
-            padding: 15px;
-        }
+            .modal-body {
+                background-color: #f0f0f0;
+                height: 500px;
+                position: relative;
+                padding: 15px;
+            }
 
-        pre {
-            display: block;
-            padding-right: 9.5px;
-            margin: 0 0 10px;
-            font-size: 13px;
-            line-height: 1.42857143;
-            color: #333;
-            word-break: break-all;
-            word-wrap: break-word;
-            background-color: #f5f5f5;
-            border: 3px solid #ccc;
-            border-radius: 10px;
-            height: inherit;
-        }
+            pre {
+                display: block;
+                padding: 0px;
+                margin: 0 0 10px;
+                font-size: 13px;
+                line-height: 1.42857143;
+                color: #333;
+                word-break: break-all;
+                word-wrap: break-word;
+                background-color: #f5f5f5;
+                border: 3px solid #ccc;
+                border-radius: 10px;
+                height: 100%;
+            }
 
-        .modal-footer {
-            background-color: red;
-            height: 50px;
-            padding: 15px;
-            text-align: right;
-            border-top: 1px solid #e5e5e5;
-        }
+            .modal-footer {
+                background-color: #d7d7d7;
+                height: 50px;
+                padding: 15px;
+                padding-top: 1%;
+                text-align: right;
+                border-top: 1px solid #e5e5e5;
+            }
 
-        .modal-title {
-            margin: 0;
-            line-height: 1.42857143;
-            text-align: center;
-        }
+            .modal-title {
+                margin: 0;
+                line-height: 1.42857143;
+                text-align: center;
+            }
 
-        #hProjNum, #hProjName {
-            display: inline-block;
-            padding-right: 2%;
-        }
+            #hProjNum, #hProjName {
+                display: inline-block;
+                padding-right: 2%;
+            }
+
+            #containerID {
+                margin: 0px;
+                padding: 0px 30px 0px 0px;
+                max-width: 100%;
+            }
+
+            #example{
+                width: 100%;
+            }
+
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -251,13 +280,15 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
 
     <script>
         $(document).ready(function () {
-            //$("#altEditor-modal").hide();
-            var myTable;
             StatusArr = [];
+            $.fn.dataTable.moment('D/M/YYYY');
+            $.fn.dataTable.moment(' D/M/YYYY HH:mm');
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
@@ -272,12 +303,25 @@
             swal("Error: " + err);
         }
 
+        //אתחול תאריך מהדאטהבייס אל הטבלה המוצגת
+        function initDates(fullData) {
+            if (fullData !== null) {
+                var jsDate = new Date(fullData);
+                jsDate = jsDate.getDate() + "/" + (jsDate.getMonth() + 1) + "/" + jsDate.getFullYear();                
+                if (jsDate == "1/1/1900") {
+                    return ("");
+                }
+                return jsDate;
+            } else {
+                return "";
+            }
+        }
 
         function getSuccessProject(projectList) {
-
             var columnDefs = [{
                 title: "מס' פרוייקט",
                 data: 'ProjectNum',
+                width: '10%',
                 render: function (data, type, row, meta) {
                     return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
                 },
@@ -286,6 +330,7 @@
             }, {
                 title: "שם",
                 data: 'ProjectName',
+                width: '15%',
                 render: function (data, type, row, meta) {
                     return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + data + ">" + data + '</a>'
                 },
@@ -294,11 +339,13 @@
             }, {
                 title: "ת. תחילת ייצור",
                 data: 'ProdStartDate',
+                width: '15%',
                 defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all",
-                render: function (data) {
-                    if (data !== null) {
+                    render: function (data) {
+                        //initDates(data);
+                        if (data !== null) {
                         var javascriptProdStartDate = new Date(data);
                         //אם שעה מלאה עם ארבע ספרות למשל 10:27
                         if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes() != 0) {
@@ -320,8 +367,9 @@
                             javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "0  " +
                                 javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
                         }
-                        //javascriptProdStartDate = javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear() +
-                        //    "  " + javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes();
+                        if (javascriptProdStartDate == "00:00 1/1/1900") {
+                            return ("");
+                        }
                         return javascriptProdStartDate;
                     } else {
                         return "";
@@ -330,21 +378,17 @@
             }, {
                 title: "ת. אספקה",
                 data: 'SupplyDate',
+                width: '10%',
                 defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all",
-                render: function (data) {
-                    if (data !== null) {
-                        var javascriptSupplyDate = new Date(data);
-                        javascriptSupplyDate = javascriptSupplyDate.getDate() + "/" + (javascriptSupplyDate.getMonth() + 1) + "/" + javascriptSupplyDate.getFullYear();
-                        return javascriptSupplyDate;
-                    } else {
-                        return "";
+                    render: function (data) {
+                        return initDates(data);
                     }
-                }
             }, {
                 title: "סטטוס פרוייקט",
                 data: 'ProjectStatus',
+                width: '15%',
                 defaultContent: "",
                 "className": "dt-center",
                 id: "ProjectStatus",
@@ -353,25 +397,27 @@
             }, {
                 title: "הערות",
                 data: 'Comment',
+                width: '25%',
                 defaultContent: "",
                 "className": "dt-center",
-                "targets": "_all"
+                    "targets": "_all",
+                //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
+                 render: function (data, type, row) {
+                      return type === 'display' && data.length > 20 ?
+                          '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>' :
+                          data;
+                    }
             }, {
                 title: "ת. כניסה לעבודה",
                 data: 'ProdEntranceDate',
+                width: '10%',
                 defaultContent: "",
                 "className": "dt-center",
-                "targets": "_all",
-                render: function (data) {
-                    if (data !== null) {
-                        var javascriptProdEntranceDate = new Date(data);
-                        javascriptProdEntranceDate = javascriptProdEntranceDate.getDate() + "/" + (javascriptProdEntranceDate.getMonth() + 1) + "/" + javascriptProdEntranceDate.getFullYear();
-                        return javascriptProdEntranceDate;
-                    } else {
-                        return "";
+                    "targets": "_all",
+                    render: function (data) {
+                        return initDates(data);
                     }
                 }
-            }
             ];
 
             myTable = $('#example').DataTable({
@@ -390,49 +436,40 @@
                 },
                 data: projectList,
                 columns: columnDefs,
+                //"fixedColumns": true,
+                //scrollX: true,
                 dom: 'Bfrtip',        // Needs button container
                 select: 'single',
                 responsive: true,
                 altEditor: true,     // Enable altEditor
-                buttons: [{
-                    text: 'Add',
-                    name: 'add'        // do not change name
-                },
+                buttons: [
+                //    {
+                //    text: 'Add',
+                //    name: 'add'        // do not change name
+                //},
                 {
                     extend: 'selected', // Bind to Selected row
-                    text: 'Edit',
-                    name: 'edittt',    // do not change name
+                    text: 'עריכת רשומה',
+                    name: 'editForm',  // do not change name
                     action: function (nButton, oConfig, oFlash) {
                         editForm(oConfig);
                     }
-
-                    //action: function (e, dt, node, config) {
-                    //    alert('Activated!');
+                }
+                //{
+                //    extend: 'selected', // Bind to Selected row
+                //    text: 'Delete',
+                //    name: 'delete'      // do not change name
                     //}
-                },
-                {
-                    extend: 'selected', // Bind to Selected row
-                    text: 'Delete',
-                    name: 'delete'      // do not change name
-                }]
+                ]
             });
 
-            //myTable.on('click', 'button.edit-task', function () {
-            //    alert('Activated!');
-            //});
-
-            //$("myTable.buttons()").click(function() {
-            //    str = "alert('Hello')";
-            //    $('#altEditor-modal').append(str);
-
-            //});
         }
 
         function errorProject(err) {
             swal("Error: " + err);
         }
 
-        // the function creates a dropdown list box
+        // the function creates a dropdown list box of ProjectStatus  
         function createSelect(selItem) {
 
             var sel = "<select>";
@@ -448,40 +485,16 @@
             return sel;
         }
 
-        //function createDate(obj) {
-        //if (obj !== null) {
-        //    var javascriptDate = new Date(obj);
-        //    javascriptDate = javascriptDate.getMonth() + 1 + "/" + javascriptDate.getDate() + "/" + javascriptDate.getFullYear();
-        //    return javascriptDate;
-        //var javascriptDate = new Date(oObj.aData[0]);
-        //javascriptDate = javascriptDate.getDate() + "/" + javascriptDate.getMonth() + "/" + javascriptDate.getFullYear();
-        //return "<div class= date>" + javascriptDate + "<div>";
-        //}
-
+        //תפיסת השינוי בסטטוס הפרוייקט
         $(document).on("change", "#example select", function () {
-
-            //Get the value from the select box
-            // תפסיסה של סטטוס הפרוייקט שאליו השתנה
-            //var newStatus = $(this).val();
-            //תפסיסה של השורה בה הסטטוס השתנה
-            //var rowIntable = $(this).closest('tr');
-
             var oData = {
+                //תפסיסה של סטטוס הפרוייקט החדש ששונה אליו
                 projectStatus: $(this).val(),
+                //תפסיסה של השורה בה הסטטוס השתנה את התא הספציפי של מספר הפקוייקט
                 projNumStatus: myTable.row($(this).closest('tr')).data().ProjectNum
             }
 
             ajaxCall("PUT", "../api/project", JSON.stringify(oData), updateSuccessStatus, errorUpdateStatus);
-
-            //oData.projectStatus = $(this).val();
-            //oData.projNumStatus = myTable.row($(this).closest('tr')).data().ProjectNum;
-            //var indexSpace = $(this).val().indexOf(" ");
-            //if (indexSpace == -1) {
-            //    ajaxCall("GET", "../api/projectstatus?projectStatus=" + $(this).val() + "&projectNum=" + projNumStatus, "", updateSuccessStatus, errorUpdateStatus);
-            //}
-            //else {
-            //    ajaxCall("GET", "../api/projectstatus?projectStatus=" + $(this).val().replace(" ", "") + "&projectNum=" + projNumStatus + "&indexSpace=" + indexSpace, "", updateSuccessStatus, errorUpdateStatus);
-            //}
         });
 
         function updateSuccessStatus() {
@@ -489,10 +502,18 @@
         function errorUpdateStatus() {
         }
 
+        //רענון הטבלה כששומרים רשומה
+        function refreshParent() {
+            window.location.reload();
+        }
+
         $(document).on("click", "#closeWindowsButton", function () {
+            //יציאה מדף העריכה לעמוד הראשי
             $("#altEditor-modal").remove();
         });
+
         $(document).on("click", "#closeWindowsX", function () {
+            //יציאה מדף העריכה לעמוד הראשי
             $("#altEditor-modal").remove();
         });
 
@@ -500,28 +521,74 @@
             Project = {
                 ProjectNum: $("#hProjNum").text(),
                 //ProjectName: $("#hProjName").text(),
-                //ProdStartDate: $("#prodStartDateID"),
-                //SupplyDate: $("#supplyDateID"),
+                //המשתנים הבאים נעביר כמחרוזות ולא כתאריכים ולכן לכל אחד מהם יש בנאי משלהם
+                ProdStartDate1: $("#prodStartDateID").val(),
+                SupplyDate1: $("#supplyDateID").val(),
                 //ProjectStatus: $("#projectStatusID"),
                 Comment: $("#commentID").val(),
-                ProdEntranceDate: $("#prodEntranceDateID")
+                //ProdEntranceDate: $("#prodEntranceDateID")
             }
-
             ajaxCall("PUT", "../api/project/UpdateProject", JSON.stringify(Project), successUpdatesProject, errorUpdatesProject);
+            
         });
 
-
+        //בהצלחת שמירת טופס עריכה
         function successUpdatesProject() {
-            swal("השינוי נשמר", "כעת ניתן לצאת מהחלון", "success");
+            //swal("השינוי נשמר", "בעוד כשנייה תועבר לדף הראשי", "success");
+            swal({
+                title: 'השינוי נשמר',
+                text: 'בעוד כשנייה תועבר לדף הראשי',
+                type: 'success',
+                timer: 2000,
+                buttons: false
+            })
+            setTimeout(function () {
+                refreshParent(); 
+            }, 2000);
+            
         }
+
         function errorUpdatesProject() {
         }
 
+        //תפיסת לחיצת כפתור העריכה ופתיחת חלון חדש לטופס העריכה
         function editForm(dt) {
+            //תפיסת השורה שאותה רוצים לערוך
             var data_row = dt.row({ selected: true }).data();
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' id='prodStartDateID' name='ת. תחילת ייצור' placeholder='ת. תחילת ייצור' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProdStartDate + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='ת. אספקה' placeholder='ת. אספקה' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.SupplyDate + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProjectStatus + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='form-control  form-control-sm' value= '" + data_row.ProdEntranceDate + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm' value= '" + data_row.Comment + "'></textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>Close</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>Save Changes</button> </div> </div> </div> </div></div>";
+
+            //תפיסת התאריכים וכתיבתם לחלון עריכה
+            var prodStartDateForm = dateToForm(new Date(data_row.ProdStartDate));
+            var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
+            var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
+       
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' id='prodStartDateID' name='ת. תחילת ייצור' placeholder='ת. תחילת ייצור' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='ת. אספקה' placeholder='ת. אספקה' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProjectStatus + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='form-control  form-control-sm' value= '" + prodEntranceDateForm + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
             $('#containerID').append(str);
- 
+        }
+
+        //פונקציה שמסדרת רת התאריכים בצורה נוחה לטפסים
+        function dateToForm(formDate) {
+            var day;
+            var month;
+            if (formDate.getDate() < 10) {
+                day = "0" + formDate.getDate();
+            }
+            else {
+                day = formDate.getDate();
+            }
+            if (formDate.getMonth() < 10) {
+                month = "0" + (formDate.getMonth() + 1);
+            }
+            else {
+                month = formDate.getMonth() + 1;
+            }
+
+            if (((formDate.getFullYear() + "-" + month + "-" + day) == "1970-01-01") || ((formDate.getFullYear() + "-" + month + "-" + day) == "1900-01-01")) {
+                return ("");
+            }
+            else {
+                return (formDate.getFullYear() + "-" + month + "-" + day)
+            }
+            
         }
 
     </script>

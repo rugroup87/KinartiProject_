@@ -41,6 +41,7 @@ namespace KinartiProject_ruppin.Models
                 prodstartdate = value;
             }
         }
+        public string ProdStartDate1 { get; set; }
 
         //private string supplydate;
         //public string SupplyDate
@@ -74,6 +75,7 @@ namespace KinartiProject_ruppin.Models
                 supplydate = value;
             }
         }
+        public string SupplyDate1 { get; set; }
 
         public string ProjectStatus { get; set; }
         public string Comment { get; set; }
@@ -106,7 +108,7 @@ namespace KinartiProject_ruppin.Models
         Item NewItem = new Item();
 
 
-        public Project(float _projectNum, string _projectName, string _prodStartDate, string _projectStatus = "תרם התחיל")
+        public Project(float _projectNum, string _projectName, DateTime _prodStartDate, string _projectStatus = "תרם התחיל")
         {
             ProjectNum = _projectNum;
             ProjectName = _projectName;
@@ -128,6 +130,14 @@ namespace KinartiProject_ruppin.Models
             //ItemArr = itemarr;
         }
 
+        //public Project(float _projectNum, string _prodStartDate1, string _comment)
+        //{
+        //    this.ProjectNum = _projectNum;
+        //    this.ProdStartDate1 = _prodStartDate1;
+        //    this.Comment = _comment;
+        //}
+
+
         public Project()
         {
         }
@@ -141,26 +151,15 @@ namespace KinartiProject_ruppin.Models
             return lp;
         }
 
-        //public void StatusChange(string projectStatus, float projectNum)
-        //{
-        //    DBServices dbs = new DBServices();
-        //    dbs.StatusChange(projectStatus, projectNum);
-        //}
-
         public void StatusChange(Objectdata obj)
         {
             DBServices dbs = new DBServices();
             dbs.StatusChange(obj.projectStatus, obj.projNumStatus);
         }
 
-        public void StatusChangeSpace(string projectStatus, float projectNum, int indexSpace)
-        {
-            DBServices dbs = new DBServices();
-            dbs.StatusChange(projectStatus.Insert(indexSpace," "), projectNum);
-        }
-
         public int UpdateProject()
         {
+            //srting a = this.prodstartdate.ToString("yyyy-MM-dd HH:mm:ss");
             DBServices dbs = new DBServices();
             return dbs.UpdateProject(this);
         }
