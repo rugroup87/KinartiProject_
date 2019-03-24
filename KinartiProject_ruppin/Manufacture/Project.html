@@ -402,10 +402,22 @@
                 "className": "dt-center",
                     "targets": "_all",
                 //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
-                 render: function (data, type, row) {
-                      return type === 'display' && data.length > 20 ?
-                          '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>' :
-                          data;
+                    render: function (data, type, row) {
+                        if (data == null) {
+                            return data;
+                        }
+                        else {
+                            if (type === 'display' && data.length > 20) {
+                                return '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>'
+                            }
+                            else {
+                                return data;
+                            }
+                        }
+                     
+                     //return type === 'display' && data.length > 20 && data !== null ?
+                     //     '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>' :
+                     //     data;
                     }
             }, {
                 title: "ת. כניסה לעבודה",
@@ -522,8 +534,8 @@
                 ProjectNum: $("#hProjNum").text(),
                 //ProjectName: $("#hProjName").text(),
                 //המשתנים הבאים נעביר כמחרוזות ולא כתאריכים ולכן לכל אחד מהם יש בנאי משלהם
-                ProdStartDate1: $("#prodStartDateID").val(),
-                SupplyDate1: $("#supplyDateID").val(),
+                ProdStartDate: $("#prodStartDateID").val(),
+                SupplyDate: $("#supplyDateID").val(),
                 //ProjectStatus: $("#projectStatusID"),
                 Comment: $("#commentID").val(),
                 //ProdEntranceDate: $("#prodEntranceDateID")

@@ -61,11 +61,10 @@ namespace KinartiProject_ruppin.Models
                 supplydate = value;
             }
         }
-        public string SupplyDate1 { get; set; }
+        //public string SupplyDate1 { get; set; }
 
         public string ProjectStatus { get; set; }
         public string Comment { get; set; }
-
         private Nullable<DateTime> prodrentrancedate;
         public Nullable<DateTime> ProdEntranceDate
         {
@@ -115,6 +114,14 @@ namespace KinartiProject_ruppin.Models
             this.Comment = _comment;
             this.ProdEntranceDate = _prodEntranceDate;
             //ItemArr = itemarr;
+        }
+
+        public Project(float _projectNum, string _prodStartDate, string _supplyDate, string _comment)
+        {
+            ProjectNum = _projectNum;
+            ProdStartDate = DateTime.Parse(_prodStartDate);
+            SupplyDate = DateTime.Parse(_supplyDate);
+            Comment = _comment;
         }
 
         public Project()
