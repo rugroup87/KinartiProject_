@@ -184,8 +184,8 @@ using KinartiProject_ruppin.Models;
                 I.ItemNum = Convert.ToString(dr["itemNum"]);
                 I.ItemName = Convert.ToString(dr["itemName"]);
                 I.ItemStatus = Convert.ToString(dr["itemStatus"]);
-                I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
-                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                //I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
+                //I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
                 //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
                 //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
                 //I.Comment = Convert.ToString(dr["comment "]);
@@ -224,7 +224,7 @@ using KinartiProject_ruppin.Models;
 
         try
         {
-            String selectSTR = "SELECT i.projectNum, i.itemNum, i.itemName, i.groupCount, i.completedPercent, i.itemStatus, p.projectName FROM item i INNER JOIN dbo.Project p ON i.projectNum = p.projectNum";
+            String selectSTR = "SELECT i.projectNum, i.itemNum, i.itemName, i.itemStatus, p.projectName FROM item i INNER JOIN dbo.Project p ON i.projectNum = p.projectNum";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             //int PID = Convert.ToInt32(cmd.ExecuteScalar());
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -237,8 +237,8 @@ using KinartiProject_ruppin.Models;
                 I.ItemNum = Convert.ToString(dr["itemNum"]);
                 I.ItemName = Convert.ToString(dr["itemName"]);
                 I.ItemStatus = Convert.ToString(dr["itemStatus"]);
-                I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
-                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                //I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
+                //I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
                 I.ProjectNum = Convert.ToSingle(dr["projectNum"]);
                 I.ProjectName = Convert.ToString(dr["projectName"]);
                 //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
@@ -349,7 +349,7 @@ using KinartiProject_ruppin.Models;
             throw (ex);
         }
 
-        String cStr = BuildNewDataCommand(NewData);      // helper method to build the insert string
+        String cStr = BuildNewDataInsertCommand(NewData);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -415,21 +415,35 @@ using KinartiProject_ruppin.Models;
 
     }
 
-    public string BuildNewDataCommand(Project NewData)
+    public string BuildNewDataInsertCommand(Project NewData)
     {
         String command;
         SqlConnection con;
         con = connect("KinartiConnectionString");
-        StringBuilder sb = new StringBuilder();
-        StringBuilder sb2 = new StringBuilder();
-        StringBuilder sb3 = new StringBuilder();
+        StringBuilder sbProj = new StringBuilder();
+        StringBuilder sbItem = new StringBuilder();
+        StringBuilder sbPartAtt = new StringBuilder();
+        StringBuilder sbPartVal = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewData.ProjectNum, NewData.ProjectName, NewData.ProdStartDate, NewData.ProjectStatus );
-        sb2.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName,  itemStatus)", NewData.ProjectNum, NewData.NewItem.ItemNum, NewData.NewItem.ItemName, NewData.NewItem.ItemStatus);
-        //sb3.AppendFormat("INSERT INTO Part ()",)
-        command = sb.ToString();
+        sbProj.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, '{1}', '{2}', '{3}')", NewData.ProjectNum, NewData.ProjectName, NewData.ProdStartDate, NewData.ProjectStatus );
+        sbItem.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName, itemStatus) VALUES({0}, {1}, '{2}', '{3}')", NewData.ProjectNum, NewData.Item.ItemNum, NewData.Item.ItemName, NewData.Item.ItemStatus);
+        sbPartAtt.AppendFormat(@"INSERT INTO Part (partNum, partName, partStatus, setNum, barcode, partKantim, PartFirstMachine,
+PartSecondMachine, PartQuantity, PartMaterial, PartColor, PartCropType, PartCategory, PartComment, PartLength,
+PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness, projectNum, itemNum)");
 
+        command = sbProj.ToString() + sbItem.ToString() + sbPartAtt.ToString() + " VALUES";
+
+        //פה צריכה להיות לולה שרצה ומכניסה את השורות של החלקים
+        for (int i = 0; i < NewData.Item.ItemParts.Count; i++)
+        {
+            sbPartVal.AppendFormat("('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', '{7}', {8}, '{9}', '{10}', '{11}', '{12}', '{13}', {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21})", NewData.Item.ItemParts[i].PartNum, NewData.Item.ItemParts[i].PartName, NewData.Item.ItemParts[i].PartStatus, NewData.Item.ItemParts[i].PartSetNumber, NewData.Item.ItemParts[i].PartBarCode, NewData.Item.ItemParts[i].PartKantim, NewData.Item.ItemParts[i].PartFirstMachine, NewData.Item.ItemParts[i].PartSecondMachine, NewData.Item.ItemParts[i].PartQuantity, NewData.Item.ItemParts[i].PartMaterial, NewData.Item.ItemParts[i].PartColor, NewData.Item.ItemParts[i].PartCropType, NewData.Item.ItemParts[i].PartCategory, NewData.Item.ItemParts[i].PartComment, NewData.Item.ItemParts[i].PartLength, NewData.Item.ItemParts[i].PartWidth, NewData.Item.ItemParts[i].PartThickness, NewData.Item.ItemParts[i].AdditionToLength, NewData.Item.ItemParts[i].AdditionToWidth, NewData.Item.ItemParts[i].AdditionToThickness, NewData.ProjectNum, NewData.Item.ItemNum);
+            if (i < (NewData.Item.ItemParts.Count - 1))
+            {
+                sbPartVal.Append(",");
+            }
+        }
+        command += sbPartVal.ToString();
         return command;
     }
 

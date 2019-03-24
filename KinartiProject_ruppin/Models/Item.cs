@@ -14,7 +14,7 @@ namespace KinartiProject_ruppin.Models
         public int ItemGroupCount { get; set; }
         public float ProjectNum { get; set; }
         public string ProjectName { get; set; }
-        List<Part> ItemParts = new List<Part>();
+        public List<Part> ItemParts = new List<Part>();
 
         public Item(string itemnum, string itemname, string itemstatus, float projectnum, string projectname)
         {

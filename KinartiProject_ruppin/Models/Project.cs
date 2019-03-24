@@ -90,7 +90,7 @@ namespace KinartiProject_ruppin.Models
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ExcelFile ProjFile = new ExcelFile();
-        public Item NewItem = new Item();
+        public Item Item = new Item();
 
         public Project(float _projectNum, string _projectName, string _prodStartDate, Item item, string _projectStatus = "תרם התחיל")
         {
@@ -98,7 +98,7 @@ namespace KinartiProject_ruppin.Models
             ProjectNum = _projectNum;
             ProjectName = _projectName;
             ProdStartDate = DateTime.Parse(_prodStartDate);
-            NewItem = item;
+            Item = item;
             ProjectStatus = _projectStatus;
             AddNewDataToDB();
         }
