@@ -41,20 +41,6 @@ namespace KinartiProject_ruppin.Models
                 prodstartdate = value;
             }
         }
-        public string ProdStartDate1 { get; set; }
-
-        //private string supplydate;
-        //public string SupplyDate
-        //{
-        //    get
-        //    {
-        //        return supplydate;
-        //    }
-        //    set
-        //    {
-        //        supplydate = value.Substring(0, 10);
-        //    }
-        //}
         private Nullable<DateTime> supplydate;
         public Nullable<DateTime> SupplyDate
         {
@@ -105,16 +91,17 @@ namespace KinartiProject_ruppin.Models
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ExcelFile ProjFile = new ExcelFile();
-        Item NewItem = new Item();
+        public Item Item = new Item();
 
-
-        public Project(float _projectNum, string _projectName, DateTime _prodStartDate, string _projectStatus = "תרם התחיל")
+        public Project(float _projectNum, string _projectName, string _prodStartDate, Item item, string _projectStatus = "תרם התחיל")
         {
+            //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
             ProjectNum = _projectNum;
             ProjectName = _projectName;
-            ProdStartDate = _prodStartDate;
+            ProdStartDate = DateTime.Parse(_prodStartDate);
+            Item = item;
             ProjectStatus = _projectStatus;
-            AddNewProjectToDB();
+            AddNewDataToDB();
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,14 +116,6 @@ namespace KinartiProject_ruppin.Models
             this.ProdEntranceDate = _prodEntranceDate;
             //ItemArr = itemarr;
         }
-
-        //public Project(float _projectNum, string _prodStartDate1, string _comment)
-        //{
-        //    this.ProjectNum = _projectNum;
-        //    this.ProdStartDate1 = _prodStartDate1;
-        //    this.Comment = _comment;
-        //}
-
 
         public Project()
         {
@@ -165,10 +144,10 @@ namespace KinartiProject_ruppin.Models
         }
 
         /// //////////////////////////////////////////////////////////////////////////////////
-        public void AddNewProjectToDB()
+        public void AddNewDataToDB()
         {
             DBServices dbs = new DBServices();
-            dbs.AddNewProjectToDB(this);
+            dbs.AddNewDataToDB(this);
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
