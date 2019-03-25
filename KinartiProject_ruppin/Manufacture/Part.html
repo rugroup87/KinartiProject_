@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <script>
+
+        // זאת הגדרה של המשתנה שיקח את הנתונים מה-URL
+        var urlParams = new URLSearchParams(window.location.search);
+
+        // זה מה שתופס את הערך של מה שיש ב-URL
+        // urlParams.get('ItemName')
+
+        //השורה הזאת מחליפה בחזרה את ה%20 לרווח שצריך להיות
+        console.log(urlParams.get('ItemName').replace("%20"," "))
+
+        // עובד אש אתה יכול להמשיך מפה :)
+
+    </script>
+</head>
+<body>
+    <h1>OkOKOKOK</h1>
+</body>
+</html>

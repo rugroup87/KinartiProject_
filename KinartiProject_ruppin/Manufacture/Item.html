@@ -276,7 +276,10 @@
                     title: "שם פרוייקט",
                     data: "ProjectName",
                     "className": "dt-center",
-                    "targets": "_all"
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
+                    }
                 }, {
                     title: "מ'ס פריט",
                     data: 'ItemNum',
@@ -286,7 +289,11 @@
                     title: "שם פריט",
                     data: 'ItemName',
                     "className": "dt-center",
-                    "targets": "_all"
+                    "targets": "_all",
+                        render: function (data, type, row, meta) {
+                            //str.replace
+                            return '<a href=Part.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ","%20") + ">" + data + '</a>'
+                    }
                 }, 
                 //   {
                 //    title: "מ'ס קבוצות",
@@ -314,12 +321,18 @@
                     title: "מ'ס פריט",
                     data: 'ItemNum',
                     "className": "dt-center",
-                    "targets": "_all"
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return '<a href=Part.html?ProjectNum=' + urlParams.get('ProjectNum') + "&ProjectName=" + urlParams.get('ProjectName') + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ", "%20") + ">" + data + '</a>'
+                    }
                 }, {
                     title: "שם פריט",
                     data: 'ItemName',
                     "className": "dt-center",
-                    "targets": "_all"
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return '<a href=Part.html?ProjectNum=' + urlParams.get('ProjectNum') + "&ProjectName=" + urlParams.get('ProjectName') + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ", "%20") + ">" + data + '</a>'
+                    }
                 },
                 //    {
                 //    title: "מ'ס קבוצות",
