@@ -211,6 +211,7 @@
     <Content Include="Manufacture\Item.html" />
     <Content Include="Manufacture\Part.html" />
     <Content Include="Manufacture\Project.html" />
+    <Content Include="Manufacture\Team.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
