@@ -292,10 +292,10 @@
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
-            ajaxCall("GET", "../api/project", "", getSuccessProject, errorProject);
         });
 
         function getSuccessStatus(statusArr) {
+            ajaxCall("GET", "../api/project", "", getSuccessProject, errorProject);
             StatusArr = statusArr;
         }
 
@@ -501,7 +501,7 @@
         $(document).on("change", "#example select", function () {
             var oData = {
                 //תפסיסה של סטטוס הפרוייקט החדש ששונה אליו
-                projectStatus: $(this).val(),
+                newStatus: $(this).val(),
                 //תפסיסה של השורה בה הסטטוס השתנה את התא הספציפי של מספר הפקוייקט
                 projNumStatus: myTable.row($(this).closest('tr')).data().ProjectNum
             }
