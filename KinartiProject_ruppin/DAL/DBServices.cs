@@ -259,7 +259,8 @@ using KinartiProject_ruppin.Models;
 
     }
 
-    public List<Part> GetAllPart()
+    //מחזיר את כל החלקים בפריט מסויים שלא משתייכים לקבוצה
+    public Part[] GetPartFromItem(float projNumStatus, string itemNumStatus)
     {
         SqlConnection con;
         List<Part> lp = new List<Part>();
@@ -279,7 +280,7 @@ using KinartiProject_ruppin.Models;
 
         try
         {
-            String selectSTR = "SELECT * FROM Part ";
+            String selectSTR = "SELECT * FROM Part where projectNum=" + projNumStatus + " and itemNum='" + itemNumStatus + "' and groupName is NULL";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             //int PID = Convert.ToInt32(cmd.ExecuteScalar());
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -320,7 +321,7 @@ using KinartiProject_ruppin.Models;
 
                 lp.Add(p);
             }
-            return lp;
+            return lp.ToArray();
         }
         catch (Exception ex)
         {
@@ -329,7 +330,6 @@ using KinartiProject_ruppin.Models;
         }
 
     }
-
 
     public string UserValidation(string department, string password)
     {
@@ -571,4 +571,78 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
 
         return command;
     }
+
+    //public List<Part> GetAllPart()
+    //{
+    //    SqlConnection con;
+    //    List<Part> lp = new List<Part>();
+
+    //    try
+    //    {
+
+    //        con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+    //    }
+
+    //    catch (Exception ex)
+    //    {
+    //        // write to log
+    //        throw (ex);
+
+    //    }
+
+    //    try
+    //    {
+    //        String selectSTR = "SELECT * FROM Part ";
+    //        SqlCommand cmd = new SqlCommand(selectSTR, con);
+    //        //int PID = Convert.ToInt32(cmd.ExecuteScalar());
+    //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+    //        while (dr.Read())
+    //        {// Read till the end of the data into a row
+    //         // read first field from the row into the list collection
+
+    //            Part p = new Part();
+    //            p.PartBarCode = Convert.ToString(dr["barcode"]);
+    //            p.PartNum = Convert.ToString(dr["partNum"]);
+    //            p.PartName = Convert.ToString(dr["partName"]);
+    //            p.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+    //            p.ItemNum = Convert.ToString(dr["itemNum"]);
+    //            p.GroupName = Convert.ToString(dr["groupName"]);
+    //            p.PartKantim = Convert.ToString(dr["partKantim"]);
+    //            p.PartFirstMachine = Convert.ToString(dr["PartFirstMachine"]);
+    //            p.PartSecondMachine = Convert.ToString(dr["PartSecondMachine"]);
+    //            p.PartSetNumber = Convert.ToInt32(dr["setNum"]);
+    //            p.PartStatus = Convert.ToString(dr["partStatus"]);
+    //            p.PartQuantity = Convert.ToInt32(dr["PartQuantity"]);
+    //            p.PartMaterial = Convert.ToString(dr["PartMaterial"]);
+    //            p.PartColor = Convert.ToString(dr["PartColor"]);
+    //            p.PartLength = Convert.ToInt32(dr["PartLength"]);
+    //            p.PartWidth = Convert.ToInt32(dr["PartWidth"]);
+    //            p.PartThickness = Convert.ToInt32(dr["PartThickness"]);
+    //            p.AdditionToLength = Convert.ToInt32(dr["AdditionToLength"]);
+    //            p.AdditionToWidth = Convert.ToInt32(dr["AdditionToWidth"]);
+    //            p.AdditionToThickness = Convert.ToInt32(dr["AdditionToThickness"]);
+    //            p.PartCropType = Convert.ToString(dr["PartCropType"]);
+    //            p.PartCategory = Convert.ToString(dr["PartCategory"]);
+    //            p.PartComment = Convert.ToString(dr["PartComment"]);
+
+    //            //if (!DBNull.Value.Equals(dr["comment"]))
+    //            //{
+    //            //    p.Comment = Convert.ToString(dr["comment"]);
+    //            //}
+
+    //            lp.Add(p);
+    //        }
+    //        return lp;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // write to log
+    //        throw (ex);
+    //    }
+
+    //}
+
+    //מביא את כל החלקים שאין להם קבוצה עדיין בפריט מסויים
+
 }

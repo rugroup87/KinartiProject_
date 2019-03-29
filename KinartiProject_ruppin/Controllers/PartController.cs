@@ -10,13 +10,23 @@ namespace KinartiProject_ruppin.Controllers
 {
     public class PartController : ApiController
     {
+        //[HttpGet]
+        //[Route("api/part")]
+        //public IEnumerable<Part> Get()
+        //{
+        //    Part p = new Part();
+        //    List<Part> partList = new List<Part>();
+        //    partList = p.GetAllPart();
+        //    return partList;
+        //}
+
         [HttpGet]
-        [Route("api/part")]
-        public IEnumerable<Part> Get()
+        [Route("api/GetPartFromItem")]
+        public IEnumerable<Part> Get(float projectNum, string itemNum)
         {
             Part p = new Part();
-            List<Part> partList = new List<Part>();
-            partList = p.GetAllPart();
+            Part[] partList;
+            partList = p.GetPartFromItem(projectNum, itemNum);
             return partList;
         }
 

@@ -40,7 +40,7 @@ namespace KinartiProject_ruppin.Models
 
         public Item[] GetProjectItems(float projNum)
         {
-            DBServices dbs = new DBServices();
+               DBServices dbs = new DBServices();
             //List<Item> Pi = new List<Item>();
             //Pi = dbs.GetProjectItems(projNum);
             return dbs.GetProjectItems(projNum);

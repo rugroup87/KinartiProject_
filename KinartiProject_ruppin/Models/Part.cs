@@ -68,26 +68,36 @@ namespace KinartiProject_ruppin.Models
             PartComment = _partComment;
         }
 
+        public Part(float _projectNum, string _itemNum)
+        {
+            ProjectNum = _projectNum;
+            ItemNum = _itemNum;
+        }
+
         //בנאי ריק
         public Part()
         {
 
         }
 
-
-
-        public List<Part> GetAllPart()
-        {
-            DBServices dbs = new DBServices();
-            List<Part> lp = new List<Part>();
-            lp = dbs.GetAllPart();
-            return lp;
-        }
+        //public List<Part> GetAllPart()
+        //{
+        //    DBServices dbs = new DBServices();
+        //    List<Part> lp = new List<Part>();
+        //    lp = dbs.GetAllPart();
+        //    return lp;
+        //}
 
         public void StatusChange(Objectdata obj)
         {
             DBServices dbs = new DBServices();
             dbs.StatusChange(obj.newStatus, obj.projNumStatus, obj.itemNumStatus, obj.partNumStatus);
+        }
+
+        public Part[] GetPartFromItem(float projNumStatus, string itemNumStatus)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.GetPartFromItem(projNumStatus, itemNumStatus);
         }
 
     }

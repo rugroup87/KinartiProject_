@@ -284,14 +284,17 @@
     <script src="../Scripts/ajaxCalls.js"></script>
 
     <script>
-        // זאת הגדרה של המשתנה שיקח את הנתונים מה-URL
-        //var urlParams = new URLSearchParams(window.location.search);
+         //זאת הגדרה של המשתנה שיקח את הנתונים מה-URL
+        var urlParams = new URLSearchParams(window.location.search);
 
-        //// זה מה שתופס את הערך של מה שיש ב-URL
-        //// urlParams.get('ItemName')
+         //זה מה שתופס את הערך של מה שיש ב-URL
+         //urlParams.get('ItemName')
 
         ////השורה הזאת מחליפה בחזרה את ה%20 לרווח שצריך להיות
         //console.log(urlParams.get('ItemName').replace("%20", " "))
+
+
+        //ProjectNum = 111.1 & ProjectName=אלכס & ItemNum=N1 & ItemName=חדר % 20ארונות
 
         $(document).ready(function () {
             StatusArr = [];
@@ -304,7 +307,15 @@
 
         function getSuccessStatus(statusArr) {
             StatusArr = statusArr;
-            ajaxCall("GET", "../api/part", "", getSuccessPart, errorPart);
+            uri = "../api/GetPartFromItem?projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum')
+            //Part = {
+            //    ProjectNum: urlParams.get('ProjectNum'),
+            //    //ProjectName: urlParams.get('ProjectName'),
+            //    ItemNum: urlParams.get('ItemNum')
+            //    //ItemName: urlParams.get('ItemName')
+            //}
+            //ajaxCall("GET", uri, "", successGetProjectItems, errorGetProjectItems);
+            ajaxCall("GET", uri, "", getSuccessPart, errorPart);
         }
 
         function errorStatus(err) {
@@ -325,22 +336,43 @@
                 //width: '15%',
                 "className": "dt-center",
                 "targets": "_all"
-            }, {
+                }, {
+                    title: "מס' חלק",
+                    data: 'PartNum',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
                 title: "שם חלק",
                 data: 'PartName',
                 //width: '15%',
                 //defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all"
-            }, {
-                title: "מס' חלק",
-                data: 'PartNum',
-                //width: '10%',
-                //defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all"
-            }, {
-                title: "סטטוס חלק",
+                }, {
+                    title: "קבוצה",
+                    data: 'GroupName',
+                    //width: '15%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "ברקוד",
+                    data: 'PartBarCode',
+                    //width: '15%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "סט",
+                    data: 'PartSetNumber',
+                    //width: '15%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                },  {
+                title: "סטטוס",
                 data: 'PartStatus',
                 //width: '15%',
                 //defaultContent: "",
@@ -361,7 +393,7 @@
                         return data;
                     }
                     else {
-                        if (type === 'display' && data.length > 20) {
+                        if (type === 'display' && data.length > 30) {
                             return '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>'
                         }
                         else {
@@ -370,8 +402,8 @@
                     }
                 }
             }, {
-                title: "קבוצה",
-                data: 'GroupName',
+                title: "יח'",
+                data: 'PartQuantity',
                 //width: '10%',
                 //defaultContent: "",
                 "className": "dt-center",
@@ -589,7 +621,7 @@
         </div>
     </header>
     <br />
-    <div class="container">
+    <div class="container" id="containerID">
         <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
     </div>
 </body>

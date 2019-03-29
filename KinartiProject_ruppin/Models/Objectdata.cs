@@ -11,6 +11,8 @@ namespace KinartiProject_ruppin.Models
         public float projNumStatus { get; set; }
         public string itemNumStatus { get; set; }
         public string partNumStatus { get; set; }
+        //public string projectName { get; set; }
+        //public string itemName { get; set; }
 
         public Objectdata()
         {
