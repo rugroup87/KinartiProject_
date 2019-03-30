@@ -94,9 +94,9 @@ namespace KinartiProject_ruppin.Models
                         case "תוספת_לעובי":
                             part.AdditionToThickness = Convert.ToInt32(temp1);
                             break;
-                        case "תז_של_חלק":
-                            part.PartID = temp1;
-                            break;
+                        //case "תז_של_חלק":
+                        //    part.PartID = temp1;
+                        //    break;
                         case "בר_קוד_תז":
                             part.PartBarCode = temp1;
                             break;

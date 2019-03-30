@@ -140,7 +140,7 @@ namespace KinartiProject_ruppin.Models
         public void StatusChange(Objectdata obj)
         {
             DBServices dbs = new DBServices();
-            dbs.StatusChange(obj.projectStatus, obj.projNumStatus);
+            dbs.StatusChange(obj.newStatus, obj.projNumStatus);
         }
 
         public int UpdateProject()

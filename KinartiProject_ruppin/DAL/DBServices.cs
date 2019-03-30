@@ -43,9 +43,7 @@ using KinartiProject_ruppin.Models;
             return cmd;
         }
 
-        //---------------------------------------------------------------------------------
-        // Create Project Table
-        //---------------------------------------------------------------------------------
+     //מחזיר את כל הסטטוסים ששייכים לטבלה שנשלחה כפרמטר
     public List<string> GetAllStatus(string relateTo)
     {
         SqlConnection con;
@@ -83,6 +81,9 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    //---------------------------------------------------------------------------------
+    // Create Project Table
+    //---------------------------------------------------------------------------------
     public List<Project> GetAllProject()
         {
             SqlConnection con;
@@ -258,6 +259,78 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    //מחזיר את כל החלקים בפריט מסויים שלא משתייכים לקבוצה
+    public Part[] GetPartFromItem(float projNumStatus, string itemNumStatus)
+    {
+        SqlConnection con;
+        List<Part> lp = new List<Part>();
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Part where projectNum=" + projNumStatus + " and itemNum='" + itemNumStatus + "' and groupName is NULL";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            //int PID = Convert.ToInt32(cmd.ExecuteScalar());
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+
+                Part p = new Part();
+                p.PartBarCode = Convert.ToString(dr["barcode"]);
+                p.PartNum = Convert.ToString(dr["partNum"]);
+                p.PartName = Convert.ToString(dr["partName"]);
+                p.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                p.ItemNum = Convert.ToString(dr["itemNum"]);
+                p.GroupName = Convert.ToString(dr["groupName"]);
+                p.PartKantim = Convert.ToString(dr["partKantim"]);
+                p.PartFirstMachine = Convert.ToString(dr["PartFirstMachine"]);
+                p.PartSecondMachine = Convert.ToString(dr["PartSecondMachine"]);
+                p.PartSetNumber = Convert.ToInt32(dr["setNum"]);
+                p.PartStatus = Convert.ToString(dr["partStatus"]);
+                p.PartQuantity = Convert.ToInt32(dr["PartQuantity"]);
+                p.PartMaterial = Convert.ToString(dr["PartMaterial"]);
+                p.PartColor = Convert.ToString(dr["PartColor"]);
+                p.PartLength = Convert.ToInt32(dr["PartLength"]);
+                p.PartWidth = Convert.ToInt32(dr["PartWidth"]);
+                p.PartThickness = Convert.ToInt32(dr["PartThickness"]);
+                p.AdditionToLength = Convert.ToInt32(dr["AdditionToLength"]);
+                p.AdditionToWidth = Convert.ToInt32(dr["AdditionToWidth"]);
+                p.AdditionToThickness = Convert.ToInt32(dr["AdditionToThickness"]);
+                p.PartCropType = Convert.ToString(dr["PartCropType"]);
+                p.PartCategory = Convert.ToString(dr["PartCategory"]);
+                p.PartComment = Convert.ToString(dr["PartComment"]);
+
+                //if (!DBNull.Value.Equals(dr["comment"]))
+                //{
+                //    p.Comment = Convert.ToString(dr["comment"]);
+                //}
+
+                lp.Add(p);
+            }
+            return lp.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+    }
+
     public Part[] GetGroupParts(string GroupName)
     {
 
@@ -348,6 +421,7 @@ using KinartiProject_ruppin.Models;
         }
     }
 
+    //שינוי סטטוס בפרוייקט
     public void StatusChange(string projectStatus, float projectNum)
     {
         SqlConnection con = connect("KinartiConnectionString");
@@ -368,6 +442,29 @@ using KinartiProject_ruppin.Models;
         da.Update(ds, "Project");
         con.Close();
 
+    }
+
+    //שינוי סטטוס בחלק
+    public void StatusChange(string partStatus, float projNumStatus, string itemNumStatus, string partNumStatus)
+    {
+        SqlConnection con = connect("KinartiConnectionString");
+
+        // create the select that will be used by the adapter to select data from the DB
+        String selectStr = String.Format("SELECT * FROM Part WHERE projectNum= {0} and itemNum= '{1}' and partNum='{2}'", projNumStatus, itemNumStatus, partNumStatus); 
+
+        SqlDataAdapter da = new SqlDataAdapter(selectStr, con); // create the data adapter
+
+        SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(da);
+
+        // create a DataSet and give it a name (not mandatory) as defualt it will be the same name as the DB
+        DataSet ds = new DataSet();
+
+        // Fill the datatable (in the dataset), using the Select command
+        da.Fill(ds, "Part");
+
+        ds.Tables["Part"].Rows[0]["partStatus"] = partStatus;
+        da.Update(ds, "Part");
+        con.Close();
     }
 
     public string BuildUpdateCommand(Project project)

@@ -17,11 +17,6 @@ namespace KinartiProject_ruppin.Controllers
         {
             Status s = new Status();
             return s.StatusArr(relateTo);
-            
-            //Status s = new Status();
-            //string[] arrStatus = new string[];
-            //arrStatus = s.StatusArr(relateTo);
-            //return arrStatus;
         }
     }
 }
