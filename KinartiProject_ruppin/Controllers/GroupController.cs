@@ -19,5 +19,10 @@ namespace KinartiProject_ruppin.Controllers
             Plist = G.GetGroupParts(GroupName);
             return Plist;
         }
+
+        public int Post([FromBody]Group group)
+        {
+            return group.InsertNewGroup();
+        }
     }
 }

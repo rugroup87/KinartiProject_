@@ -81,9 +81,7 @@ using KinartiProject_ruppin.Models;
 
     }
 
-    //---------------------------------------------------------------------------------
     // Create Project Table
-    //---------------------------------------------------------------------------------
     public List<Project> GetAllProject()
         {
             SqlConnection con;
@@ -380,7 +378,6 @@ using KinartiProject_ruppin.Models;
 
     }
 
-
     public string UserValidation(string department, string password)
     {
         string returnedUser = "NoUser";
@@ -559,7 +556,6 @@ using KinartiProject_ruppin.Models;
                 con.Close();
             }
         }
-
     }
 
     public string BuildNewDataInsertCommand(Project NewData)
@@ -621,4 +617,87 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
 
         return command;
     }
+
+    public int InsertNewGroup(Group group)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildNewGroupCommand(group);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (SqlException ex)
+        {
+            if (ex.Number == 2627)
+            {
+                return -999;
+            }
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private String BuildNewGroupCommand(Group group)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString());
+        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime) ";
+        String prefix2 = " Update Part SET groupName='" + group.GroupName + "' WHERE projectNum ='" + group.ProjectNum + "' AND itemNum ='" + group.ItemNum + "' AND partNum IN(";
+        for (int i = 0; i < group.ArrPart.Length; i++)
+        {
+            sb2.AppendFormat("'" + group.ArrPart[i] + "'");
+            if (i== group.ArrPart.Length-1)
+            {
+                sb2.AppendFormat(")");
+            }
+            else
+            {
+                sb2.AppendFormat(", ");
+            }
+        }
+        //Update Part SET groupName = 'K' WHERE projectNum = '111.1' AND itemNum = 'N2' AND partNum IN('bbb222', 'ccc222')
+        command = prefix + sb.ToString() + prefix2 + sb2.ToString();
+        return command;
+    }
+
+
 }
