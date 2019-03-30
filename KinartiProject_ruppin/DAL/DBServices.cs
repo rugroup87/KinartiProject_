@@ -6,8 +6,9 @@ using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Data;
 using System.Text;
-using KinartiProject_ruppin.Models;
 
+namespace KinartiProject_ruppin.Models
+{
     public class DBServices
     {
         public SqlDataAdapter da;
@@ -46,47 +47,139 @@ using KinartiProject_ruppin.Models;
         //---------------------------------------------------------------------------------
         // Create Project Table
         //---------------------------------------------------------------------------------
-    public List<string> GetAllStatus(string relateTo)
-    {
-        SqlConnection con;
-        //Status s = new Status();
-        List<string> ls = new List<string>();
-        try
+        public List<string> GetAllStatus(string relateTo)
         {
+            SqlConnection con;
+            //Status s = new Status();
+            List<string> ls = new List<string>();
+            try
+            {
 
-            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
-        }
-
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-        }
-        try
-        {
-            String selectSTR = "SELECT * FROM STATUS WHERE relateTO like '" + relateTo + "'";
-            SqlCommand cmd = new SqlCommand(selectSTR, con);
-            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            while (dr.Read())
-            {// Read till the end of the data into a row
-             // read first field from the row into the list collection
-                ls.Add(Convert.ToString(dr["statusName"]));
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
             }
-            return ls;
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM STATUS WHERE relateTO like '" + relateTo + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+                    ls.Add(Convert.ToString(dr["statusName"]));
+                }
+                return ls;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
         }
-        catch (Exception ex)
+        public List<Route> Read()
         {
-            // write to log
-            throw (ex);
+            SqlConnection con;
+            List<Route> rl = new List<Route>();
+            try
+            {
+
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM Route ";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+                    Route r = new Route();
+                    r.RouteName = Convert.ToString(dr["routeName"]);  
+                    rl.Add(r);
+                }
+                return rl;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
         }
-
-    }
-
-    public List<Project> GetAllProject()
+        public List<Project> GetAllProject()
         {
             SqlConnection con;
             List<Project> lp = new List<Project>();
+            try
+            {
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM Project ";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+                    Project p = new Project();
+                    p.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                    p.ProjectName = Convert.ToString(dr["projectName"]);
+                    if (!DBNull.Value.Equals(dr["prodStartDate"]))
+                    {
+                        p.ProdStartDate = Convert.ToString(dr["prodStartDate"]);
+                    }
+                    if (!DBNull.Value.Equals(dr["supplyDate"]))
+                    {
+                        p.SupplyDate = Convert.ToString(dr["supplyDate"]);
+                    }
+                    if (!DBNull.Value.Equals(dr["projectStatus"]))
+                    {
+                        p.ProjectStatus = Convert.ToString(dr["projectStatus"]);
+                    }
+                    if (!DBNull.Value.Equals(dr["comment"]))
+                    {
+                        p.Comment = Convert.ToString(dr["comment"]);
+                    }
+                    if (!DBNull.Value.Equals(dr["prodEntranceDate"]))
+                    {
+                        p.ProdEntranceDate = Convert.ToString(dr["prodEntranceDate"]);
+                    }
+
+                    lp.Add(p);
+                }
+                return lp;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+        }
+        public Item[] GetProjectItems(float projNum)
+        {
+
+            SqlConnection con;
+            List<Item> Pi = new List<Item>();
 
             try
             {
@@ -103,7 +196,7 @@ using KinartiProject_ruppin.Models;
 
             try
             {
-                String selectSTR = "SELECT * FROM Project ";
+                String selectSTR = "SELECT * FROM Item where projectNum = " + projNum;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 //int PID = Convert.ToInt32(cmd.ExecuteScalar());
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -111,34 +204,260 @@ using KinartiProject_ruppin.Models;
                 while (dr.Read())
                 {// Read till the end of the data into a row
                  // read first field from the row into the list collection
-                    
-                    Project p = new Project();
-                    p.ProjectNum = Convert.ToSingle(dr["projectNum"]);
-                    p.ProjectName = Convert.ToString(dr["projectName"]);
-                    if (!DBNull.Value.Equals(dr["prodStartDate"]))
-                {
-                    p.ProdStartDate = Convert.ToString(dr["prodStartDate"]);
+
+                    Item I = new Item();
+                    I.ItemNum = Convert.ToString(dr["itemNum"]);
+                    I.ItemName = Convert.ToString(dr["itemName"]);
+                    I.ItemStatus = Convert.ToString(dr["itemStatus"]);
+                    I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
+                    I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                    //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
+                    //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
+                    //I.Comment = Convert.ToString(dr["comment "]);
+                    //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
+                    Pi.Add(I);
                 }
-                if (!DBNull.Value.Equals(dr["supplyDate"]))
-                {
-                    p.SupplyDate = Convert.ToString(dr["supplyDate"]);
+                return Pi.ToArray();
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+
+        }
+
+        public Item[] GetAllProjectItems()
+        {
+
+            SqlConnection con;
+            List<Item> Pi = new List<Item>();
+            try
+            {
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            try
+            {
+                String selectSTR = "SELECT i.projectNum, i.itemNum, i.itemName, i.groupCount, i.completedPercent, i.itemStatus, p.projectName FROM item i INNER JOIN dbo.Project p ON i.projectNum = p.projectNum";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                //int PID = Convert.ToInt32(cmd.ExecuteScalar());
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+
+                    Item I = new Item();
+                    I.ItemNum = Convert.ToString(dr["itemNum"]);
+                    I.ItemName = Convert.ToString(dr["itemName"]);
+                    I.ItemStatus = Convert.ToString(dr["itemStatus"]);
+                    I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
+                    I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                    I.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                    I.ProjectName = Convert.ToString(dr["projectName"]);
+                    //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
+                    //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
+                    //I.Comment = Convert.ToString(dr["comment "]);
+                    //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
+                    Pi.Add(I);
                 }
-                if (!DBNull.Value.Equals(dr["projectStatus"]))
-                {
-                    p.ProjectStatus = Convert.ToString(dr["projectStatus"]);
+                return Pi.ToArray();
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+
+        }
+
+        public string UserValidation(string department, string password)
+        {
+            string returnedUser = "NoUser";
+            SqlConnection con;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM Person where department='" + department + "' and personPassword='" + password + "'";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+                    returnedUser = Convert.ToString(dr["department"]);
                 }
-                if (!DBNull.Value.Equals(dr["comment"]))
-                {
-                    p.Comment = Convert.ToString(dr["comment"]);
+                return returnedUser;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+        }
+
+        public void StatusChange(string projectStatus, float projectNum)
+        {
+            SqlConnection con = connect("KinartiConnectionString");
+
+            String selectStr = String.Format("SELECT * FROM Project WHERE projectNum= {0}", projectNum); // create the select that will be used by the adapter to select data from the DB
+
+            SqlDataAdapter da = new SqlDataAdapter(selectStr, con); // create the data adapter
+
+            SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(da);
+
+            DataSet ds = new DataSet(); // create a DataSet and give it a name (not mandatory) as defualt it will be the same name as the DB
+
+            da.Fill(ds, "Project");       // Fill the datatable (in the dataset), using the Select command
+                                          //dt = ds.Tables[0]; // point to the cars table , which is the only table in this case
+
+            //dt.Rows[PersonId]["active"] = activity;
+            ds.Tables["Project"].Rows[0]["projectStatus"] = projectStatus;
+            da.Update(ds, "Project");
+            con.Close();
+
+        }
+
+        public List<Machine> ReadMachine(string conString, string tableName)
+        {
+
+            SqlConnection con = null;
+            List<Machine> ml = new List<Machine>();
+            try
+            {
+                con = connect(conString); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "SELECT * FROM " + tableName;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Machine m = new Machine();
+                    //p.Id = Convert.ToInt16(dr["Id"]);
+                    m.MachineName = (string)dr["machineName"];
+                    //p.Number = (string)dr["number"];
+                    //p.Pgroup = (string)dr["group"];
+
+                    ml.Add(m);
                 }
-                if (!DBNull.Value.Equals(dr["prodEntranceDate"]))
+                return ml;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
                 {
-                    p.ProdEntranceDate = Convert.ToString(dr["prodEntranceDate"]);
+                    con.Close();
                 }
 
-                lp.Add(p);
+            }
+
+        }
+
+        public int InsertStation(Route route)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+         
+          
+                String cStr = BuildInsertStationCommand(route);      // helper method to build the insert string
+                cmd = CreateCommand(cStr, con);          // create the command
+            
+                try
+                {
+                    int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                    return numEffected;
                 }
-                return lp;
+
+
+                catch (Exception ex)
+                {
+
+                    return 0;
+                    // write to log
+                    throw (ex);
+                }
+
+                finally
+                {
+                    if (con != null)
+                    {
+                        // close the db connection
+                        con.Close();
+                    }
+                }                         
+        }
+
+        private String BuildInsertStationCommand(Route r)
+        {
+            String command;            
+            StringBuilder sbRouteName = new StringBuilder();
+            StringBuilder sbStationArr = new StringBuilder();
+            StringBuilder sbStationArrInsert = new StringBuilder();
+            // use a string builder to create the dynamic string
+            sbRouteName.AppendFormat("INSERT INTO Route (routeName) values('{0}')", r.RouteName );  
+            sbStationArr.AppendFormat(" INSERT INTO StationInRoute ([routeName],[machineNum],[position])");
+            command = sbRouteName.ToString() + sbStationArr.ToString() + " values";
+            for (int i = 1; i <= r.StationArr.Length; i++)
+            {
+                sbStationArrInsert.AppendFormat(" ('{0}',{1},{2})", r.RouteName, r.StationArr[i - 1], i);
+                if (i< r.StationArr.Length)
+                {
+                    sbStationArrInsert.Append(",");
+                }
+            }
+            command += sbStationArrInsert.ToString();
+            return command;
+        }
+
+        public int UpdateRoute(Route route)
+        {
+
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create the connection
             }
             catch (Exception ex)
             {
@@ -146,181 +465,92 @@ using KinartiProject_ruppin.Models;
                 throw (ex);
             }
 
-        }
+            String cStr = BuildUpdateCommand(route);      // helper method to build the insert string
 
-    public Item[] GetProjectItems(float projNum)
-    {
+            cmd = CreateCommand(cStr, con);             // create the command
 
-        SqlConnection con;
-        List<Item> Pi = new List<Item>();
-
-        try
-        {
-
-            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
-        }
-
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-
-        }
-
-        try
-        {
-            String selectSTR = "SELECT * FROM Item where projectNum = " + projNum;
-            SqlCommand cmd = new SqlCommand(selectSTR, con);
-            //int PID = Convert.ToInt32(cmd.ExecuteScalar());
-            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            while (dr.Read())
-            {// Read till the end of the data into a row
-             // read first field from the row into the list collection
-
-                Item I = new Item();
-                I.ItemNum = Convert.ToString(dr["itemNum"]);
-                I.ItemName = Convert.ToString(dr["itemName"]);
-                I.ItemStatus = Convert.ToString(dr["itemStatus"]);
-                I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
-                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
-                //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
-                //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
-                //I.Comment = Convert.ToString(dr["comment "]);
-                //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
-                Pi.Add(I);
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
             }
-            return Pi.ToArray();
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-
-        }
-
-    }
-
-    public Item[] GetAllProjectItems()
-    {
-
-        SqlConnection con;
-        List<Item> Pi = new List<Item>();
-
-        try
-        {
-
-            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
-        }
-
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-
-        }
-
-        try
-        {
-            String selectSTR = "SELECT i.projectNum, i.itemNum, i.itemName, i.groupCount, i.completedPercent, i.itemStatus, p.projectName FROM item i INNER JOIN dbo.Project p ON i.projectNum = p.projectNum";
-            SqlCommand cmd = new SqlCommand(selectSTR, con);
-            //int PID = Convert.ToInt32(cmd.ExecuteScalar());
-            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            while (dr.Read())
-            {// Read till the end of the data into a row
-             // read first field from the row into the list collection
-
-                Item I = new Item();
-                I.ItemNum = Convert.ToString(dr["itemNum"]);
-                I.ItemName = Convert.ToString(dr["itemName"]);
-                I.ItemStatus = Convert.ToString(dr["itemStatus"]);
-                I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
-                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
-                I.ProjectNum = Convert.ToSingle(dr["projectNum"]);
-                I.ProjectName = Convert.ToString(dr["projectName"]);
-                //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
-                //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
-                //I.Comment = Convert.ToString(dr["comment "]);
-                //I.ProdEntranceDate = Convert.ToDateTime(dr["prodEntranceDate"]);
-                Pi.Add(I);
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
             }
-            return Pi.ToArray();
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
 
-        }
-
-    }
-
-    public string UserValidation(string department, string password)
-    {
-        string returnedUser = "NoUser";
-        SqlConnection con;
-
-        try
-        {
-            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
-        }
-
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-
-        }
-
-        try
-        {
-            String selectSTR = "SELECT * FROM Person where department='" + department + "' and personPassword='" + password + "'";
-
-            SqlCommand cmd = new SqlCommand(selectSTR, con);
-
-            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            while (dr.Read())
-            {// Read till the end of the data into a row
-                // read first field from the row into the list collection
-                returnedUser = Convert.ToString(dr["department"]);
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
             }
-            return returnedUser;
+
         }
-        catch (Exception ex)
+        //------------------------------------------------------------------------------------------------
+        public string BuildUpdateCommand(Route route)
         {
-            // write to log
-            throw (ex);
+            String command;
+            StringBuilder sbMachineNum = new StringBuilder();
+            //StringBuilder sbStationArr = new StringBuilder();
+            //StringBuilder sbStationArrInsert = new StringBuilder();
+            // use a string builder to create the dynamic string
+            for (int i = 0; i < route.StationArr.Length; i++)
+            {
+                var pos = i + 1;
+                sbMachineNum.AppendFormat(" update StationInRoute SET machineNum={0} where routeName='{1}' and position={2}", route.StationArr[i],route.RouteName, pos);
+            
+            }
+           command = sbMachineNum.ToString();
+            return command;
+        }
+
+        public List<Route> ReadRouteInfo(string conString, string routeName)
+        {
+            List<Route> lri = new List<Route>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect(conString); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Route ri = new Route();
+                    ri.RouteName = Convert.ToString(dr["routeName"]);
+                    ri.MachineNum = Convert.ToInt32(dr["machineNum"]);
+                    ri.MachineName = Convert.ToString(dr["machineName"]);
+                    ri.Position = Convert.ToInt32(dr["position"]);
+                    //ri.RouteNum = Convert.ToInt16(dr["routeNum"]);
+                    lri.Add(ri);
+                }
+                return lri;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
 
         }
-    }
 
-    public void StatusChange(string projectStatus, float projectNum)
-    {
-        SqlConnection con = connect("KinartiConnectionString");
 
-        String selectStr = String.Format("SELECT * FROM Project WHERE projectNum= {0}", projectNum); // create the select that will be used by the adapter to select data from the DB
-
-        SqlDataAdapter da = new SqlDataAdapter(selectStr, con); // create the data adapter
-
-        SqlCommandBuilder cmdBuilder = new SqlCommandBuilder(da);
-
-        DataSet ds = new DataSet(); // create a DataSet and give it a name (not mandatory) as defualt it will be the same name as the DB
-
-        da.Fill(ds, "Project");       // Fill the datatable (in the dataset), using the Select command
-        //dt = ds.Tables[0]; // point to the cars table , which is the only table in this case
-
-        //dt.Rows[PersonId]["active"] = activity;
-        ds.Tables["Project"].Rows[0]["projectStatus"] = projectStatus;
-        da.Update(ds, "Project");
-        con.Close();
 
     }
-
-
-
-
-
-
 }

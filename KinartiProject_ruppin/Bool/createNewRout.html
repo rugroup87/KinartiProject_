@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="utf-8" />
+
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
+    <link href="../CSS/StyleSheetmaslulim.css" rel="stylesheet" />
+
+    <style type="text/css">
+        body {
+            font-family: Arial;
+            color: white;
+        }
+
+        .title {
+            font-family: Arial;
+            background-color: black;
+            height: 20%;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 200px;
+            float: left;
+        }
+
+        .splitRight {
+            height: 100%;
+            width: 20%;
+            position: fixed;
+            z-index: 1;
+            top: 20%;
+            overflow-x: visible;
+            padding-top: 20%;
+            float: left;
+            right: 0;
+            background-color: black;
+        }
+
+        .splitLeft {
+            height: 100%;
+            width: 80%;
+            position: fixed;
+            z-index: 1;
+            top: 20%;
+            overflow-x: hidden;
+            /*padding-top: 20%;*/
+            background-color: black;
+            float: left;
+            left: 0;
+        }
+
+        .centeredTitle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .centered {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .centeredStation {
+            text-align: center;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            color: black;
+        }
+
+        #addStation {
+            margin-right: 20px;
+        }
+    </style>
+
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+
+    <script>
+        ctr = 1;
+        machineList = [];
+        machinId = 1;
+        RouteNum = 0;
+
+        $(document).ready(function () {
+            ajaxCall("GET", "../api/Machine", "", successGetMachine, errorGetMachine);
+
+            $("#addStation").click(addStation);
+            $("#Machine").submit(f1);
+        });
+
+        function successGetMachine(Machinedata) {
+            machineList = Machinedata;
+        }
+
+        function errorGetMachine() {
+            alert("errorGetMachine");
+        }
+
+        function addStation() {
+            str = "<div><label>תחנה" + ctr + "</label><select id=" + ctr + ">";
+            for (var i = 1; i <= machineList.length; i++) {
+                str += "<option value ='" + i + "'> " + machineList[i - 1].MachineName + "</option>"
+            }
+            str += "</select></div>";
+            $('#station').append(str);
+            ctr++;
+        }
+
+        function f1() {
+            AddRoute();
+            return false;
+        }
+
+        function AddRoute() {
+            sendStationArr = [];
+            for (var i = 1; i < ctr; i++) {
+                id = "#" + i + " option:selected";
+                MachineNum = $(id).val();
+                sendStationArr.push(MachineNum);
+            }
+
+            Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
+                RouteName: $("#routeName").val(),
+                StationArr: sendStationArr
+            }
+
+            ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+        }
+
+        function successInsertRouteName() {
+            alert("שם מסלול הוכנס לבסיס נתונים");
+            $('.splitLeft').empty();
+        }
+
+        function errorInsertRouteName() {
+            alert("שם מסלול לא הוכנס לבסיס נתונים");
+        }
+
+        function successInsertStaitionInRoute() {
+            alert("מערך הוזן בהצלחה לבסיס הנתונים");
+        }
+
+        function errorInsertStaitionInRoute() {
+            alert("מערך לא הוזן בבסיס הנתונים")
+        }
+
+    </script>
+
+    <title>Create New Route</title>
+</head>
+
+<body>
+
+    <form id="Machine">
+        <div class="title">
+            <div class="centeredTitle">
+                <h1>יצירת מסלול חדש</h1>
+            </div>
+        </div>
+
+        <div class="splitRight">
+            <div class="centered">
+                <p>1. הכנס את שם המסלול החדש</p>
+                <p>2. לחץ על הוסף תחנה</p>
+                <p>3. בחר את שם התחנה</p>
+                <p>4. לסיום לחץ צור מסלול</p>             
+            </div>
+        </div>
+
+        <div class="splitLeft">
+
+            <table>
+                <tr>
+                    <td><p>שם המסלול החדש:</p></td>
+                    <td><input type="text" id="routeName"><br></td>
+                </tr>
+            </table>
+            <div id="station">
+
+            </div>
+
+            <input type="submit" value="צור מסלול" />
+            <button id="addStation" type="button">הוסף תחנה</button>
+            <button id="addStation" type="button" onclick=window.location.replace("Route.html")>הצג מסלולים קיימים</button>
+        </div>
+    </form>
+</body>
+</html>
+

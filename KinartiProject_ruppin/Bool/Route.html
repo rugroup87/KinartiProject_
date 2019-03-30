@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <!--<meta charset="utf-8" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+
+    <style>
+        body {
+            font-family: Arial;
+            color: white;
+            text-align: center;
+        }
+
+        .title {
+            font-family: Arial;
+            background-color: black;
+            height: 20%;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 200px;
+            float: left;
+        }
+
+        .centeredTitle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .splitRight {
+            height: 100%;
+            width: 20%;
+            position: fixed;
+            z-index: 1;
+            top: 20%;
+            overflow-x: visible;
+            padding-top: 20%;
+            float: left;
+            right: 0;
+            background-color: black;
+        }
+
+        .splitLeft {
+            height: 100%;
+            width: 80%;
+            position: fixed;
+            top: 20%;
+            overflow-x: hidden;
+            /*padding-top: 20%;*/
+            background-color: black;
+            float: left;
+            left: 0;
+        }
+
+        .centered {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .centeredStation {
+            text-align: center;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+            font-size: inherit;
+            /*line-height: inherit;*/
+            color: black;
+        }
+
+        .content {
+            padding: 20px 30px;
+            position: center;
+            border-radius: 15px;
+        }
+
+        .button {
+            background-color: yellow;
+            border: none;
+            color: black;
+            /*padding: 15px 32px;*/
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            float: right;
+        }
+
+        #type {
+            background-color: yellow;
+            font-size: 20px;
+        }
+    </style>
+
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+
+    <script>
+        $(document).ready(function () {
+            ajaxCall("GET", "../api/Route", "", successGetRoute, errorGetRoute);
+            $("#RoutesForm").submit(f1);
+        });
+
+        function successGetRoute(Routesdata) {
+            str = "";
+            for (var i = 1; i <= Routesdata.length; i++) {
+                str += "<option value='" + i + "'>" + Routesdata[i - 1].RouteName + "</option>";
+            }
+            $('#type').append(str);
+        }
+
+        function errorGetRoute() {
+            alert("error1");
+        }
+
+        function f1() {
+            $('.splitLeft').empty();
+            RouteName = $("#type option:selected").text();
+            uri = "../api/Route?routeName=" + RouteName;
+            ajaxCall("GET", uri, "", SuccessGetRouteInfo, errorGetRouteInfo);
+            return false;
+        }
+
+        function SuccessGetRouteInfo(routedate) {
+            RouteList = routedate;
+            str1 = "<h1>מסלול " + RouteName + "</h1>";
+            for (var i = 1; i <= RouteList.length; i++) {
+                str1 += "<div class='content'><h2>תחנה " + i + "</h2><h1>" + RouteList[i - 1].MachineName + "</h1></div><br/>"
+            }
+            $('.splitLeft').append(str1);
+        }
+
+        function errorGetRouteInfo() {
+            alert("error2");
+        }
+
+    </script>
+
+    <title>Show Route</title>
+</head>
+
+<body>
+    <form id="RoutesForm">
+        <div class="title">
+            <div class="centeredTitle">
+                <h1>מסלולים</h1>
+            </div>
+        </div>
+        <div class="splitRight">
+            <div class="centered">
+                <h2>רשימת מסלולים</h2>
+                    <select id="type" required>
+                        <option value="0"> בחר מסלול מהרשימה</option>
+                    </select>
+                    <br /><br /><br />
+                <input type="submit" class="button" value="הצג מסלול" />
+                    <br />
+                <input type="button" class="button" onclick=window.location.replace("createNewRout.html") value="צור מסלול חדש" />
+                    <br />
+                    <input type="button" class="button" onclick=window.location.replace("Update_Route.html") value="עדכן מסלול קיים" />
+            </div>
+        </div>
+        <div class="splitLeft">
+         
+        </div>
+    </form>
+</body>
+</html>
