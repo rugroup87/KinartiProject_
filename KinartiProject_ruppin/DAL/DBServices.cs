@@ -783,7 +783,49 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
             }
     }
 
-    private String BuildInsertStationCommand(Route r)
+
+        public int InsertStation(Route route)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildInsertStationCommand(route);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        private String BuildInsertStationCommand(Route r)
         {
             String command;            
             StringBuilder sbRouteName = new StringBuilder();
@@ -804,5 +846,6 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
             command += sbStationArrInsert.ToString();
             return command;
         }
+
     }
 }

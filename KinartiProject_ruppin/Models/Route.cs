@@ -36,7 +36,7 @@ namespace KinartiProject_ruppin.Models
             rl = dbs.Read();
             return rl;      
         }
-     
+
         public int InsertStation()
         {
             DBServices dbs = new DBServices();
