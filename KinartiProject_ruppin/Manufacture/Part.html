@@ -26,7 +26,7 @@
 
         .container {
             padding: 0 20px;
-            max-width: 960px;
+            /*max-width: 960px;*/
             margin: 0 auto;
         }
 
@@ -258,6 +258,14 @@
             padding-right: 2%;
         }
 
+        #ProjName {
+            text-align: center;
+            color: #000000;
+            text-shadow: 0 0px 2px #000000;
+            font-size: 20px;
+            font-family: monospace;
+        }
+
         #containerID {
             margin: 0px;
             padding: 0px 30px 0px 0px;
@@ -298,8 +306,6 @@
 
         $(document).ready(function () {
             StatusArr = [];
-            //$.fn.dataTable.moment('D/M/YYYY');
-            //$.fn.dataTable.moment(' D/M/YYYY HH:mm');
             var statusRelateTo = "Part";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
@@ -308,13 +314,6 @@
         function getSuccessStatus(statusArr) {
             StatusArr = statusArr;
             uri = "../api/GetPartFromItem?projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum')
-            //Part = {
-            //    ProjectNum: urlParams.get('ProjectNum'),
-            //    //ProjectName: urlParams.get('ProjectName'),
-            //    ItemNum: urlParams.get('ItemNum')
-            //    //ItemName: urlParams.get('ItemName')
-            //}
-            //ajaxCall("GET", uri, "", successGetProjectItems, errorGetProjectItems);
             ajaxCall("GET", uri, "", getSuccessPart, errorPart);
         }
 
@@ -322,21 +321,23 @@
             swal("Error: " + err);
         }
 
-
         function getSuccessPart(partList) {
-            var columnDefs = [{
-                title: "מס' פרוייקט",
-                data: 'ProjectNum',
-                //width: '10%',
-                "className": "dt-center",
-                "targets": "_all"
-            }, {
-                title: "מס' פריט",
-                data: 'ItemNum',
-                //width: '15%',
-                "className": "dt-center",
-                "targets": "_all"
-                }, {
+            $("#ProjName").text("פרוייקט:   " + urlParams.get('ProjectName') + " - " + urlParams.get('ProjectNum') + "\xa0\xa0\xa0\xa0\xa0" + "פריט: " + urlParams.get('ItemName') + " - " + urlParams.get('ItemNum'));
+            var columnDefs = [
+            //    {
+            //    title: "מס' פרוייקט",
+            //    data: 'ProjectNum',
+            //    //width: '10%',
+            //    "className": "dt-center",
+            //    "targets": "_all"
+            //}, {
+            //    title: "מס' פריט",
+            //    data: 'ItemNum',
+            //    //width: '15%',
+            //    "className": "dt-center",
+            //    "targets": "_all"
+            //    },
+                {
                     title: "מס' חלק",
                     data: 'PartNum',
                     //width: '10%',
@@ -350,14 +351,16 @@
                 //defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all"
-                }, {
-                    title: "קבוצה",
-                    data: 'GroupName',
-                    //width: '15%',
-                    //defaultContent: "",
-                    "className": "dt-center",
-                    "targets": "_all"
-                }, {
+                },
+                //{
+                //    title: "קבוצה",
+                //    data: 'GroupName',
+                //    //width: '15%',
+                //    //defaultContent: "",
+                //    "className": "dt-center",
+                //    "targets": "_all"
+                //},
+                {
                     title: "ברקוד",
                     data: 'PartBarCode',
                     //width: '15%',
@@ -408,11 +411,103 @@
                 //defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all"
-            }
+            }, {
+                    title: "קאנט",
+                    data: 'PartKantim',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "מכונה 1",
+                    data: 'PartFirstMachine',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "מכונה 2",
+                    data: 'PartSecondMachine',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "חומר",
+                    data: 'PartMaterial',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "צבע",
+                    data: 'PartColor',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "סוג חיתוך",
+                    data: 'PartCropType',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "קטגוריה",
+                    data: 'PartCategory',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "אורך",
+                    data: 'PartLength',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "רוחב",
+                    data: 'PartWidth',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "עובי",
+                    data: 'PartThickness',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "אורך++",
+                    data: 'AdditionToLength',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "רוחב++",
+                    data: 'AdditionToWidth',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "עובי++",
+                    data: 'AdditionToThickness',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
+                }
             ];
 
             myTable = $('#example').DataTable({
                 "sPaginationType": "simple_numbers",
+                "scrollX": "true",
                 "language": {
                     "search": "חיפוש:",
                     "loadingRecords": "Loading...",
@@ -431,7 +526,7 @@
                 //scrollX: true,
                 dom: 'Bfrtip',        // Needs button container
                 select: 'single',
-                responsive: true,
+                //responsive: true,
                 altEditor: true,     // Enable altEditor
                 buttons: [
                     //    {
@@ -621,6 +716,9 @@
         </div>
     </header>
     <br />
+    <div id="ProjName">
+
+    </div>
     <div class="container" id="containerID">
         <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
     </div>
