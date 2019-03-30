@@ -23,7 +23,7 @@ namespace KinartiProject_ruppin.Models
         public List<Machine> Read()
         {
             DBServices dbs = new DBServices();
-            return dbs.ReadMachine("KinartiConnectionString", "Machine");
+            return dbs.ReadMachine("KinartiConnectionString");
         }
     }
 }

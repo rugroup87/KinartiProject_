@@ -44,8 +44,8 @@ namespace KinartiProject_ruppin.Models
             return cmd;
         }
 
-     //מחזיר את כל הסטטוסים ששייכים לטבלה שנשלחה כפרמטר
-    public List<string> GetAllStatus(string relateTo)
+        //מחזיר את כל הסטטוסים ששייכים לטבלה שנשלחה כפרמטר
+        public List<string> GetAllStatus(string relateTo)
     {
         SqlConnection con;
         //Status s = new Status();
@@ -80,6 +80,7 @@ namespace KinartiProject_ruppin.Models
                 throw (ex);
             }
         }
+
         public List<Route> Read()
         {
             SqlConnection con;
@@ -116,6 +117,7 @@ namespace KinartiProject_ruppin.Models
                 throw (ex);
             }
         }
+
         public List<Project> GetAllProject()
         {
             SqlConnection con;
@@ -175,6 +177,7 @@ namespace KinartiProject_ruppin.Models
             }
 
         }
+
         public Item[] GetProjectItems(float projNum)
         {
 
@@ -402,7 +405,7 @@ namespace KinartiProject_ruppin.Models
 
         }
 
-        public string UserValidation(string department, string password)
+    public string UserValidation(string department, string password)
         {
             string returnedUser = "NoUser";
             SqlConnection con;
@@ -579,28 +582,7 @@ namespace KinartiProject_ruppin.Models
                 con.Close();
             }
         }
-
-        private String BuildInsertStationCommand(Route r)
-        {
-            String command;            
-            StringBuilder sbRouteName = new StringBuilder();
-            StringBuilder sbStationArr = new StringBuilder();
-            StringBuilder sbStationArrInsert = new StringBuilder();
-            // use a string builder to create the dynamic string
-            sbRouteName.AppendFormat("INSERT INTO Route (routeName) values('{0}')", r.RouteName );  
-            sbStationArr.AppendFormat(" INSERT INTO StationInRoute ([routeName],[machineNum],[position])");
-            command = sbRouteName.ToString() + sbStationArr.ToString() + " values";
-            for (int i = 1; i <= r.StationArr.Length; i++)
-            {
-                sbStationArrInsert.AppendFormat(" ('{0}',{1},{2})", r.RouteName, r.StationArr[i - 1], i);
-                if (i< r.StationArr.Length)
-                {
-                    sbStationArrInsert.Append(",");
-                }
-            }
-            command += sbStationArrInsert.ToString();
-            return command;
-        }
+    }
 
     public string BuildNewDataInsertCommand(Project NewData)
     {
@@ -611,30 +593,16 @@ namespace KinartiProject_ruppin.Models
         StringBuilder sbItem = new StringBuilder();
         StringBuilder sbPartAtt = new StringBuilder();
         StringBuilder sbPartVal = new StringBuilder();
-        public int UpdateRoute(Route route)
-        {
-
+    
+            
         // use a string builder to create the dynamic string
         sbProj.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, '{1}', '{2}', '{3}')", NewData.ProjectNum, NewData.ProjectName, NewData.ProdStartDate, NewData.ProjectStatus );
         sbItem.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName, itemStatus) VALUES({0}, {1}, '{2}', '{3}')", NewData.ProjectNum, NewData.Item.ItemNum, NewData.Item.ItemName, NewData.Item.ItemStatus);
         sbPartAtt.AppendFormat(@"INSERT INTO Part (partNum, partName, partStatus, setNum, barcode, partKantim, PartFirstMachine,
 PartSecondMachine, PartQuantity, PartMaterial, PartColor, PartCropType, PartCategory, PartComment, PartLength,
 PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness, projectNum, itemNum)");
-            SqlConnection con;
-            SqlCommand cmd;
-
-            try
-            {
-                con = connect("KinartiConnectionString"); // create the connection
-            }
-            catch (Exception ex)
-            {
-                // write to log
-                throw (ex);
-            }
 
         command = sbProj.ToString() + sbItem.ToString() + sbPartAtt.ToString() + " VALUES";
-            String cStr = BuildUpdateCommand(route);      // helper method to build the insert string
 
         //פה צריכה להיות לולה שרצה ומכניסה את השורות של החלקים
         for (int i = 0; i < NewData.Item.ItemParts.Count; i++)
@@ -648,19 +616,7 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
         command += sbPartVal.ToString();
         return command;
     }
-            cmd = CreateCommand(cStr, con);             // create the command
 
-            try
-            {
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
-                return numEffected;
-            }
-            catch (Exception ex)
-            {
-                return 0;
-                // write to log
-                throw (ex);
-            }
     public string BuildNewItemCommand(Item NewItem)
     {
         //int[] temp = new int[person.Hobbies.Length];
@@ -685,19 +641,12 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
         //    }
         //}
         //command += sb3.ToString();
+                
+        return command;  
+    }
 
-            finally
-            {
-                if (con != null)
-                {
-                    // close the db connection
-                    con.Close();
-                }
-            }
-
-        }
         //------------------------------------------------------------------------------------------------
-        public string BuildUpdateCommand(Route route)
+    public string BuildUpdateCommand(Route route)
         {
             String command;
             StringBuilder sbMachineNum = new StringBuilder();
@@ -714,7 +663,7 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
             return command;
         }
 
-        public List<Route> ReadRouteInfo(string conString, string routeName)
+    public List<Route> ReadRouteInfo(string conString, string routeName)
         {
             List<Route> lri = new List<Route>();
             SqlConnection con = null;
@@ -755,10 +704,105 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
 
         }
 
+    public List<Machine> ReadMachine(string conString)
+        {
+            List<Machine> lm = new List<Machine>();
+            SqlConnection con = null;
 
+            try
+            {
+                con = connect(conString); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "select * from Machine";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
 
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Machine m = new Machine();
+                    m.MachineName = Convert.ToString(dr["machineName"]);
+                    m.MachineNum = Convert.ToInt32(dr["machineNum"]);
+                    lm.Add(m);
+                }
+                return lm;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+    public int UpdateRoute(Route route)
+     {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildUpdateCommand(route);      // helper method to build the insert string
+            
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
     }
-}
-        return command;
+
+    private String BuildInsertStationCommand(Route r)
+        {
+            String command;            
+            StringBuilder sbRouteName = new StringBuilder();
+            StringBuilder sbStationArr = new StringBuilder();
+            StringBuilder sbStationArrInsert = new StringBuilder();
+            // use a string builder to create the dynamic string
+            sbRouteName.AppendFormat("INSERT INTO Route (routeName) values('{0}')", r.RouteName );  
+            sbStationArr.AppendFormat(" INSERT INTO StationInRoute ([routeName],[machineNum],[position])");
+            command = sbRouteName.ToString() + sbStationArr.ToString() + " values";
+            for (int i = 1; i <= r.StationArr.Length; i++)
+            {
+                sbStationArrInsert.AppendFormat(" ('{0}',{1},{2})", r.RouteName, r.StationArr[i - 1], i);
+                if (i< r.StationArr.Length)
+                {
+                    sbStationArrInsert.Append(",");
+                }
+            }
+            command += sbStationArrInsert.ToString();
+            return command;
+        }
     }
 }
