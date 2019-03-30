@@ -258,6 +258,56 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    public Part[] GetGroupParts(string GroupName)
+    {
+
+        SqlConnection con;
+        List<Part> Plist = new List<Part>();
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Part where groupName = '" + GroupName + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            //int PID = Convert.ToInt32(cmd.ExecuteScalar());
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+
+                Part P = new Part();
+                //P.ItemNum = Convert.ToString(dr["itemNum"]);
+                //P.ItemName = Convert.ToString(dr["itemName"]);
+                //P.ItemStatus = Convert.ToString(dr["itemStatus"]);
+                //P.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                //P.ProjectName = Convert.ToString(dr["projectName"]);
+                Plist.Add(P);
+            }
+            return Plist.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+    }
+
+
     public string UserValidation(string department, string password)
     {
         string returnedUser = "NoUser";
