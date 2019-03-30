@@ -1,4 +1,10 @@
-﻿<!DOCTYPE html>
+﻿<!--1) Need to Add Sawl src + swall command to error function
+    2) 
+    
+    
+    -->
+
+<!DOCTYPE html>
 <html dir="rtl">
 <head>
     <meta charset="utf-8" />
@@ -127,7 +133,7 @@
                     content: none;
                 }
         }
-
+        /*This Is The DT CSS*/
         table.dataTable tbody > tr.selected,
         table.dataTable tbody > tr > .selected {
             background-color: #A2D3F6;
@@ -135,6 +141,7 @@
         tr{
             text-align:center;
         }
+        /*This Is The Project Name CSS*/
         #ProjName {
             text-align: center;
             color: #000000;
@@ -142,6 +149,7 @@
             font-size:20px;
             font-family:monospace;
         }
+        /*This Is The Filters Drop Down List CSS*/
         #Filters {
             text-align: center;
             color: #000000;
@@ -162,12 +170,13 @@
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
 
-
-
     <script>
 
         var urlParams = new URLSearchParams(window.location.search);
-        
+        var selected = [];
+        var myTable;
+
+
 
         $(document).ready(function () {
 
@@ -183,6 +192,51 @@
             }
         });
 
+        $(document).on("change", "#Filters .FilterValues", function () {
+            //console.log($("#Filters option:selected").val())
+           
+            //$('#Filters :selected').each(function () {
+            //    selected[$(this).val()] = $(this).text();
+            //});
+            //console.log(selected);
+            console.log($(this).val());
+            $('#Filters :selected').each(function (i, sel) {
+                //if ($(sel).val() != "")
+                //{
+                    selected[i] = [$(sel).val()];
+                //}
+            });
+            myTable.column(0).search(selected[0]).draw();
+            myTable.column(5).search(selected[1]).draw();
+            myTable.column(2).search(selected[2]).draw();
+            //var FilterMone = 0;
+            //for (var k = 0; k < selected.length; k++)
+            //{
+                //if (selected[k] != "")
+                //{
+                    //FilterMone++;
+                    //switch (k)
+                    //{
+                    //    case 0:
+                    //        myTable.column(0).search(selected[0]).draw();
+                    //        break;
+                    //    case 1:
+                    //        myTable.column(5).search(selected[1]).draw();
+                    //        break;
+                    //    case 2:
+                    //        myTable.column(2).search(selected[2]).draw();
+                    //        break;
+                    //    default:
+                    //    // code block
+                    //}     
+                //}
+            //}
+            //if (FilterMone == 0) {
+            //    myTable.column(0).search("").draw();
+            //    myTable.column(5).search("").draw();
+            //    myTable.column(2).search("").draw();
+            //}
+        });
 
         function successGetProjectItems(itemslist) {
 
@@ -196,24 +250,25 @@
                 //console.log(UniqueStatusNames)
                 //console.log(UniqueItemsNames)
                 str = "<select id='ProjectsNames' class='FilterValues'>";
-                str += "<option value=''selected disabled hidden>בחר פרוייקט</option>";
+                str += "<option value=''selected>בחר פרוייקט</option>";
                 for (var i = 0; i < UniqueProjecstNames.length; i++)
                 {
                     str += "<option value='" + UniqueProjecstNames[i] + "'>" + UniqueProjecstNames[i] + "</option>";
                 }
                 str += "</select><select id='StatusNames' class='FilterValues'>";
-                str += "<option value=''selected disabled hidden>בחר סטטוס</option>";
+                str += "<option value=''selected>בחר סטטוס</option>";
                 for (var i = 0; i < UniqueStatusNames.length; i++)
                 {
                     str += "<option value='" + UniqueStatusNames[i] + "'>" + UniqueStatusNames[i] + "</option>";
                 }
                 str += "</select><select id='ItemsNames' class='FilterValues'>";
-                str += "<option value=''selected disabled hidden>בחר סוג פריט</option>";
+                str += "<option value=''selected>בחר סוג פריט</option>";
                 for (var i = 0; i < UniqueItemsNames.length; i++)
                 {
                     str += "<option value='" + UniqueItemsNames[i] + "'>" + UniqueItemsNames[i] + "</option>";
                 }
                 str += "</select>";
+                //<button onclick='ResetFilters()'>Reset Filters</button>
                 $('#Filters').append(str);
 
                 //$("#ProjName p").text()
@@ -221,7 +276,10 @@
                     title: "שם פרוייקט",
                     data: "ProjectName",
                     "className": "dt-center",
-                    "targets": "_all"
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
+                    }
                 }, {
                     title: "מ'ס פריט",
                     data: 'ItemNum',
@@ -231,23 +289,30 @@
                     title: "שם פריט",
                     data: 'ItemName',
                     "className": "dt-center",
-                    "targets": "_all"
-                }, {
-                    title: "מ'ס קבוצות",
-                    data: 'ItemGroupCount',
-                    "className": "dt-center",
-                    "targets": "_all"
-                }, {
-                    title: "אחוז השלמה",
-                    data: 'ItemCompletedPercentage',
-                    "className": "dt-center",
-                    "targets": "_all"
-                }, {
+                    "targets": "_all",
+                        render: function (data, type, row, meta) {
+                            //str.replace
+                            return '<a href=Part.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ","%20") + ">" + data + '</a>'
+                    }
+                }, 
+                //   {
+                //    title: "מ'ס קבוצות",
+                //    data: 'ItemGroupCount',
+                //    "className": "dt-center",
+                //    "targets": "_all"
+                //}, 
+                    //{
+                    //title: "אחוז השלמה",
+                    //data: 'ItemCompletedPercentage',
+                    //"className": "dt-center",
+                    //"targets": "_all"
+                    //},
+                   {
                     title: "סטטוס פריט",
                     data: 'ItemStatus',
                     "className": "dt-center",
                     "targets": "_all"
-                    }
+                   }
                 ];
             }
             else {
@@ -256,34 +321,42 @@
                     title: "מ'ס פריט",
                     data: 'ItemNum',
                     "className": "dt-center",
-                    "targets": "_all"
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return '<a href=Part.html?ProjectNum=' + urlParams.get('ProjectNum') + "&ProjectName=" + urlParams.get('ProjectName') + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ", "%20") + ">" + data + '</a>'
+                    }
                 }, {
                     title: "שם פריט",
                     data: 'ItemName',
                     "className": "dt-center",
-                    "targets": "_all"
-                }, {
-                    title: "מ'ס קבוצות",
-                    data: 'ItemGroupCount',
-                    "className": "dt-center",
-                    "targets": "_all"
-                }, {
-                    title: "אחוז השלמה",
-                    data: 'ItemCompletedPercentage',
-                    "className": "dt-center",
-                    "targets": "_all"
-                }, {
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return '<a href=Part.html?ProjectNum=' + urlParams.get('ProjectNum') + "&ProjectName=" + urlParams.get('ProjectName') + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ", "%20") + ">" + data + '</a>'
+                    }
+                },
+                //    {
+                //    title: "מ'ס קבוצות",
+                //    data: 'ItemGroupCount',
+                //    "className": "dt-center",
+                //    "targets": "_all"
+                //}, {
+                //    title: "אחוז השלמה",
+                //    data: 'ItemCompletedPercentage',
+                //    "className": "dt-center",
+                //    "targets": "_all"
+                //    },
+                   {
                     title: "סטטוס פריט",
                     data: 'ItemStatus',
                     "className": "dt-center",
                     "targets": "_all"
-                }
+                   }
                 ];
             }
             
-            var myTable;
             myTable = $('#example').DataTable({
                 "sPaginationType": "simple_numbers",
+                //"scrollX": "true",
                 "language": {
                     "search": "חיפוש:",
                     "loadingRecords": "Loading...",
@@ -300,6 +373,7 @@
                 columns: columnDefs,
                 dom: 'Bfrtip',        // Needs button container
                 select: 'single',
+                //bFilter: false,////////////////////////////////////////////////////////////////////////////what is it?/////////////////////////////////////////////////////////////
                 responsive: true,
                 altEditor: true,     // Enable altEditor
                 buttons: [{

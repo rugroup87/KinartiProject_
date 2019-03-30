@@ -14,16 +14,24 @@ namespace KinartiProject_ruppin.Models
         public int ItemGroupCount { get; set; }
         public float ProjectNum { get; set; }
         public string ProjectName { get; set; }
+        public List<Part> ItemParts = new List<Part>();
 
-        public Item(string itemnum, string itemname, string itemstatus, double itemcompletedpercentage, int itemgroupcount, float projectnum, string projectname)
+        public Item(string itemnum, string itemname, string itemstatus, float projectnum, string projectname)
         {
             ItemNum = itemnum;
             ItemName = itemname;
             ItemStatus = itemstatus;
-            ItemCompletedPercentage = itemcompletedpercentage;
-            ItemGroupCount = itemgroupcount;
             ProjectNum = projectnum;
             ProjectName = projectname;
+        }
+        public Item(string itemnum, List<Part> itemparts, string itemstatus = "עוד לא התחיל")
+        {
+            //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
+            ItemNum = itemnum;
+            ItemStatus = itemstatus;
+            //ItemName = itemname;
+            ItemParts = itemparts;
+            //AddNewItemToDB();
         }
         public Item()
         {
@@ -32,7 +40,7 @@ namespace KinartiProject_ruppin.Models
 
         public Item[] GetProjectItems(float projNum)
         {
-            DBServices dbs = new DBServices();
+               DBServices dbs = new DBServices();
             //List<Item> Pi = new List<Item>();
             //Pi = dbs.GetProjectItems(projNum);
             return dbs.GetProjectItems(projNum);
@@ -45,6 +53,13 @@ namespace KinartiProject_ruppin.Models
             //Pi = dbs.GetAllProjectItems();
             return dbs.GetAllProjectItems();
         }
+
+        //public void AddNewItemToDB()
+        //{
+        //    //הגישה תיהיה דרך this.
+        //    DBServices dbs = new DBServices();
+        //    dbs.AddNewItemToDB(this);
+        //}
     }
     
 }
