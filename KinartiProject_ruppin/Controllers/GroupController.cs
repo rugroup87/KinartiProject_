@@ -19,5 +19,15 @@ namespace KinartiProject_ruppin.Controllers
             Plist = G.GetGroupParts(GroupName);
             return Plist;
         }
+
+        [HttpGet]
+        [Route("api/GetGroups")]
+        public IEnumerable<String> Get(string projectNum, string itemNum)
+        {
+            Group G = new Group();
+            String[] Glist;
+            Glist = G.GetGroups(projectNum, itemNum);
+            return Glist;
+        }
     }
 }

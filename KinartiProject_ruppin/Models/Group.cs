@@ -27,5 +27,12 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             return dbs.GetGroupParts(GroupName);
         }
+
+
+        public String[] GetGroups(string projectNum, string itemNum)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.GetGroups(projectNum, itemNum);
+        }
     }
 }

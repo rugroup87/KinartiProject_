@@ -380,6 +380,46 @@ using KinartiProject_ruppin.Models;
 
     }
 
+    public String[] GetGroups(string projectNum, string itemNum)
+    {
+
+        SqlConnection con;
+        List<String> GNamelist = new List<String>();
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Groups where projectNum = " + projectNum + " and itemNum='" + itemNum + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+
+                GNamelist.Add(Convert.ToString(dr["groupName"]));
+            }
+            return GNamelist.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+    }
 
     public string UserValidation(string department, string password)
     {
@@ -594,31 +634,4 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
         return command;
     }
 
-    public string BuildNewItemCommand(Item NewItem)
-    {
-        //int[] temp = new int[person.Hobbies.Length];
-        String command;
-        SqlConnection con;
-        con = connect("KinartiConnectionString");
-        StringBuilder sb = new StringBuilder();
-        StringBuilder sb2 = new StringBuilder();
-        StringBuilder sb3 = new StringBuilder();
-        // use a string builder to create the dynamic string
-        //sb.AppendFormat("INSERT INTO Item (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewItem.ProjectNum, NewItem.ProjectName, NewItem.ProdStartDate, NewItem.ProjectStatus);
-        command = sb.ToString();
-        //sb2.AppendFormat("DELETE FROM Hobbies_for_persons WHERE id = {0} ", person.ID);
-        //String prefix = "INSERT INTO Hobbies_for_persons (id, Hobbie_id) ";
-        //command = sb.ToString() + sb2.ToString() + prefix + "Values";
-        //for (int i = 0; i < person.Hobbies.Length; i++)
-        //{
-        //    sb3.AppendFormat("({0}, {1})", person.ID, person.Hobbies[i] + 1);
-        //    if (i < (person.Hobbies.Length - 1))
-        //    {
-        //        sb3.Append(",");
-        //    }
-        //}
-        //command += sb3.ToString();
-
-        return command;
-    }
 }
