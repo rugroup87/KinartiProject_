@@ -694,7 +694,6 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
                 sb2.AppendFormat(", ");
             }
         }
-        //Update Part SET groupName = 'K' WHERE projectNum = '111.1' AND itemNum = 'N2' AND partNum IN('bbb222', 'ccc222')
         command = prefix + sb.ToString() + prefix2 + sb2.ToString();
         return command;
     }
