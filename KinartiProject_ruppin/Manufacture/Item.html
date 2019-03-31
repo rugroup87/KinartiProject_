@@ -24,14 +24,14 @@
         }
 
         header {
-            padding: 20px 0;
-            background: white;
+            padding: 5px 0;
+            background: #212121;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
         .container {
-            padding: 0 20px;
-            max-width: 960px;
+            padding: 0 auto;
+            /*max-width: 960px;*/
             margin: 0 auto;
         }
 
@@ -59,7 +59,7 @@
             list-style: none;
             margin: 0;
             padding: 0;
-            float: right;
+            text-align: center;
         }
 
         nav li {
@@ -74,7 +74,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #868686;
+            color: #337ab7;
             text-transform: uppercase;
         }
 
@@ -85,7 +85,7 @@
                 position: absolute;
                 left: 0;
                 bottom: 15px;
-                background: #868686;
+                background: #ffffff;
                 transition: width .5s linear;
             }
 
@@ -138,25 +138,152 @@
         table.dataTable tbody > tr > .selected {
             background-color: #A2D3F6;
         }
-        tr{
-            text-align:center;
-        }
-        /*This Is The Project Name CSS*/
-        #ProjName {
+
+        tr {
             text-align: center;
-            color: #000000;
-            text-shadow: 0 0px 2px #000000;
-            font-size:20px;
-            font-family:monospace;
         }
-        /*This Is The Filters Drop Down List CSS*/
-        #Filters {
-            text-align: center;
-            color: #000000;
-            text-shadow: 0 0px 2px #000000;
-            font-size: 20px;
-            font-family: monospace;
+
+        .form-control {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
         }
+
+        @media (min-width: 768px) {
+            .col-sm-3 {
+                width: 100%;
+            }
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .modal-dialog {
+                width: 600px;
+                margin: 20px auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .modal-content {
+                -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+                box-shadow: 0 5px 150px rgba(0,0,0,.5);
+            }
+        }
+
+
+        button.close {
+            -webkit-appearance: none;
+            padding-left: 10px;
+            cursor: pointer;
+            background: 0 0;
+            border: 0;
+        }
+
+        @media (min-width: 992px) {
+            .col-md-3 {
+                width: 50%;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .container {
+                width: 100%;
+            }
+
+            .modal-header {
+                background-color: #d7d7d7;
+                height: 80px;
+                padding: 15px;
+                border-bottom: 1px solid #e5e5e5;
+                text-align: center;
+            }
+
+            .modal-body {
+                background-color: #f0f0f0;
+                height: 500px;
+                position: relative;
+                padding: 15px;
+            }
+
+            pre {
+                display: block;
+                padding: 0px;
+                margin: 0 0 10px;
+                font-size: 13px;
+                line-height: 1.42857143;
+                color: #333;
+                word-break: break-all;
+                word-wrap: break-word;
+                background-color: #f5f5f5;
+                border: 3px solid #ccc;
+                border-radius: 10px;
+                height: 100%;
+            }
+
+            .modal-footer {
+                background-color: #d7d7d7;
+                height: 50px;
+                padding: 15px;
+                padding-top: 1%;
+                text-align: right;
+                border-top: 1px solid #e5e5e5;
+            }
+
+            .modal-title {
+                margin: 0;
+                line-height: 1.42857143;
+                text-align: center;
+            }
+
+            #hProjNum, #hProjName {
+                display: inline-block;
+                padding-right: 2%;
+            }
+
+            /*This Is The Project Name CSS*/
+            #ProjName {
+                text-align: center;
+                color: #000000;
+                text-shadow: 0 0px 2px #000000;
+                font-size: 20px;
+                font-family: monospace;
+            }
+            /*This Is The Filters Drop Down List CSS*/
+            #Filters {
+                text-align: center;
+                color: #000000;
+                text-shadow: 0 0px 2px #000000;
+                font-size: 20px;
+                font-family: monospace;
+            }
+
+            #containerID {
+                margin: 0px auto;
+                padding: 0px 0px 0px 0px;
+                max-width: 100%;
+            }
+
+            #example {
+                width: 100%;
+            }
     </style>
 
     <script src="../Scripts/ajaxCalls.js"></script>

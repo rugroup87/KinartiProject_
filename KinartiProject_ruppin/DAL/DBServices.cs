@@ -366,10 +366,51 @@ using KinartiProject_ruppin.Models;
 
             }
 
-        public string UserValidation(string department, string password)
+    public String[] GetGroups(string projectNum, string itemNum)
+    {
+
+        SqlConnection con;
+        List<String> GNamelist = new List<String>();
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Groups where projectNum = " + projectNum + " and itemNum='" + itemNum + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
             {
-                string returnedUser = "NoUser";
-                SqlConnection con;
+
+                GNamelist.Add(Convert.ToString(dr["groupName"]));
+            }
+            return GNamelist.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+    }
+
+    public string UserValidation(string department, string password)
+    {
+        string returnedUser = "NoUser";
+        SqlConnection con;
 
                 try
                 {
