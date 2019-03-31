@@ -619,34 +619,6 @@ using KinartiProject_ruppin.Models;
             return command;
         }
 
-        public string BuildNewItemCommand(Item NewItem)
-        {
-            //int[] temp = new int[person.Hobbies.Length];
-            String command;
-            SqlConnection con;
-            con = connect("KinartiConnectionString");
-            StringBuilder sb = new StringBuilder();
-            StringBuilder sb2 = new StringBuilder();
-            StringBuilder sb3 = new StringBuilder();
-            // use a string builder to create the dynamic string
-            //sb.AppendFormat("INSERT INTO Item (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, {1}, {2}, {3})", NewItem.ProjectNum, NewItem.ProjectName, NewItem.ProdStartDate, NewItem.ProjectStatus);
-            command = sb.ToString();
-            //sb2.AppendFormat("DELETE FROM Hobbies_for_persons WHERE id = {0} ", person.ID);
-            //String prefix = "INSERT INTO Hobbies_for_persons (id, Hobbie_id) ";
-            //command = sb.ToString() + sb2.ToString() + prefix + "Values";
-            //for (int i = 0; i < person.Hobbies.Length; i++)
-            //{
-            //    sb3.AppendFormat("({0}, {1})", person.ID, person.Hobbies[i] + 1);
-            //    if (i < (person.Hobbies.Length - 1))
-            //    {
-            //        sb3.Append(",");
-            //    }
-            //}
-            //command += sb3.ToString();
-
-            return command;
-        }
-
         public int InsertNewGroup(Group group)
         {
 
