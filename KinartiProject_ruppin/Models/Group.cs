@@ -18,9 +18,10 @@ namespace KinartiProject_ruppin.Models
         public int EstColorTime { get; set; }
         public string[] ArrPart { get; set; }
 
-
-        public Group(float _projectNum, string _itemNum, string _groupName,string _groupRouteName,
-           int _groupPartCount, int _estPrepTime, int _estColorTime,string[] _arrPart, string _groupStatus="קבוצה מוכנה לעבודה")
+        //הג'ייסון לא נכנס לי לבנאי הזה ולכן אין סטטוס כי הוא הולך לבנאי הריק - לבדוק למה
+        public Group(float _projectNum, string _itemNum, string _groupName, string _groupRouteName,
+           int _groupPartCount, int _estPrepTime, int _estCarpTime, int _estColorTime,
+           string[] _arrPart, string _groupStatus = "קבוצה מוכנה לעבודה")
         {
             ProjectNum = _projectNum;
             ItemNum = _itemNum;
@@ -28,10 +29,12 @@ namespace KinartiProject_ruppin.Models
             GroupRouteName = _groupRouteName;
             GroupPartCount = _groupPartCount;
             EstPrepTime = _estPrepTime;
+            EstCarpTime = _estCarpTime;
             EstColorTime = _estColorTime;
             GroupStatus = _groupStatus;
             ArrPart = _arrPart;
         }
+
         //בנאי ריק
         public Group()
         {

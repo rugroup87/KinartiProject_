@@ -16,9 +16,8 @@ namespace KinartiProject_ruppin.Controllers
         {
             Route r = new Route();
             List<Route> RouteList = new List<Route>();
-            RouteList = r.Read();
-            return RouteList;
-            
+            RouteList = r.GetAllRoutes();
+            return RouteList;           
         }
 
         [HttpGet]

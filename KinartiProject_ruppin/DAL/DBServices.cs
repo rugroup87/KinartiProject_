@@ -26,8 +26,16 @@ using KinartiProject_ruppin.Models;
             // read the connection string from the configuration file
             string cStr = WebConfigurationManager.ConnectionStrings[conString].ConnectionString;
             SqlConnection con = new SqlConnection(cStr);
+        //try
+        //{
             con.Open();
-            return con;
+        //}
+        //catch (Exception ex)
+        //{
+        //    // write to log
+        //    throw (ex);
+        //}
+        return con;
         }
 
         //---------------------------------------------------------------------------------
@@ -703,7 +711,7 @@ using KinartiProject_ruppin.Models;
                 return command;
             }
 
-        public List<Route> Read()
+        public List<Route> GetAllRoutes()
         {
             SqlConnection con;
             List<Route> rl = new List<Route>();

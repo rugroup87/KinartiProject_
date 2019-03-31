@@ -29,11 +29,11 @@ namespace KinartiProject_ruppin.Models
             StationArr = stationArr;
         }
 
-        public List<Route> Read()
+        public List<Route> GetAllRoutes()
         {
             DBServices dbs = new DBServices();
             List<Route> rl = new List<Route>();
-            rl = dbs.Read();
+            rl = dbs.GetAllRoutes();
             return rl;      
         }
 
