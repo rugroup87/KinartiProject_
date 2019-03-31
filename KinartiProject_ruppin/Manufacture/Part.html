@@ -253,7 +253,7 @@
             text-align: center;
         }
 
-        #hProjNum, #hProjName {
+        #mainH_form, #secondH_form {
             display: inline-block;
             padding-right: 2%;
         }
@@ -295,15 +295,6 @@
          //זאת הגדרה של המשתנה שיקח את הנתונים מה-URL
         var urlParams = new URLSearchParams(window.location.search);
 
-         //זה מה שתופס את הערך של מה שיש ב-URL
-         //urlParams.get('ItemName')
-
-        ////השורה הזאת מחליפה בחזרה את ה%20 לרווח שצריך להיות
-        //console.log(urlParams.get('ItemName').replace("%20", " "))
-
-
-        //ProjectNum = 111.1 & ProjectName=אלכס & ItemNum=N1 & ItemName=חדר % 20ארונות
-
         $(document).ready(function () {
             StatusArr = [];
             var statusRelateTo = "Part";
@@ -324,19 +315,6 @@
         function getSuccessPart(partList) {
             $("#ProjName").text("פרוייקט:   " + urlParams.get('ProjectName') + " - " + urlParams.get('ProjectNum') + "\xa0\xa0\xa0\xa0\xa0" + "פריט: " + urlParams.get('ItemName') + " - " + urlParams.get('ItemNum'));
             var columnDefs = [
-            //    {
-            //    title: "מס' פרוייקט",
-            //    data: 'ProjectNum',
-            //    //width: '10%',
-            //    "className": "dt-center",
-            //    "targets": "_all"
-            //}, {
-            //    title: "מס' פריט",
-            //    data: 'ItemNum',
-            //    //width: '15%',
-            //    "className": "dt-center",
-            //    "targets": "_all"
-            //    },
                 {
                     title: "מס' חלק",
                     data: 'PartNum',
@@ -351,16 +329,7 @@
                 //defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all"
-                },
-                //{
-                //    title: "קבוצה",
-                //    data: 'GroupName',
-                //    //width: '15%',
-                //    //defaultContent: "",
-                //    "className": "dt-center",
-                //    "targets": "_all"
-                //},
-                {
+                }, {
                     title: "ברקוד",
                     data: 'PartBarCode',
                     //width: '15%',
@@ -411,7 +380,7 @@
                 //defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all"
-            }, {
+                }, {
                     title: "קאנט",
                     data: 'PartKantim',
                     //width: '10%',
@@ -525,20 +494,20 @@
                 //"fixedColumns": true,
                 //scrollX: true,
                 dom: 'Bfrtip',        // Needs button container
-                select: 'single',
+                select: 'multi',
                 //responsive: true,
                 altEditor: true,     // Enable altEditor
                 buttons: [
                     //    {
                     //    text: 'Add',
                     //    name: 'add'        // do not change name
-                    //},
+                    //}
                     {
                         extend: 'selected', // Bind to Selected row
-                        text: 'עריכת רשומה',
-                        name: 'editForm',  // do not change name
+                        text: 'צור קבוצה',
+                        name: 'createNewGroup',  // do not change name
                         action: function (nButton, oConfig, oFlash) {
-                            editForm(oConfig);
+                            createNewGroup(oConfig);
                         }
                     }
                     //{
@@ -554,20 +523,6 @@
         function errorPart(err) {
             swal("Error: " + err);
         }
-
-                //אתחול תאריך מהדאטהבייס אל הטבלה המוצגת
-        //function initDates(fullData) {
-        //    if (fullData !== null) {
-        //        var jsDate = new Date(fullData);
-        //        jsDate = jsDate.getDate() + "/" + (jsDate.getMonth() + 1) + "/" + jsDate.getFullYear();
-        //        if (jsDate == "1/1/1900") {
-        //            return ("");
-        //        }
-        //        return jsDate;
-        //    } else {
-        //        return "";
-        //    }
-        //}
 
 
          //the function creates a dropdown list box of ProjectStatus
@@ -610,89 +565,73 @@
         //    window.location.reload();
         //}
 
-        //$(document).on("click", "#closeWindowsButton", function () {
-        //    //יציאה מדף העריכה לעמוד הראשי
-        //    $("#altEditor-modal").remove();
-        //});
+        $(document).on("click", "#closeWindowsButton", function () {
+            //יציאה מדף העריכה לעמוד הראשי
+            $("#altEditor-modal").remove();
+        });
 
-        //$(document).on("click", "#closeWindowsX", function () {
-        //    //יציאה מדף העריכה לעמוד הראשי
-        //    $("#altEditor-modal").remove();
-        //});
+        $(document).on("click", "#closeWindowsX", function () {
+            //יציאה מדף העריכה לעמוד הראשי
+            $("#altEditor-modal").remove();
+        });
+        
+        $(document).on("click", "#createNewGroup", function () {
+            var partArr = [];
+            for (var i = 0; i < data_rows.data().length; i++) {
+                partArr.push(data_rows.data()[i].PartNum)
+            }
+            Group = {
+                ProjectNum: urlParams.get('ProjectNum'),
+                ItemNum: urlParams.get('ItemNum'),
+                GroupName: $("#groupNameID").val(),
+                GroupRouteName: $("#routeNameID").val(),
+                GroupPartCount: $("#partCountID").val(),
+                EstPrepTime: $("#estPrepTimeID").val(),
+                EstCarpTime: $("#estCarpTimeID").val(),
+                EstColorTime: $("#estColorID").val(),
+                ArrPart: partArr 
+                }
+            ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
 
-        //$(document).on("click", "#saveEditForm", function () {
-        //    Project = {
-        //        ProjectNum: $("#hProjNum").text(),
-        //        //ProjectName: $("#hProjName").text(),
-        //        //המשתנים הבאים נעביר כמחרוזות ולא כתאריכים ולכן לכל אחד מהם יש בנאי משלהם
-        //        ProdStartDate: $("#prodStartDateID").val(),
-        //        SupplyDate: $("#supplyDateID").val(),
-        //        //ProjectStatus: $("#projectStatusID"),
-        //        Comment: $("#commentID").val(),
-        //        //ProdEntranceDate: $("#prodEntranceDateID")
-        //    }
-        //    ajaxCall("PUT", "../api/project/UpdateProject", JSON.stringify(Project), successUpdatesProject, errorUpdatesProject);
+        });
 
-        //});
+        //בהצלחת יצירת קבוצה חדשה
+        function successInsertGroup() {
+            swal({
+                title: 'יצרת קבוצה חדשה!',
+                text: 'בעוד כשנייה תועבר לדף הראשי',
+                type: 'success',
+                timer: 2000,
+                buttons: false
+            })
+            setTimeout(function () {
+                refreshParent();
+            }, 2000);
 
-        //בהצלחת שמירת טופס עריכה
-        //function successUpdatesProject() {
-        //    //swal("השינוי נשמר", "בעוד כשנייה תועבר לדף הראשי", "success");
-        //    swal({
-        //        title: 'השינוי נשמר',
-        //        text: 'בעוד כשנייה תועבר לדף הראשי',
-        //        type: 'success',
-        //        timer: 2000,
-        //        buttons: false
-        //    })
-        //    setTimeout(function () {
-        //        refreshParent();
-        //    }, 2000);
+        }
 
-        //}
+        function errorInsertGroup() {
+        }
 
-        //function errorUpdatesProject() {
-        //}
-
-        ////תפיסת לחיצת כפתור העריכה ופתיחת חלון חדש לטופס העריכה
-        //function editForm(dt) {
+        ////תפיסת לחיצת כפתור יצירת קבוצה ופתיחת חלון חדש לטופס יצירה
+        function createNewGroup(dt) {
         //    //תפיסת השורה שאותה רוצים לערוך
         //    var data_row = dt.row({ selected: true }).data();
+
+            data_rows = dt.rows({ selected: true });
+
 
         //    //תפיסת התאריכים וכתיבתם לחלון עריכה
         //    var prodStartDateForm = dateToForm(new Date(data_row.ProdStartDate));
         //    var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
         //    var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
 
-        //    var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' id='prodStartDateID' name='ת. תחילת ייצור' placeholder='ת. תחילת ייצור' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='ת. אספקה' placeholder='ת. אספקה' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProjectStatus + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='form-control  form-control-sm' value= '" + prodEntranceDateForm + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
-        //    $('#containerID').append(str);
-        //}
+        //var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' style='overflow:hidden' class='form-control form-control-sm'></div></form></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button></div></div></div></div>";
+        //var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><input type='text' id='routeNameID' name='שם מסלול' placeholder='בחר שם מסלול' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='text' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5></div></form></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button></div></div></div></div>";
 
-        ////פונקציה שמסדרת רת התאריכים בצורה נוחה לטפסים
-        //function dateToForm(formDate) {
-        //    var day;
-        //    var month;
-        //    if (formDate.getDate() < 10) {
-        //        day = "0" + formDate.getDate();
-        //    }
-        //    else {
-        //        day = formDate.getDate();
-        //    }
-        //    if (formDate.getMonth() < 10) {
-        //        month = "0" + (formDate.getMonth() + 1);
-        //    }
-        //    else {
-        //        month = formDate.getMonth() + 1;
-        //    }
-
-        //    if (((formDate.getFullYear() + "-" + month + "-" + day) == "1970-01-01") || ((formDate.getFullYear() + "-" + month + "-" + day) == "1900-01-01")) {
-        //        return ("");
-        //    }
-        //    else {
-        //        return (formDate.getFullYear() + "-" + month + "-" + day)
-        //    }
-
-        //}
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><input type='text' id='routeNameID' name='שם מסלול' placeholder='בחר שם מסלול' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5><label>הכנה:</label><input type='number' id='estPrepTimeID' name='זמן הכנה משוער' style='overflow:hidden' class='form-control form-control-sm'><label>נגריה:</label><input type='number' id='estCarpTimeID' name='זמן נגריה משוער' style='overflow:hidden' class='form-control form-control-sm'><label>צבע:</label><input type='number' id='estColorID' name='זמן צבע משוער' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button></div></form></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='createNewGroup'>צור קבוצה</button></div></div></div></div>";
+            $('#containerID').append(str);
+        }
 
     </script>
 </head>
