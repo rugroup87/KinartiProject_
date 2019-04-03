@@ -289,7 +289,6 @@
         /*החלק בו נמצאים התחנות שמוצגות בטופס בחירת מסלול ליצירת קבוצה*/
         #machineRoute {
             width: 100%;
-            background-color: yellow;
         }
 
     </style>
@@ -582,39 +581,21 @@
             window.location.reload();
         }
 
-
+        //לחיצה על סגור בטופס
         $(document).on("click", "#closeWindowsButton", function () {
             //יציאה מדף העריכה לעמוד הראשי
             $("#altEditor-modal").remove();
         });
-
+        //לחיצה על סגור בטופס
         $(document).on("click", "#closeWindowsX", function () {
             //יציאה מדף העריכה לעמוד הראשי
             $("#altEditor-modal").remove();
         });
 
 
-
         //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
         $(document).on("click", "#createNewGroupButton", function () {
             $("#formID").submit(inserNewGroupToDB);
-            //var partArr = [];
-            //for (var i = 0; i < data_rows.data().length; i++) {
-            //    partArr.push(data_rows.data()[i].PartNum)
-            //}
-            //Group = {
-            //    ProjectNum: urlParams.get('ProjectNum'),
-            //    ItemNum: urlParams.get('ItemNum'),
-            //    GroupName: $("#groupNameID").val(),
-            //    GroupRouteName: $("#routeNameID option:selected").text(),
-            //    GroupPartCount: $("#partCountID").val(),
-            //    EstPrepTime: $("#estPrepTimeID").val(),
-            //    EstCarpTime: $("#estCarpTimeID").val(),
-            //    EstColorTime: $("#estColorID").val(),
-            //    ArrPart: partArr 
-            //    }
-            //ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
-
         });
 
         function inserNewGroupToDB() {
@@ -662,6 +643,14 @@
             ajaxCall("GET", uriGetSelctedRoutName, "", SuccessGetRouteInfo, errorGetRouteInfo);
         }
 
+        //--------------------------------------------------------------------------------------------------------------
+        //בלחיצה על יצרית מסלול חדש בתוך הטופס
+        $(document).on("click", "#createNewRoute", function () {
+            let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+                        width=600,height=630,left=400,top=200`;
+            open('/Bool/createNewRout.html', 'createGroupFromForm', params);
+        });
+
         function SuccessGetRouteInfo(routedate) {
             $('#machineRoute').remove();
             //RouteList = routedate;
@@ -698,7 +687,6 @@
             $('#containerID').append(str); 
             $('#routeNameID').append(routelistStr);
         }
-
 
         function errorGetRoute() {
         }
