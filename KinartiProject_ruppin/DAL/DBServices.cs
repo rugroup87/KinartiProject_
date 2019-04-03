@@ -81,7 +81,7 @@ namespace KinartiProject_ruppin.Models
             }
         }
 
-        public List<Route> Read()
+        public List<Route> GetAllRoutes()
         {
             SqlConnection con;
             List<Route> rl = new List<Route>();
@@ -646,7 +646,7 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
     }
 
         //------------------------------------------------------------------------------------------------
-    public string BuildUpdateCommand(Route route)
+        public string BuildUpdateCommand(Route route)
         {
             String command;
             StringBuilder sbMachineNum = new StringBuilder();
@@ -663,7 +663,7 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
             return command;
         }
 
-    public List<Route> ReadRouteInfo(string conString, string routeName)
+        public List<Route> ReadRouteInfo(string conString, string routeName)
         {
             List<Route> lri = new List<Route>();
             SqlConnection con = null;
@@ -671,7 +671,7 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
             try
             {
                 con = connect(conString); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "'";
+                String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "' order by position";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -699,12 +699,10 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
                 {
                     con.Close();
                 }
-
             }
-
         }
 
-    public List<Machine> ReadMachine(string conString)
+        public List<Machine> ReadMachine(string conString)
         {
             List<Machine> lm = new List<Machine>();
             SqlConnection con = null;
@@ -742,7 +740,7 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
 
         }
 
-    public int UpdateRoute(Route route)
+        public int UpdateRoute(Route route)
      {
             SqlConnection con;
             SqlCommand cmd;
@@ -782,7 +780,6 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
                 }
             }
     }
-
 
         public int InsertStation(Route route)
         {
@@ -845,6 +842,44 @@ PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness
             }
             command += sbStationArrInsert.ToString();
             return command;
+        }
+
+        public string RouteValidation(string routeName)
+        {
+            string returnedRoute = "NoRoute";
+            SqlConnection con;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM Route where routeName='" + routeName + "'";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                    returnedRoute = Convert.ToString(dr["routeName"]);
+                }
+                return returnedRoute;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
         }
 
     }
