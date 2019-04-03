@@ -10,15 +10,15 @@ namespace KinartiProject_ruppin.Controllers
 {
     public class RouteController : ApiController
     {
-        //[HttpGet]
-        //[Route("api/Route")]
-        //public IEnumerable<Route> Get()
-        //{
-        //    Route r = new Route();
-        //    List<Route> RouteList = new List<Route>();
-        //    RouteList = r.GetAllRoutes();
-        //    return RouteList;           
-        //}
+        [HttpGet]
+        [Route("api/Route")]
+        public IEnumerable<Route> Get()
+        {
+            Route r = new Route();
+            List<Route> RouteList = new List<Route>();
+            RouteList = r.GetAllRoutes();
+            return RouteList;
+        }
 
         [HttpGet]
         [Route("api/Route")]
