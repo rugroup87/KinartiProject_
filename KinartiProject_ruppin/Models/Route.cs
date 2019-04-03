@@ -29,13 +29,13 @@ namespace KinartiProject_ruppin.Models
             StationArr = stationArr;
         }
 
-        public List<Route> GetAllRoutes()
-        {
-            DBServices dbs = new DBServices();
-            List<Route> rl = new List<Route>();
-            rl = dbs.GetAllRoutes();
-            return rl;      
-        }
+        //public List<Route> Read()
+        //{
+        //    DBServices dbs = new DBServices();
+        //    List<Route> rl = new List<Route>();
+        //    rl = dbs.Read();
+        //    return rl;      
+        //}
 
         public int InsertStation()
         {
