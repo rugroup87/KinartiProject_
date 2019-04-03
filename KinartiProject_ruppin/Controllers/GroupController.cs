@@ -17,10 +17,11 @@ namespace KinartiProject_ruppin.Controllers
         public object Get(string GroupName)
         {
             Group G = new Group();
+            Route R = new Route();
             Part[] parts = G.GetGroupParts(GroupName);
             Group group = G.GetSpecificGroup(GroupName);
-            //Route route = 
-            return new {parts, group };
+            List<Route> routes = R.ReadRouteName(group.GroupRouteName);
+            return new {parts, group, routes};
         }
 
         [HttpGet]
