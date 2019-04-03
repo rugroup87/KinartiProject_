@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css">
-    <link href="../CSS/StyleSheetmaslulim.css" rel="stylesheet" />
+    <!--<link href="../CSS/StyleSheetmaslulim.css" rel="stylesheet" />-->
 
     <style type="text/css">
         body {
@@ -75,15 +75,25 @@
             text-align: center;
         }
 
+        #creatRoute {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            color: black;
+            margin-right: 20px;
+        }
+
         button, input, select, textarea {
             font-family: inherit;
             font-size: inherit;
             line-height: inherit;
             color: black;
+            margin-right: 20px;
         }
 
         #addStation {
             margin-right: 20px;
+        
         }
     </style>
 
@@ -93,60 +103,98 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
 
     <script>
+        var i = 1;
         ctr = 1;
         machineList = [];
         machinId = 1;
-        RouteNum = 0;
+        routeName = "";
+        
+        
 
         $(document).ready(function () {
             ajaxCall("GET", "../api/Machine", "", successGetMachine, errorGetMachine);
-
             $("#addStation").click(addStation);
-            $("#Machine").submit(f1);
+            $("#Machine").submit(callAddRouteStation);
         });
 
         function successGetMachine(Machinedata) {
             machineList = Machinedata;
+            str = "<div><label>תחנה" + 1 + "</label><select id=" + ctr + "><option value =''>" + "בחר תחנה" + "</option>";
+            for (i; i <= machineList.length; i++) {
+                str += "<option value ='" + i + "'>" + machineList[i - 1].MachineName + "</option>";
+            }
+            str += "</select></div>";
+            $('#station').append(str);
         }
 
         function errorGetMachine() {
             alert("errorGetMachine");
         }
-
-        function addStation() {
-            str = "<div><label>תחנה" + ctr + "</label><select id=" + ctr + ">";
-            for (var i = 1; i <= machineList.length; i++) {
-                str += "<option value ='" + i + "'> " + machineList[i - 1].MachineName + "</option>"
+        
+        function addStation() {   
+            selectMachineVal = "#" + ctr + " option:selected";
+            selectMachineName = $(selectMachineVal).text();
+            
+            if (selectMachineName!="בחר תחנה") {
+                ctr++;
+                str = "<div><label>תחנה" + ctr + "</label><select id=" + ctr + "><option value =''>" + "בחר תחנה" + "</option>";
+                for (var i = 1; i <= machineList.length; i++) {
+                    str += "<option value ='" + i + "'> " + machineList[i - 1].MachineName + "</option>"
+                }
+                str += "</select></div>";
+                $('#station').append(str);       
             }
-            str += "</select></div>";
-            $('#station').append(str);
-            ctr++;
+            else {
+                alert("עליך לבחור תחנה לפני הוספת תחנה חדשה")
+                 }
         }
-
-        function f1() {
+       
+        function callAddRouteStation() {         
             AddRoute();
             return false;
         }
 
         function AddRoute() {
-            sendStationArr = [];
-            for (var i = 1; i < ctr; i++) {
-                id = "#" + i + " option:selected";
-                MachineNum = $(id).val();
-                sendStationArr.push(MachineNum);
+            routeName = $("#routeName").val();
+            if (routeName == "") {
+                alert("יש להוסיף שם מסלול")
             }
-
-            Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
-                RouteName: $("#routeName").val(),
-                StationArr: sendStationArr
+            else {
+                uri = "../api/Route/RouteNameCheck?routeName=" + routeName
+                ajaxCall("GET", uri, "", successCheckRoute, errorCheckRoute);
+                return false;
             }
+        }
 
-            ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+        function successCheckRoute(data) {
+            if (data == "NoRoute") {
+                sendStationArr = [];
+                for (var i = 1; i <= ctr; i++) {
+                    id = "#" + i + " option:selected";
+                    MachineNum = $(id).val();
+                    sendStationArr.push(MachineNum);
+                }
+                Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
+                    RouteName: routeName,
+                    StationArr: sendStationArr
+                }
+                ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+            }
+            else {
+                alert("שם מסלול תפוס. בחר שם חדש או עדכן מסלול קיים");
+                location.reload()
+            }
+        }
+
+        function errorCheckRoute() {
+            alert("error-Login")
         }
 
         function successInsertRouteName() {
             alert("שם מסלול הוכנס לבסיס נתונים");
-            $('.splitLeft').empty();
+            location.reload();
+            //$('.splitLeft').ready();
+
         }
 
         function errorInsertRouteName() {
@@ -160,6 +208,7 @@
         function errorInsertStaitionInRoute() {
             alert("מערך לא הוזן בבסיס הנתונים")
         }
+
 
     </script>
 
@@ -196,9 +245,10 @@
 
             </div>
 
-            <input type="submit" value="צור מסלול" />
+            <!--<button id="creatRoute" type="submit">צור מסלול</button>-->
+            <input id="creatRoute" type="submit" value="צור מסלול"/>
             <button id="addStation" type="button">הוסף תחנה</button>
-            <button id="addStation" type="button" onclick=window.location.replace("Route.html")>הצג מסלולים קיימים</button>
+            <button id="addRoute" type="button" onclick=window.location.replace("Route.html")>הצג מסלולים קיימים</button>
         </div>
     </form>
 </body>

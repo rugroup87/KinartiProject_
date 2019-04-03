@@ -10,40 +10,11 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="../Scripts/ajaxCalls.js"></script>
-    <script src="../Scripts/ajaxCalls.js"></script>
-    <script>
-        $(document).ready(function () {
-
-            $('#login').on('click', function () {
-                uri = "../api/persons?department=" + $("#department").val() + "&password=" + $("#password").val()
-                ajaxCall("GET", uri, "", successLogin, errorLogin);
-
-            });
-        });
-
-        function successLogin(data) {
-            if (data != "NoUser") {
-                window.location.replace("Dashboard.html");
-            }
-            else {
-                swal("Error!", "מחלקה או סיסמה אינם נכונים", "error");
-                $("#department").val() = "";
-                $("#password").val() = "";
-            }
-        }
-
-        function errorLogin() {
-
-        }
-    </script>
     <style>
         * {
             box-sizing: border-box;
         }
+
         body {
             background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/yFbEFAv/mountains-motion-background_bvfnn_hzx__F0000.png);
             background-repeat: no-repeat;
@@ -52,6 +23,7 @@
             height: 100vh;
             font-family: "Lato", "Aril", sans-serif;
         }
+
         h1 {
             color: #ddd;
             text-transform: uppercase;
@@ -60,6 +32,7 @@
             margin: 0 0 25px 0;
             font-size: 16px;
         }
+
         input {
             display: inline-block;
             background: none;
@@ -69,6 +42,7 @@
             border-bottom: 1px solid #ddd;
             border-radius: 0;
         }
+
         .login-box {
             position: absolute;
             top: 50%;
@@ -141,11 +115,41 @@
                 margin-top: 6%;
             }
     </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#login').on('click', function () {
+                uri = "../api/persons?department=" + $("#department").val() + "&password=" + $("#password").val()
+                ajaxCall("GET", uri, "", successLogin, errorLogin);
+            });
+        });
+
+        function successLogin(data) {
+            if (data != "NoUser") {
+                window.location.replace("Dashboard.html");
+            }
+            else {
+                swal("Error!", "מחלקה או סיסמה אינם נכונים", "error");
+                $("#department").val() = "";
+                $("#password").val() = "";
+            }
+        }
+
+        function errorLogin() {
+            alert("error-Login")
+        }
+
+    </script>
+
 </head>
 <body>
- 
-       
-            
+
     <div class="login-box">
         <div class="input-section">
             <i class="far fa-user"></i>
@@ -164,12 +168,14 @@
         </div>
 
         <input type="submit" class="btn" value="התחבר למערכת" id="login">
-        <div class="question-box">
+        <!--<div class="question-box">
             <a class="reg-btn" href="insert.html"> הירשם </a><p class="question">?משתמש חדש</p>
-        </div>
+        </div>-->
     </div>
+
             <div class="success-box">
                 <h1>You have been logged in!</h1>
             </div>
+
 </body>
 </html>

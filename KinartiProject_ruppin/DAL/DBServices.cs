@@ -88,7 +88,43 @@ using KinartiProject_ruppin.Models;
             }
         }
 
-        // Create Project Table
+        public List<Route> Read()
+        {
+            SqlConnection con;
+            List<Route> rl = new List<Route>();
+            try
+            {
+
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM Route ";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                 // read first field from the row into the list collection
+                    Route r = new Route();
+                    r.RouteName = Convert.ToString(dr["routeName"]);  
+                    rl.Add(r);
+                }
+                return rl;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+        }
+
         public List<Project> GetAllProject()
         {
             SqlConnection con;
@@ -873,9 +909,9 @@ using KinartiProject_ruppin.Models;
             }
 
         public List<Machine> ReadMachine(string conString)
-            {
-                List<Machine> lm = new List<Machine>();
-                SqlConnection con = null;
+        {
+            List<Machine> lm = new List<Machine>();
+            SqlConnection con = null;
 
                 try
                 {
@@ -911,9 +947,9 @@ using KinartiProject_ruppin.Models;
             }
 
         public int UpdateRoute(Route route)
-         {
-                SqlConnection con;
-                SqlCommand cmd;
+     {
+            SqlConnection con;
+            SqlCommand cmd;
 
                 try
                 {
@@ -950,6 +986,7 @@ using KinartiProject_ruppin.Models;
                     }
                 }
         }
+
 
         public int InsertStation(Route route)
             {
@@ -1013,5 +1050,43 @@ using KinartiProject_ruppin.Models;
                 command += sbStationArrInsert.ToString();
                 return command;
             }
+
+        public string RouteValidation(string routeName)
+        {
+            string returnedRoute = "NoRoute";
+            SqlConnection con;
+
+            try
+            {
+                con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            }
+
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+            try
+            {
+                String selectSTR = "SELECT * FROM Route where routeName='" + routeName + "'";
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {// Read till the end of the data into a row
+                    returnedRoute = Convert.ToString(dr["routeName"]);
+                }
+                return returnedRoute;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+
+            }
+        }
 
     }

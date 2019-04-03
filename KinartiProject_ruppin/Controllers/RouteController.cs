@@ -28,6 +28,15 @@ namespace KinartiProject_ruppin.Controllers
             return ri.ReadRouteName(routeName);
         }
 
+
+        [HttpGet]
+        //[Route("api/RouteNameCheck")]
+        public string RouteNameCheck(string routeName)
+        {
+            Route r = new Route();
+            return r.RouterValidation(routeName);
+        }
+
         [HttpPost]
         [Route("api/Route")]
         public void Post([FromBody]Route r)
@@ -42,6 +51,7 @@ namespace KinartiProject_ruppin.Controllers
         {
             r.UpdateRoute();
         }
+
 
     }
 }

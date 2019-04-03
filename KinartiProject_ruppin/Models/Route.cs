@@ -34,7 +34,7 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             List<Route> rl = new List<Route>();
             rl = dbs.GetAllRoutes();
-            return rl;
+            return rl;      
         }
 
         public int InsertStation()
@@ -60,5 +60,11 @@ namespace KinartiProject_ruppin.Models
             return rli;
         }
 
+            public string RouterValidation(string routeName)
+            {
+                DBServices dbs = new DBServices();
+                return dbs.RouteValidation(routeName);
+            }
+        }
+
     }
-}
