@@ -347,13 +347,32 @@ using KinartiProject_ruppin.Models;
                 {// Read till the end of the data into a row
                  // read first field from the row into the list collection
 
-                    Part P = new Part();
-                    //P.ItemNum = Convert.ToString(dr["itemNum"]);
-                    //P.ItemName = Convert.ToString(dr["itemName"]);
-                    //P.ItemStatus = Convert.ToString(dr["itemStatus"]);
-                    //P.ProjectNum = Convert.ToSingle(dr["projectNum"]);
-                    //P.ProjectName = Convert.ToString(dr["projectName"]);
-                    Plist.Add(P);
+                    Part p = new Part();
+                    p.PartBarCode = Convert.ToString(dr["barcode"]);
+                    p.PartNum = Convert.ToString(dr["partNum"]);
+                    p.PartName = Convert.ToString(dr["partName"]);
+                    p.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                    p.ItemNum = Convert.ToString(dr["itemNum"]);
+                    p.GroupName = Convert.ToString(dr["groupName"]);
+                    p.PartKantim = Convert.ToString(dr["partKantim"]);
+                    p.PartFirstMachine = Convert.ToString(dr["PartFirstMachine"]);
+                    p.PartSecondMachine = Convert.ToString(dr["PartSecondMachine"]);
+                    p.PartSetNumber = Convert.ToInt32(dr["setNum"]);
+                    p.PartStatus = Convert.ToString(dr["partStatus"]);
+                    p.PartQuantity = Convert.ToInt32(dr["PartQuantity"]);
+                    p.PartMaterial = Convert.ToString(dr["PartMaterial"]);
+                    p.PartColor = Convert.ToString(dr["PartColor"]);
+                    p.PartLength = Convert.ToInt32(dr["PartLength"]);
+                    p.PartWidth = Convert.ToInt32(dr["PartWidth"]);
+                    p.PartThickness = Convert.ToInt32(dr["PartThickness"]);
+                    p.AdditionToLength = Convert.ToInt32(dr["AdditionToLength"]);
+                    p.AdditionToWidth = Convert.ToInt32(dr["AdditionToWidth"]);
+                    p.AdditionToThickness = Convert.ToInt32(dr["AdditionToThickness"]);
+                    p.PartCropType = Convert.ToString(dr["PartCropType"]);
+                    p.PartCategory = Convert.ToString(dr["PartCategory"]);
+                    p.PartComment = Convert.ToString(dr["PartComment"]);
+
+                    Plist.Add(p);
                 }
                 return Plist.ToArray();
             }
@@ -366,11 +385,11 @@ using KinartiProject_ruppin.Models;
 
             }
 
-    public String[] GetGroups(string projectNum, string itemNum)
+    public Group[] GetGroups(string projectNum, string itemNum)
     {
 
         SqlConnection con;
-        List<String> GNamelist = new List<String>();
+        List<Group> Glist = new List<Group>();
 
         try
         {
@@ -393,10 +412,61 @@ using KinartiProject_ruppin.Models;
 
             while (dr.Read())
             {
-
-                GNamelist.Add(Convert.ToString(dr["groupName"]));
+                Group g = new Group();
+                g.GroupName = Convert.ToString(dr["groupName"]);
+                g.GroupStatus = Convert.ToString(dr["groupStatus"]);
+                g.GroupRouteName = Convert.ToString(dr["routeName"]);
+                g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
+                g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                Glist.Add(g);
             }
-            return GNamelist.ToArray();
+            return Glist.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+    }
+
+    public Group GetSpecificGroup(string GroupName)
+    {
+
+        SqlConnection con;
+        Group g = new Group();
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Groups where groupName = '" + GroupName + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                g.GroupName = Convert.ToString(dr["groupName"]);
+                g.GroupStatus = Convert.ToString(dr["groupStatus"]);
+                g.GroupRouteName = Convert.ToString(dr["routeName"]);
+                g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
+                g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+            }
+            return g;
         }
         catch (Exception ex)
         {
