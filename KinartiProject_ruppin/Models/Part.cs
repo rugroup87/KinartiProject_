@@ -80,14 +80,6 @@ namespace KinartiProject_ruppin.Models
 
         }
 
-        //public List<Part> GetAllPart()
-        //{
-        //    DBServices dbs = new DBServices();
-        //    List<Part> lp = new List<Part>();
-        //    lp = dbs.GetAllPart();
-        //    return lp;
-        //}
-
         public void StatusChange(Objectdata obj)
         {
             DBServices dbs = new DBServices();
