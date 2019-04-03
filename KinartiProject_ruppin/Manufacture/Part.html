@@ -165,7 +165,7 @@
 
         @media (min-width: 768px) {
             .col-sm-3 {
-                width: 100%;
+                width: 50%;
             }
         }
 
@@ -173,6 +173,7 @@
             position: relative;
             min-height: 1px;
             padding-right: 15px;
+            margin: 0 25%;
         }
 
         @media (min-width: 768px) {
@@ -417,6 +418,21 @@
             width: 100%;
             height: 100%;
         }
+
+        /*כפתור לחיצת יצירת מסלול חדש בתוך הטופס*/
+        #createNewRoute {
+            margin-right: 25%;
+            border-right-width: 0px;
+            border-left-width: 0px;
+            margin-left: 25%;
+            border-top-width: 1px;
+            margin-top: 5px;
+        }
+        /*החלק בו נמצאים התחנות שמוצגות בטופס בחירת מסלול ליצירת קבוצה*/
+        #machineRoute {
+            width: 100%;
+        }
+
 
         @font-face {
             font-family: 'Titillium Web';
@@ -729,9 +745,9 @@
                     {
                         extend: 'selected', // Bind to Selected row
                         text: 'צור קבוצה',
-                        name: 'createNewGroup',  // do not change name
+                        name: 'formCreateNewGroup',  // do not change name
                         action: function (nButton, oConfig, oFlash) {
-                            createNewGroup(oConfig);
+                            formCreateNewGroup(oConfig);
                         }
                     }
                     //{
@@ -784,22 +800,29 @@
         function errorUpdateStatus() {
         }
 
-                                //רענון הטבלה כששומרים רשומה
-                                //function refreshParent() {
-                                //    window.location.reload();
-                                //}
+        //רענון הטבלה כששומרים רשומה
+        function refreshParent() {
+            window.location.reload();
+        }
 
+        //לחיצה על סגור בטופס
         $(document).on("click", "#closeWindowsButton", function () {
             //יציאה מדף העריכה לעמוד הראשי
             $("#altEditor-modal").remove();
         });
-
+        //לחיצה על סגור בטופס
         $(document).on("click", "#closeWindowsX", function () {
             //יציאה מדף העריכה לעמוד הראשי
             $("#altEditor-modal").remove();
         });
-        
-        $(document).on("click", "#createNewGroup", function () {
+
+
+        //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
+        $(document).on("click", "#createNewGroupButton", function () {
+            $("#formID").submit(inserNewGroupToDB);
+        });
+
+        function inserNewGroupToDB() {
             var partArr = [];
             for (var i = 0; i < data_rows.data().length; i++) {
                 partArr.push(data_rows.data()[i].PartNum)
@@ -808,16 +831,17 @@
                 ProjectNum: urlParams.get('ProjectNum'),
                 ItemNum: urlParams.get('ItemNum'),
                 GroupName: $("#groupNameID").val(),
-                GroupRouteName: $("#routeNameID").val(),
+                GroupRouteName: $("#routeNameID option:selected").text(),
                 GroupPartCount: $("#partCountID").val(),
                 EstPrepTime: $("#estPrepTimeID").val(),
                 EstCarpTime: $("#estCarpTimeID").val(),
                 EstColorTime: $("#estColorID").val(),
-                ArrPart: partArr 
+                ArrPart: partArr,
+                GroupStatus: ""
                 }
             ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
-
-        });
+            return false;
+        }
 
         //בהצלחת יצירת קבוצה חדשה
         function successInsertGroup() {
@@ -831,30 +855,64 @@
             setTimeout(function () {
                 refreshParent();
             }, 2000);
-
         }
 
         function errorInsertGroup() {
         }
 
+
+        //הצגת של המסלול הנבחר בטופס יצירת הקבוצה
+        function selectOption(selectedRoute) {
+            uriGetSelctedRoutName = "../api/Route?routeName=" + selectedRoute;
+            ajaxCall("GET", uriGetSelctedRoutName, "", SuccessGetRouteInfo, errorGetRouteInfo);
+        }
+
+        //--------------------------------------------------------------------------------------------------------------
+        //בלחיצה על יצרית מסלול חדש בתוך הטופס
+        $(document).on("click", "#createNewRoute", function () {
+            let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+                        width=600,height=630,left=400,top=200`;
+            open('/Bool/createNewRout.html', 'createGroupFromForm', params);
+        });
+
+        function SuccessGetRouteInfo(routedate) {
+            $('#machineRoute').remove();
+            //RouteList = routedate;
+            //str1 = "<h1>מסלול " + routedate.RouteName + "</h1>";
+            strRoute = "<div id='machineRoute'><label>תחנות במסלול: </br>";
+            for (var i = 0; i < routedate.length; i++) {
+                if (i==routedate.length-1) {
+                    strRoute += routedate[i].MachineName + "</label></div>"
+                }
+                else {
+                    strRoute += routedate[i].MachineName + " --> "
+                }
+            }
+            $('#routeNameDiv').append(strRoute);
+        }
+
+        function errorGetRouteInfo() {
+        }
+
         ////תפיסת לחיצת כפתור יצירת קבוצה ופתיחת חלון חדש לטופס יצירה
-        function createNewGroup(dt) {
-        //    //תפיסת השורה שאותה רוצים לערוך
-        //    var data_row = dt.row({ selected: true }).data();
-
+        function formCreateNewGroup(dt) {
+            //    תפיסת השורות שאותן רוצים לערוך
             data_rows = dt.rows({ selected: true });
+            ajaxCall("GET", "../api/Route", "", successGetRoute, errorGetRoute);
+        }
 
+        function successGetRoute(Routesdata) {
+            var enmptyValue = "";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><form id='formID' name='altEditor-form' role='form'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required></div><div id='routeNameDiv' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><select id='routeNameID' name='שם מסלול' onChange='selectOption($(\"#routeNameID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר מסלול מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required><option value='" + enmptyValue + "'>בחר מסלול מהרשימה</option></select></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5><label>הכנה:</label><input type='number' min='0' id='estPrepTimeID' name='זמן הכנה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'><label>נגריה:</label><input type='number' min='0' id='estCarpTimeID' name='זמן נגריה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'><label>צבע:</label><input type='number' min='0' id='estColorID' name='זמן צבע משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button></div></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/></div></form></div></div></div>";
+            var routelistStr = "";
+            for (var i = 1; i <= Routesdata.length; i++) {
+                routelistStr += "<option value='" + i + "'>" + Routesdata[i - 1].RouteName + "</option>";
+            }
+            $('#containerID').append(str); 
+            $('#routeNameID').append(routelistStr);
+        }
 
-        //    //תפיסת התאריכים וכתיבתם לחלון עריכה
-        //    var prodStartDateForm = dateToForm(new Date(data_row.ProdStartDate));
-        //    var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
-        //    var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
-
-        //var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' style='overflow:hidden' class='form-control form-control-sm'></div></form></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button></div></div></div></div>";
-        //var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><input type='text' id='routeNameID' name='שם מסלול' placeholder='בחר שם מסלול' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='text' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5></div></form></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button></div></div></div></div>";
-
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><input type='text' id='routeNameID' name='שם מסלול' placeholder='בחר שם מסלול' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5><label>הכנה:</label><input type='number' id='estPrepTimeID' name='זמן הכנה משוער' style='overflow:hidden' class='form-control form-control-sm'><label>נגריה:</label><input type='number' id='estCarpTimeID' name='זמן נגריה משוער' style='overflow:hidden' class='form-control form-control-sm'><label>צבע:</label><input type='number' id='estColorID' name='זמן צבע משוער' style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button></div></form></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='createNewGroup'>צור קבוצה</button></div></div></div></div>";
-            $('#containerID').append(str);
+        function errorGetRoute() {
         }
 
     </script>

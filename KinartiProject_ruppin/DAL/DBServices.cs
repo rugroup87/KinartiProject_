@@ -26,8 +26,16 @@ using KinartiProject_ruppin.Models;
             // read the connection string from the configuration file
             string cStr = WebConfigurationManager.ConnectionStrings[conString].ConnectionString;
             SqlConnection con = new SqlConnection(cStr);
+        //try
+        //{
             con.Open();
-            return con;
+        //}
+        //catch (Exception ex)
+        //{
+        //    // write to log
+        //    throw (ex);
+        //}
+        return con;
         }
 
         //---------------------------------------------------------------------------------
@@ -716,7 +724,7 @@ using KinartiProject_ruppin.Models;
                 return command;
             }
 
-        public List<Route> Read()
+        public List<Route> GetAllRoutes()
         {
             SqlConnection con;
             List<Route> rl = new List<Route>();
@@ -761,7 +769,7 @@ using KinartiProject_ruppin.Models;
                 try
                 {
                     con = connect(conString); // create a connection to the database using the connection String defined in the web config file
-                    String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "'";
+                    String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "' order by position";
                     SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                     // get a reader
