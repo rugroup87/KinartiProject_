@@ -756,7 +756,7 @@ using KinartiProject_ruppin.Models;
                 try
                 {
                     con = connect(conString); // create a connection to the database using the connection String defined in the web config file
-                    String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "'";
+                    String selectSTR = "select * from StationInRoute as sir inner join Machine as m on sir.machineNum=m.machineNum where sir.routeName='" + routeName + "' order by position";
                     SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                     // get a reader
