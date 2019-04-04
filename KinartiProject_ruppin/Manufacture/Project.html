@@ -406,8 +406,22 @@
                 defaultContent: "",
                 "className": "dt-center",
                 id: "ProjectStatus",
-                "targets": "_all",
-                render: function (data) { return createSelect(data); }
+                    "targets": "_all",
+                    render: function (data) { return createSelect(data); }
+                    //function (data, type, full, meta) {
+                    //    if (type === 'filter' || type === 'sort') {
+                    //        var api = new $.fn.dataTable.Api(meta.settings);
+                    //        var td = api.cell({ row: meta.row, column: meta.col }).node();
+                    //        var $input = $('select, input', td);
+                    //        if ($input.length && $input.is('select')) {
+                    //            data = $('option:selected', $input).text();
+                    //        } else {
+                    //            data = $input.val();
+                    //        }
+                    //    }
+
+                    //    return data;
+                    //}                
             }, {
                 title: "הערות",
                 data: 'Comment',
@@ -428,10 +442,6 @@
                                 return data;
                             }
                         }
-                     
-                     //return type === 'display' && data.length > 20 && data !== null ?
-                     //     '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>' :
-                     //     data;
                     }
             }, {
                 title: "ת. כניסה לעבודה",
@@ -491,24 +501,20 @@
             });
         }
 
-        function checkboxProjectFinal() {
+        $(document).on("click", "#checkbox", function (e) {
             $.fn.dataTableExt.afnFiltering.push(function (oSettings, aData, iDataIndex) {
                 var checked = $('#checkbox').is(':checked');
                 var s = myTable.column(4).data()[iDataIndex]
                 if (checked) {
                     return true;
                 }
-                if (!checked && s != "סיום פרוייקט!") {
+                if (!checked && s != "סיום פרוייקט") {
                     return true;
                 }
                 else {
                     return false;
                 }
             });
-        }
-
-        $(document).on("click", "#checkbox", function (e) {
-            checkboxProjectFinal();
             myTable.draw();
         });
 
