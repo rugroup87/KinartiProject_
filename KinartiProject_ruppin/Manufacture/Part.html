@@ -29,7 +29,7 @@
 
         header {
             padding: 5px 0;
-            background: #333;
+            background: #404040;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
@@ -83,7 +83,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #337ab7;
+            color: #f9f9f9;
             text-transform: uppercase;
         }
 
@@ -96,6 +96,10 @@
                 bottom: 15px;
                 background: #ffffff;
                 transition: width .5s linear;
+            }
+            /*/The color of the menu when hover/*/
+            nav a:hover {
+                color: #43a4f7;
             }
 
             nav a:hover:after {
@@ -297,7 +301,7 @@
                 margin-left: 80px;
             }
 
-            /*---------------------------------------------------------------------------------------*/
+            /*-----------------------------Side Menu Style--------------------------------*/
             @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
         }
 
@@ -315,6 +319,7 @@
             text-align: center;
             vertical-align: middle;
             font-size: 20px;
+            color: #f9f9f9;
         }
 
 
@@ -324,7 +329,7 @@
         }
 
         .main-menu {
-            background: #212121;
+            background: #404040;
             border-right: 1px solid #e5e5e5;
             position: fixed;
             top: 0;
@@ -356,7 +361,7 @@
                     display: table;
                     border-collapse: collapse;
                     border-spacing: 0;
-                    color: #337ab7;
+                    color: #f9f9f9;
                     font-family: arial;
                     font-size: 14px;
                     text-decoration: none;
@@ -458,14 +463,15 @@
         }
 
         i.fa.fa-sitemap.fa-2x {
-            color: #3efb9b;
+            color: #f9f9f9;
+            
         }
 
         /*make unclickable label with this id*/
         #unclickable {
             pointer-events: none;
         }
-        /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+        /*//////////////////////The Route in form of group style////////////////////////////////////*/
         body {
             line-height: 1.3em;
             min-width: 920px;
@@ -559,7 +565,7 @@
         }
 
         thead tr:first-child {
-            background: #5ea8e6;
+            background: #5ea8e699;
             color: #fff;
             border: none;
         }
@@ -723,7 +729,7 @@
 
             var str = "<ul>";
             // Addint the groups to the side menu
-            str += "<li style='border-bottom: 3px solid #4588ba;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #3efb9b;' class='nav-text'> קבוצות מוכנות </span></li>";
+            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #f9f9f9;' class='nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
             for (var i = 0; i < Data.Glist.length; i++) {
