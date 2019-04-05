@@ -616,7 +616,7 @@ using KinartiProject_ruppin.Models;
 
             StringBuilder sb = new StringBuilder();
             // use a string builder to create the dynamic string
-            sb.AppendFormat("UPDATE Project SET comment  = '{0}', prodStartDate = '{1}', supplyDate = '{2}' where projectNum  = '{3}'", project.Comment, project.ProdStartDate.ToString(),project.SupplyDate.ToString(),project.ProjectNum.ToString());
+            sb.AppendFormat("UPDATE Project SET comment  = '{0}', prodStartDate = '{1}', supplyDate = '{2}' where projectNum  = '{3}'", project.Comment, project.ProdStartDateString,project.SupplyDateString,project.ProjectNum.ToString());
 
             command = sb.ToString();
             return command;
