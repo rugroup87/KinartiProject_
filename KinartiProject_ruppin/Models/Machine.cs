@@ -20,7 +20,7 @@ namespace KinartiProject_ruppin.Models
             MachineName = machineName;
         }
 
-        public List<Machine> Read()
+        public List<Machine> GetAllMachines()
         {
             DBServices dbs = new DBServices();
             return dbs.ReadMachine("KinartiConnectionString");

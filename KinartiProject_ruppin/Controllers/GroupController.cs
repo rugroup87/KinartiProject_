@@ -26,12 +26,15 @@ namespace KinartiProject_ruppin.Controllers
 
         [HttpGet]
         [Route("api/GetGroups")]
-        public IEnumerable<Group> Get(string projectNum, string itemNum)
+        public object Get(string projectNum, string itemNum)
         {
+            Machine M = new Machine();
+            List<Machine> mlist;
             Group G = new Group();
             Group[] Glist;
             Glist = G.GetGroups(projectNum, itemNum);
-            return Glist;
+            mlist = M.GetAllMachines();
+            return new {Glist, mlist };
         }
 
         public int Post([FromBody]Group group)

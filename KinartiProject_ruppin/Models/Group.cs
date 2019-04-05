@@ -22,7 +22,7 @@ namespace KinartiProject_ruppin.Models
         //הג'ייסון לא נכנס לי לבנאי הזה ולכן אין סטטוס כי הוא הולך לבנאי הריק - לבדוק למה
         public Group(float _projectNum, string _itemNum, string _groupName, string _groupRouteName,
            int _groupPartCount, int _estPrepTime, int _estCarpTime, int _estColorTime,
-           string[] _arrPart, string _groupStatus = "קבוצה מוכנה לעבודה", string _CurrentGroupStation = "תרם נסרק")
+           string[] _arrPart, string _groupStatus = "קבוצה מוכנה לעבודה", string _CurrentGroupStation = "טרם נסרק")
         {
             ProjectNum = _projectNum;
             ItemNum = _itemNum;
