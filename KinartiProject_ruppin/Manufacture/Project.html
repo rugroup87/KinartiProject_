@@ -282,6 +282,11 @@
             width: 100%;
         }
 
+        /*This is For the Edit button location*/
+        a.dt-button.buttons-selected {
+            margin-left: 80px;
+        }
+
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -301,8 +306,8 @@
     <script>
         $(document).ready(function () {
             StatusArr = [];
-            //$.fn.dataTable.moment('D/M/YYYY');
-            //$.fn.dataTable.moment(' D/M/YYYY HH:mm');
+            $.fn.dataTable.moment('D/M/YYYY');
+            $.fn.dataTable.moment('D/M/YYYY HH:mm');
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
