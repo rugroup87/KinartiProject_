@@ -244,6 +244,12 @@
                 padding: 15px;
             }
 
+            @media(min-width:992px){
+                pre {
+                    overflow-x: hidden;
+                }
+            }
+
             pre {
                 display: block;
                 padding: 0px;
@@ -257,6 +263,7 @@
                 border: 3px solid #ccc;
                 border-radius: 10px;
                 height: 100%;
+                
             }
 
             .modal-footer {
@@ -289,8 +296,8 @@
 
             #containerID {
                 margin: 0px;
-                padding: 0px 0px 0px 0px;
-                max-width: 100%;
+                padding-right: 20px;
+                width: 102%;
             }
 
             #example {
@@ -671,34 +678,54 @@
             $(document).on("click", ".main-menu ul li span", function () {
                 //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה
                 console.log($(this).id);
-                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));;
+                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));
                 ajaxCall("GET", uriGroupParts, "", GetSuccessGroupParts, ErrorGetGroupParts);
                 console.log($(this).text());
             });
 
+            $(document).on("click", "#SaveGroupChanges", function () {
+                //מעדכן את הערכת זמנים של קבוצה מוכנה
+                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                ajaxCall("PUT", uriUpdateTime, "", SuccessUpdateGroupEstTime, ErrorUpdateGroupEstTime);
+            });
+
+            $(document).on("click", "#DeleteIcon", function () {
+                //מביא את האיידי של השורה עליה לחצו
+                console.log($(this).context.parentNode.parentNode.parentNode.id);
+                //מוחק חלק מתוך קבוצה - אבל עדיין חלק יהיה קיים בחלקים אחרים ויהיה אפשר לשייך אותו לאיפושהו
+                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id;
+                ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
+            });
+
         });
 
-        //function Form_Of_Parts_For_Specific_Group() {
+        function SuccessDeletePartFromGroup(barcode) { $("#" + barcode).remove(); }
+        function ErrorDeletePartFromGroup() { }
 
-        //}
+        function SuccessUpdateGroupEstTime()
+        {
+            $("#altEditor-modal").remove();
+            //צריך לעשות פה סוואל
+        }
+        function ErrorUpdateGroupEstTime() {}
         function GetSuccessGroupParts(Data) {
             //Need to add Status value
             //class="active" marks the circle in green - related to the progress bar
             console.log(Data)
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button> \
-                            <h3 class='modal-title'>קבוצה</h3> \
-                            <h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
-                            <div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                            <label>מספר חלקים בקבוצה:</label><input type='text' id='unclickable' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
-                            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                            <label>סטטוס:</label><input type='text' id='unclickable' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
-                            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                            <label>זמן הכנה:</label><input type='number' id='#' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
-                            <label>זמן נגרייה:</label><input type='number' id='#' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
-                            <label>זמן צבע:</label><input type='number' id='#' name='זמן צבע' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstColorTime + "'>\
-                            </div >\
-                            <label>שם מסלול : " + Data.group.GroupRouteName + "</label>\
-                            <div class='history-tl-container'><ul class='tl'>";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>קבוצה</h3>\
+<h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
+<div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מספר חלקים בקבוצה:</label><input type='text' id='unclickable' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>סטטוס:</label><input type='text' id='unclickable' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>זמן הכנה:</label><input type='number' id='PrepTime' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
+<label>זמן נגרייה:</label><input type='number' id='CarpTime' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
+<label>זמן צבע:</label><input type='number' id='PaintTime' name='זמן צבע' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstColorTime + "'>\
+</div >\
+<label>שם מסלול : " + Data.group.GroupRouteName + "</label>\
+<div class='history-tl-container'><ul class='tl'>";
             for (var i = 0; i < Data.routes.length; i++) {
                 //Data.routes[i].MachineName == Data.routes[Data.group.CurrentGroupStation].MachineName
                 //Data.group.CurrentGroupStation
@@ -713,7 +740,7 @@
             str += "</ul ></div >";
             str += "<table><thead><tr><th colspan='4'>חלקים בקבוצה: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
             for (var k = 0; k < Data.parts.length; k++) {
-                str += "<tr><td>" + Data.parts[k].PartBarCode + "</td><td>" + Data.parts[k].PartName + "</td><td>" + Data.parts[k].PartStatus + "</td><td><i class='fas fa-pencil-alt'></i><i class='fas fa-trash'></i></td></tr>"
+                str += "<tr id='" + Data.parts[k].PartBarCode + "'><td>" + Data.parts[k].PartBarCode + "</td><td>" + Data.parts[k].PartName + "</td><td>" + Data.parts[k].PartStatus + "</td><td><a href='#'><i id='DeleteIcon' class='fas fa-trash'></i></a></td></tr>"
             }
             str += "</tbody></table>"
             str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='#' data-dismiss='modal'>כרגע סתם כפתור</button></div ></form ></pre ></div >\

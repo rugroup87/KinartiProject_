@@ -41,5 +41,21 @@ namespace KinartiProject_ruppin.Controllers
         {
             return group.InsertNewGroup();
         }
+
+        [HttpPut]
+        [Route("api/UpdateGroupEstTime")]
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        {
+            Group G = new Group();
+            G.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+        }
+
+        [HttpPut]
+        [Route("api/DeletePartFromGroup")]
+        public string DeletePartFromGroup(string partBarcode)
+        {
+            Group G = new Group();
+            return G.DeletePartFromGroup(partBarcode);
+        }
     }
 }
