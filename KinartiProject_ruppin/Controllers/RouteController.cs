@@ -21,6 +21,15 @@ namespace KinartiProject_ruppin.Controllers
         }
 
         [HttpGet]
+        public IEnumerable<Route> GetRouteWithoutOld_()
+        {
+            Route r = new Route();
+            List<Route> RouteList = new List<Route>();
+            RouteList = r.GetRouteWithoutOld_();
+            return RouteList;
+        }
+
+        [HttpGet]
         [Route("api/Route")]
         public IEnumerable<Route> Get(string routeName)
         {

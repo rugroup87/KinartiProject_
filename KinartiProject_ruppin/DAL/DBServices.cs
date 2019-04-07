@@ -866,6 +866,43 @@ public class DBServices
         }
     }
 
+    public List<Route> GetRouteWithoutOld_()
+    {
+        SqlConnection con;
+        List<Route> rl = new List<Route>();
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT * FROM Route WHERE routeName NOT LIKE 'old_%' ";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+                Route r = new Route();
+                r.RouteName = Convert.ToString(dr["routeName"]);
+                rl.Add(r);
+            }
+            return rl;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+    }
+
     public List<Route> ReadRouteInfo(string conString, string routeName)
     {
         List<Route> lri = new List<Route>();
