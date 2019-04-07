@@ -35,7 +35,7 @@ namespace KinartiProject_ruppin.Models
             string temp1 = "";
             List<string> temp = new List<string>();
             Excel.Application excelApp = new Excel.Application();
-            Excel.Workbook excelBook = excelApp.Workbooks.Open(@"C:\Users\alex.tochilovsky\source\repos\KinartiProject_ruppin\KinartiProject_ruppin\" + filename);
+            Excel.Workbook excelBook = excelApp.Workbooks.Open(@"C:\Users\user\source\repos\KinartiProject_\KinartiProject_ruppin\" + filename);
             Excel._Worksheet excelSheet = excelBook.Sheets[1];
             Excel.Range excelRange = excelSheet.UsedRange;
             
@@ -144,8 +144,8 @@ namespace KinartiProject_ruppin.Models
             catch (Exception e)
             {
                 KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                string excelFileName = filename.Replace("uploadedFiles/", "");
-                File.Delete(excelBook.Path + excelFileName);
+                string excelFileName = filename.Replace(@"uploadedFiles\", "");
+                File.Delete(@"C:\Users\user\source\repos\KinartiProject_\KinartiProject_ruppin\uploadedFiles\" + excelFileName);
                 throw (e);
             }
             
