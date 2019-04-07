@@ -699,12 +699,16 @@
 
         });
 
-        function SuccessDeletePartFromGroup(barcode) { $("#" + barcode).remove(); }
+        function SuccessDeletePartFromGroup(barcode) {
+            $("#" + barcode).remove();
+            window.location.reload();
+        }
         function ErrorDeletePartFromGroup() { }
 
         function SuccessUpdateGroupEstTime()
         {
-            $("#altEditor-modal").remove();
+            window.location.reload();
+            //$("#altEditor-modal").remove();
             //צריך לעשות פה סוואל
         }
         function ErrorUpdateGroupEstTime() {}
