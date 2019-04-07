@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Diagnostics;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Linq;
 using System.Web;
 using Excel = Microsoft.Office.Interop.Excel;
@@ -14,6 +17,16 @@ namespace KinartiProject_ruppin.Models
         public ExcelFile()
         {
 
+        }
+
+        [DllImport("user32.dll")]
+        static extern int GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
+
+        Process GetExcelProcess(Excel.Application excelApp)
+        {
+            int id;
+            GetWindowThreadProcessId(excelApp.Hwnd, out id);
+            return Process.GetProcessById(id);
         }
 
         public void WorkOnExcelFile(string filename, string fileuploaddate)
@@ -122,13 +135,30 @@ namespace KinartiProject_ruppin.Models
                 part.GroupName = "";
                 PartList.Add(part);
             }
-
+            var ExcelIdProcess = GetExcelProcess(excelApp);
             Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), PartList);
-            Project NewData = new Project(Convert.ToSingle(excelRange.Cells[2, 1].Value2), excelRange.Cells[2, 2].Value2, fileuploaddate, Item);
+            try
+            {
+                Project NewData = new Project(Convert.ToSingle(excelRange.Cells[2, 1].Value2), excelRange.Cells[2, 2].Value2, fileuploaddate, Item);
+            }
+            catch (Exception e)
+            {
+                KillSpecificExcelFileProcess(ExcelIdProcess.Id);
+                string excelFileName = filename.Replace("uploadedFiles/", "");
+                File.Delete(excelBook.Path + excelFileName);
+                throw (e);
+            }
             
             //after reading, relaase the excel project
             excelApp.Quit();
             System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+        }
+
+        private void KillSpecificExcelFileProcess(int id)
+        {
+            //excelFileName = excelFileName.Replace("uploadedFiles/", "");
+            var process = Process.GetProcessById(id);
+            process.Kill();
         }
     }
 }
