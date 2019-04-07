@@ -93,7 +93,6 @@
 
         #addStation {
             margin-right: 20px;
-        
         }
     </style>
 
@@ -108,8 +107,7 @@
         machineList = [];
         machinId = 1;
         routeName = "";
-        
-        
+
 
         $(document).ready(function () {
             ajaxCall("GET", "../api/Machine", "", successGetMachine, errorGetMachine);
@@ -130,26 +128,26 @@
         function errorGetMachine() {
             alert("errorGetMachine");
         }
-        
-        function addStation() {   
+
+        function addStation() {
             selectMachineVal = "#" + ctr + " option:selected";
             selectMachineName = $(selectMachineVal).text();
-            
-            if (selectMachineName!="בחר תחנה") {
+
+            if (selectMachineName != "בחר תחנה") {
                 ctr++;
                 str = "<div><label>תחנה" + ctr + "</label><select id=" + ctr + "><option value =''>" + "בחר תחנה" + "</option>";
                 for (var i = 1; i <= machineList.length; i++) {
                     str += "<option value ='" + i + "'> " + machineList[i - 1].MachineName + "</option>"
                 }
                 str += "</select></div>";
-                $('#station').append(str);       
+                $('#station').append(str);
             }
             else {
                 alert("עליך לבחור תחנה לפני הוספת תחנה חדשה")
-                 }
+            }
         }
-       
-        function callAddRouteStation() {         
+
+        function callAddRouteStation() {
             AddRoute();
             return false;
         }
@@ -182,7 +180,7 @@
             }
             else {
                 alert("שם מסלול תפוס. בחר שם חדש או עדכן מסלול קיים");
-                location.reload()
+                location.reload();
             }
         }
 

@@ -963,7 +963,7 @@
         }
 
 
-        //the function creates a dropdown list box of ProjectStatus
+        //the function creates a dropdown list box of PartStatus
         function createSelect(selItem) {
 
             var sel = "<select>";
@@ -978,6 +978,7 @@
             sel += "</select>";
             return sel;
         }
+
 
         $(document).on("change", "#example select", function () {
             var oData = {
@@ -1066,7 +1067,7 @@
         }
 
         //--------------------------------------------------------------------------------------------------------------
-        //בלחיצה על יצרית מסלול חדש בתוך הטופס
+        // בלחיצה על יצירת מסלול חדש בתוך הטופס מעבר לחלון אינטרנט חדש ---- לבטל כשמסיימים דף מסלולים
         $(document).on("click", "#createNewRoute", function () {
             let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
                             width=600,height=630,left=400,top=200`;
@@ -1101,7 +1102,40 @@
 
         function successGetRoute(Routesdata) {
             var enmptyValue = "";
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><form id='formID' name='altEditor-form' role='form'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required></div><div id='routeNameDiv' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><select id='routeNameID' name='שם מסלול' onChange='selectOption($(\"#routeNameID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר מסלול מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required><option value='" + enmptyValue + "'>בחר מסלול מהרשימה</option></select></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5><label>הכנה:</label><input type='number' min='0' id='estPrepTimeID' name='זמן הכנה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'><label>נגריה:</label><input type='number' min='0' id='estCarpTimeID' name='זמן נגריה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'><label>צבע:</label><input type='number' min='0' id='estColorID' name='זמן צבע משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button></div></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/></div></form></div></div></div>";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
+</div>\
+<div class='modal-body'><pre>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>שם קבוצה:</label>\
+<input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+</div>\
+<div id='routeNameDiv' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מסלול:</label>\
+<select id='routeNameID' name='שם מסלול' onChange='selectOption($(\"#routeNameID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר מסלול מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+<option value='" + enmptyValue + "'>בחר מסלול מהרשימה</option>\
+</select>\
+</div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מספר החלקים בקבוצה:</label>\
+<input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled>\
+</div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5>\
+<label>הכנה:</label><input type='number' min='0' id='estPrepTimeID' name='זמן הכנה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
+<label>נגריה:</label><input type='number' min='0' id='estCarpTimeID' name='זמן נגריה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
+<label>צבע:</label><input type='number' min='0' id='estColorID' name='זמן צבע משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
+</div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button>\
+</div>\
+</pre></div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/>\
+</div></form></div></div></div>";
             var routelistStr = "";
             for (var i = 1; i <= Routesdata.length; i++) {
                 routelistStr += "<option value='" + i + "'>" + Routesdata[i - 1].RouteName + "</option>";
