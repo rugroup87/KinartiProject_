@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+//הקלאסים פה זהם בישביל אקספשנים שאני מייצר על דברים שאני רוצה
+//כל פעם צריך לבנות קלאס חדש בישביל אקספשן חדש שאני רוצה לשים
 namespace KinartiProject_ruppin.Models
 {
     [Serializable]
