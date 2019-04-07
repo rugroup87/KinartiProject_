@@ -118,7 +118,8 @@ namespace KinartiProject_ruppin.Models
                             // code block
                     }
                 }
-                part.PartStatus = "עוד לא התחיל";
+                part.PartStatus = "חלק טרם נסרק";
+                part.GroupName = "";
                 PartList.Add(part);
             }
 

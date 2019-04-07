@@ -6,7 +6,17 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-        
+
+        <script src="../Scripts/ajaxCalls.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+        <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
+        <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
+        <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
+        <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+        <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+
         <style>
             body {
                 line-height: 1.3em;
@@ -113,7 +123,7 @@
 
             th {
                 font-weight: 500;
-                text-align:center;
+                text-align: center;
             }
 
             thead tr:last-child th {
@@ -154,9 +164,22 @@
             }
             /*this is for the icons style - space between them*/
             .fa, .fas {
-                 margin-right: 20%; 
+                margin-right: 20%;
             }
         </style>
+        <script>
+
+            $(document).ready(function () {
+
+                $(document).on("click", "#one", function () {
+                    //console.log("work")
+                    alert("Ok");
+                    //uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                    //ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
+                });
+
+            });
+        </script>
     </head>
     <body>
 
@@ -210,7 +233,7 @@
                     <td>Encontrar desenvolvedor front-end</td>
                     <td>xyyux</td>
                     <td>
-                        <i class="fas fa-trash"></i>
+                        <i id="one" class="fas fa-trash"></i>
                         <i class="fas fa-pencil-alt"></i>
                     </td>
                 </tr>

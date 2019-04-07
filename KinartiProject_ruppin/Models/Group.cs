@@ -55,23 +55,11 @@ namespace KinartiProject_ruppin.Models
             return dbs.GetSpecificGroup(GroupName);
         }
 
-
-
-        ////מחזיר לנו את החלקים של הקבוצה שנבחרה כולל את המידע של הקבוצה 
-        //public Part[] GetGroupParts(string GroupName)
-        //{
-        //    DBServices dbs = new DBServices();
-        //    Part[] parts = dbs.GetGroupParts(GroupName);
-        //    Group g = dbs.GetSpecificGroup(GroupName);
-        //    var result = Add_Multiply(g, parts);
-        //    return result;
-        //}
-        ////השימוש ב טאפל.. מאפשר להחזיר 2 פרמטרים
-        //private static Tuple<Group, Part[]> Add_Multiply(Group g, Part[] parts)
-        //{
-        //    var tuple = new Tuple<Group, Part[]>(g, parts);
-        //    return tuple;
-        //}
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        {
+            DBServices dbs = new DBServices();
+            dbs.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+        }
 
         //מחזיר את כל הקבוצות אשר שייכוח לפרויקט ופריט מסויים
         public Group[] GetGroups(string projectNum, string itemNum)
@@ -85,6 +73,12 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             int numAffected = dbs.InsertNewGroup(this);
             return numAffected;
+        }
+
+        public string DeletePartFromGroup(string partBarcode)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.DeletePartFromGroup(partBarcode);
         }
     }
 }

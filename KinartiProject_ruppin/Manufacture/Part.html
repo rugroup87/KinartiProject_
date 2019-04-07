@@ -29,7 +29,7 @@
 
         header {
             padding: 5px 0;
-            background: #333;
+            background: #404040;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
@@ -83,7 +83,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #337ab7;
+            color: #f9f9f9;
             text-transform: uppercase;
         }
 
@@ -96,6 +96,10 @@
                 bottom: 15px;
                 background: #ffffff;
                 transition: width .5s linear;
+            }
+            /*/The color of the menu when hover/*/
+            nav a:hover {
+                color: #43a4f7;
             }
 
             nav a:hover:after {
@@ -240,6 +244,12 @@
                 padding: 15px;
             }
 
+            @media(min-width:992px){
+                pre {
+                    overflow-x: hidden;
+                }
+            }
+
             pre {
                 display: block;
                 padding: 0px;
@@ -253,6 +263,7 @@
                 border: 3px solid #ccc;
                 border-radius: 10px;
                 height: 100%;
+                
             }
 
             .modal-footer {
@@ -285,8 +296,8 @@
 
             #containerID {
                 margin: 0px;
-                padding: 0px 0px 0px 0px;
-                max-width: 100%;
+                padding-right: 20px;
+                width: 102%;
             }
 
             #example {
@@ -297,7 +308,7 @@
                 margin-left: 80px;
             }
 
-            /*---------------------------------------------------------------------------------------*/
+            /*-----------------------------Side Menu Style--------------------------------*/
             @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
         }
 
@@ -315,6 +326,7 @@
             text-align: center;
             vertical-align: middle;
             font-size: 20px;
+            color: #f9f9f9;
         }
 
 
@@ -324,7 +336,7 @@
         }
 
         .main-menu {
-            background: #212121;
+            background: #404040;
             border-right: 1px solid #e5e5e5;
             position: fixed;
             top: 0;
@@ -356,7 +368,7 @@
                     display: table;
                     border-collapse: collapse;
                     border-spacing: 0;
-                    color: #337ab7;
+                    color: #f9f9f9;
                     font-family: arial;
                     font-size: 14px;
                     text-decoration: none;
@@ -458,14 +470,15 @@
         }
 
         i.fa.fa-sitemap.fa-2x {
-            color: #3efb9b;
+            color: #f9f9f9;
+            
         }
 
         /*make unclickable label with this id*/
         #unclickable {
             pointer-events: none;
         }
-        /*////////////////////////////////////////////////////////////////////////////////////////////////*/
+        /*//////////////////////The Route in form of group style////////////////////////////////////*/
         body {
             line-height: 1.3em;
             min-width: 920px;
@@ -559,7 +572,7 @@
         }
 
         thead tr:first-child {
-            background: #5ea8e6;
+            background: #5ea8e699;
             color: #fff;
             border: none;
         }
@@ -665,34 +678,58 @@
             $(document).on("click", ".main-menu ul li span", function () {
                 //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה
                 console.log($(this).id);
-                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));;
+                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));
                 ajaxCall("GET", uriGroupParts, "", GetSuccessGroupParts, ErrorGetGroupParts);
                 console.log($(this).text());
             });
 
+            $(document).on("click", "#SaveGroupChanges", function () {
+                //מעדכן את הערכת זמנים של קבוצה מוכנה
+                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                ajaxCall("PUT", uriUpdateTime, "", SuccessUpdateGroupEstTime, ErrorUpdateGroupEstTime);
+            });
+
+            $(document).on("click", "#DeleteIcon", function () {
+                //מביא את האיידי של השורה עליה לחצו
+                console.log($(this).context.parentNode.parentNode.parentNode.id);
+                //מוחק חלק מתוך קבוצה - אבל עדיין חלק יהיה קיים בחלקים אחרים ויהיה אפשר לשייך אותו לאיפושהו
+                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id;
+                ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
+            });
+
         });
 
-        //function Form_Of_Parts_For_Specific_Group() {
+        function SuccessDeletePartFromGroup(barcode) {
+            $("#" + barcode).remove();
+            window.location.reload();
+        }
+        function ErrorDeletePartFromGroup() { }
 
-        //}
+        function SuccessUpdateGroupEstTime()
+        {
+            window.location.reload();
+            //$("#altEditor-modal").remove();
+            //צריך לעשות פה סוואל
+        }
+        function ErrorUpdateGroupEstTime() {}
         function GetSuccessGroupParts(Data) {
             //Need to add Status value
             //class="active" marks the circle in green - related to the progress bar
             console.log(Data)
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button> \
-                            <h3 class='modal-title'>קבוצה</h3> \
-                            <h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
-                            <div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                            <label>מספר חלקים בקבוצה:</label><input type='text' id='unclickable' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
-                            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                            <label>סטטוס:</label><input type='text' id='unclickable' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
-                            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                            <label>זמן הכנה:</label><input type='number' id='#' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
-                            <label>זמן נגרייה:</label><input type='number' id='#' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
-                            <label>זמן צבע:</label><input type='number' id='#' name='זמן צבע' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstColorTime + "'>\
-                            </div >\
-                            <label>שם מסלול : " + Data.group.GroupRouteName + "</label>\
-                            <div class='history-tl-container'><ul class='tl'>";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>קבוצה</h3>\
+<h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
+<div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מספר חלקים בקבוצה:</label><input type='text' id='unclickable' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>סטטוס:</label><input type='text' id='unclickable' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>זמן הכנה:</label><input type='number' id='PrepTime' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
+<label>זמן נגרייה:</label><input type='number' id='CarpTime' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
+<label>זמן צבע:</label><input type='number' id='PaintTime' name='זמן צבע' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstColorTime + "'>\
+</div >\
+<label>שם מסלול : " + Data.group.GroupRouteName + "</label>\
+<div class='history-tl-container'><ul class='tl'>";
             for (var i = 0; i < Data.routes.length; i++) {
                 //Data.routes[i].MachineName == Data.routes[Data.group.CurrentGroupStation].MachineName
                 //Data.group.CurrentGroupStation
@@ -707,7 +744,7 @@
             str += "</ul ></div >";
             str += "<table><thead><tr><th colspan='4'>חלקים בקבוצה: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
             for (var k = 0; k < Data.parts.length; k++) {
-                str += "<tr><td>" + Data.parts[k].PartBarCode + "</td><td>" + Data.parts[k].PartName + "</td><td>" + Data.parts[k].PartStatus + "</td><td><i class='fas fa-pencil-alt'></i><i class='fas fa-trash'></i></td></tr>"
+                str += "<tr id='" + Data.parts[k].PartBarCode + "'><td>" + Data.parts[k].PartBarCode + "</td><td>" + Data.parts[k].PartName + "</td><td>" + Data.parts[k].PartStatus + "</td><td><a href='#'><i id='DeleteIcon' class='fas fa-trash'></i></a></td></tr>"
             }
             str += "</tbody></table>"
             str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='#' data-dismiss='modal'>כרגע סתם כפתור</button></div ></form ></pre ></div >\
@@ -723,7 +760,7 @@
 
             var str = "<ul>";
             // Addint the groups to the side menu
-            str += "<li style='border-bottom: 3px solid #4588ba;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #3efb9b;' class='nav-text'> קבוצות מוכנות </span></li>";
+            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #f9f9f9;' class='nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
             for (var i = 0; i < Data.Glist.length; i++) {
