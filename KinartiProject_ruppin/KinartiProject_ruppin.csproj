@@ -195,6 +195,7 @@
     <Compile Include="Models\ExcelFile.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\MyExceptions.cs" />
     <Compile Include="Models\Objectdata.cs" />
     <Compile Include="Models\Part.cs" />
     <Compile Include="Models\Machine.cs" />

@@ -184,8 +184,9 @@
         function FillTheDB() {
             swal("Upload Successfuly!", "הפריט עבר בהצלחה למחלקת ייצור", "success");
         }
-        function errorFillTheDB() {
-            swal("Error: " + err);
+        function errorFillTheDB(err) {
+            var er = eval("(" + err.responseText + ")");
+            swal("Error: " + er.ExceptionMessage);
         }
         function GetCurrentDate() {
             var currentdate = new Date();
