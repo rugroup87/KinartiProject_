@@ -5,10 +5,10 @@
     <title></title>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> <!--dataTables-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> dataTables-->
+    <!--<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  dataTables.buttons
+    <!--<link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  dataTables.select-->
+    <!--<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  dataTables.responsive-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
@@ -618,23 +618,23 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
-    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
-    <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
-    <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
-    <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
-    <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--<script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> dataTables-->
+    <!--<script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  dataTables.buttons-->
+    <!--<script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> dataTables.select-->
+    <!--<script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  dataTables.responsive-->
+    <!--<script src="js/altEditor/dataTables.altEditor.free.js"></script>  dataTables.altEditor-->
 
     <script>
 
         $(document).on("click", "#createRoute", function () {
             ajaxCall("GET", "../api/Machine", "", successGetMachine, errorGetMachine);
-
         });
 
-        //ctr = 1;
+        var totalStaionInRoute = 0;
+        var stationNumber = 1;
         machineList = [];
         machinId = 1;
-        routeName = "";
 
 
         function successGetMachine(Machinedata) {
@@ -664,28 +664,19 @@
 </div>\
 </form></div></div></div>";
             $('#containerID').append(str);
-            var stationNumber = 1;
-            createDDLRouteCheck(stationNumber);
+            createDDLRouteCheck(window['stationNumber'], window['totalStaionInRoute']);
         }
-        
-        function selectedMachineName(selected, stationNumber) {       
+        // && totalStaionInRoute == stationNumber-1
+        function selectedMachineName(selected, stationNumber, totalStaionInRoute) {
             if (selected != "בחר תחנה") {
-                //$("#1").attr("disabled", "disabled");
                 $("#" + stationNumber).attr("disabled", "disabled");
-                //$("#'" + stationNumber + "'").attr("disabled", "disabled");
-                //$("'#" + stationNumber + "'").attr("disabled", "disabled");
-                //$('"#' + stationNumber + '"').attr("disabled", "disabled");
-                createDDLRouteCheck(++stationNumber);
-                //}
-                //else {
-                //    alert("עליך לבחור תחנה לפני הוספת תחנה חדשה")
-                //}
+                createDDLRouteCheck(++window['stationNumber'], ++window['totalStaionInRoute']);
             }
         }
 
-        function createDDLRouteCheck(stationNumber) {
-            var strMachineList = "<div><label>תחנה " + stationNumber + "</label>\
-<select id='" + stationNumber + "' onChange='selectedMachineName($(\"#" + stationNumber + " option:selected\").text()," + stationNumber + ")' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+        function createDDLRouteCheck(stationNumber, totalStaionInRoute) {
+            var strMachineList = "<div><label>תחנה " + window['stationNumber'] + "</label>\
+<select id='" + stationNumber + "' onChange='selectedMachineName($(\"#" + window['stationNumber'] + " option:selected\").text()," + window['stationNumber'] + "," + window['totalStaionInRoute'] + ")' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
 <option value=''>בחר תחנה</option>";
             for (var i = 1; i <= machineList.length; i++) {
                 strMachineList += "<option value ='" + i + "'>" + machineList[i - 1].MachineName + "</option>";
@@ -698,65 +689,74 @@
             alert("errorGetMachine");
         }
 
-        //function callAddRouteStation() {
-        //    AddRoute();
-        //    return false;
-        //}
+        //בלחיצת כפתור "צור מסלול" הכנסת הפרטים שבטופס מסלול חדש לתוך הדי.בי שלנו
+        $(document).on("click", "#createNewRouteButton", function () {
+            if (stationNumber==1) {
+                return;
+            }
+            $("#" + stationNumber).parent().remove();
+            $("#formID").submit(inserNewRouteToDB);
+        });
 
-        //function AddRoute() {
-        //    routeName = $("#routeName").val();
-        //    if (routeName == "") {
-        //        alert("יש להוסיף שם מסלול")
-        //    }
-        //    else {
-        //        uri = "../api/Route/RouteNameCheck?routeName=" + routeName
-        //        ajaxCall("GET", uri, "", successCheckRoute, errorCheckRoute);
-        //        return false;
-        //    }
-        //}
+        function inserNewRouteToDB() {
+            sendStationArr = [];
+            for (var i = 1; i <= totalStaionInRoute; i++) {
+                id = "#" + i + " option:selected";
+                MachineNum = $(id).val();
+                sendStationArr.push(MachineNum);
+            }
+            Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
+                RouteName: $("#newRouteNameID").val(),
+                StationArr: sendStationArr
+            }
+            ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+            return false;
+        }
 
         //function successCheckRoute(data) {
         //    if (data == "NoRoute") {
         //        sendStationArr = [];
-        //        for (var i = 1; i <= ctr; i++) {
+        //        for (var i = 1; i <= stationNumber; i++) {
         //            id = "#" + i + " option:selected";
         //            MachineNum = $(id).val();
         //            sendStationArr.push(MachineNum);
         //        }
         //        Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
-        //            RouteName: routeName,
+        //            RouteName: $("#newRouteNameID").val(),
         //            StationArr: sendStationArr
         //        }
         //        ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
         //    }
-        //    else {
-        //        alert("שם מסלול תפוס. בחר שם חדש או עדכן מסלול קיים");
-        //        location.reload()
-        //    }
+        //    //else {
+        //    //    alert("שם מסלול תפוס. בחר שם חדש או עדכן מסלול קיים");
+        //    //    location.reload()
+        //    //}
         //}
 
-        //function errorCheckRoute() {
-        //    alert("error-Login")
-        //}
+        function errorCheckRoute() {
+            alert("error-Login")
+        }
 
-        //function successInsertRouteName() {
-        //    alert("שם מסלול הוכנס לבסיס נתונים");
-        //    location.reload();
-        //    //$('.splitLeft').ready();
+        //יציאה מדף יצירת המסלול ורענון הדף הראשי
+        function refreshParent() {
+            window.location.reload();
+        }
 
-        //}
+        function successInsertRouteName() {
+            swal({
+                title: '!יצרת מסלול חדש',
+                text: 'בעוד כשנייה תועבר לדף הראשי',
+                type: 'success',
+                timer: 2000,
+                buttons: false
+            })
+            setTimeout(function () {
+                refreshParent();
+            }, 2000);
+        }
 
-        //function errorInsertRouteName() {
-        //    alert("שם מסלול לא הוכנס לבסיס נתונים");
-        //}
-
-        //function successInsertStaitionInRoute() {
-        //    alert("מערך הוזן בהצלחה לבסיס הנתונים");
-        //}
-
-        //function errorInsertStaitionInRoute() {
-        //    alert("מערך לא הוזן בבסיס הנתונים")
-        //}
+        function errorInsertRouteName() {
+        }
 
     </script>
 </head>
@@ -765,29 +765,5 @@
     <button id="createRoute">צור מסלול</button>
     <div class="container" id="containerID"></div>
 
-    <!--<form id="Machine">
-        <div class="title">
-            <div class="centeredTitle">
-                <h1>יצירת מסלול חדש</h1>
-            </div>
-        </div>
-
-        <div class="splitLeft">
-            <table>
-                <tr>
-                    <td><p>שם המסלול החדש:</p></td>
-                    <td><input type="text" id="routeName"><br></td>
-                </tr>
-            </table>
-            <div id="station">
-
-            </div>
-
-            <button id="creatRoute" type="submit">צור מסלול</button>
-            <input id="creatRoute" type="submit" value="צור מסלול" />
-            <button id="addStation" type="button">הוסף תחנה</button>
-            <button id="addRoute" type="button" onclick=window.location.replace("Route.html")>הצג מסלולים קיימים</button>
-        </div>
-    </form>-->
 </body>
 </html>
