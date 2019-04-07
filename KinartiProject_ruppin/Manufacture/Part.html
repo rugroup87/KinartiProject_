@@ -1085,6 +1085,7 @@
                 title: 'יצרת קבוצה חדשה!',
                 text: 'בעוד כשנייה תועבר לדף הראשי',
                 type: 'success',
+                icon: 'success',
                 timer: 2000,
                 buttons: false
             })
@@ -1097,7 +1098,7 @@
         }
 
 
-        //הצגת של המסלול הנבחר בטופס יצירת הקבוצה
+        //הצגה של המסלול הנבחר בטופס יצירת הקבוצה
         function selectOption(selectedRoute) {
             uriGetSelctedRoutName = "../api/Route?routeName=" + selectedRoute;
             ajaxCall("GET", uriGetSelctedRoutName, "", SuccessGetRouteInfo, errorGetRouteInfo);
@@ -1105,11 +1106,14 @@
 
         //--------------------------------------------------------------------------------------------------------------
         // בלחיצה על יצירת מסלול חדש בתוך הטופס מעבר לחלון אינטרנט חדש ---- לבטל כשמסיימים דף מסלולים
-        $(document).on("click", "#createNewRoute", function () {
-            let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-                            width=600,height=630,left=400,top=200`;
-            open('/Bool/createNewRout.html', 'createGroupFromForm', params);
-        });
+        //$(document).on("click", "#createNewRoute", function () {
+        //    //let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+        //    //                width=600,height=630,left=400,top=200`;
+        //    //open('/Bool/createNewRout.html', 'createGroupFromForm', params);
+           
+        //    open('/Manufacture/TempAinav.html#modal-1');
+
+        //});
 
         function SuccessGetRouteInfo(routedate) {
             $('#machineRoute').remove();
@@ -1134,7 +1138,7 @@
         function formCreateNewGroup(dt) {
             //    תפיסת השורות שאותן רוצים לערוך
             data_rows = dt.rows({ selected: true });
-            ajaxCall("GET", "../api/Route", "", successGetRoute, errorGetRoute);
+            ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute);
         }
 
         function successGetRoute(Routesdata) {
@@ -1165,14 +1169,15 @@
 <label>נגריה:</label><input type='number' min='0' id='estCarpTimeID' name='זמן נגריה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
 <label>צבע:</label><input type='number' min='0' id='estColorID' name='זמן צבע משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
 </div>\
-<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-<button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button>\
-</div>\
 </pre></div>\
 <div class='modal-footer'>\
 <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
 <input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/>\
 </div></form></div></div></div>";
+//כפתור הסוספת מסלול חדש מתחת לדיב שצבע נגמר בו
+//            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+//<button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button>\
+//</div>\
             var routelistStr = "";
             for (var i = 1; i <= Routesdata.length; i++) {
                 routelistStr += "<option value='" + i + "'>" + Routesdata[i - 1].RouteName + "</option>";
