@@ -21,4 +21,19 @@ namespace KinartiProject_ruppin.Models
             : base(message, innerException)
         { }
     }
+
+    [Serializable]
+    public class MissingHeaderException : Exception
+    {
+        public MissingHeaderException()
+        { }
+
+        public MissingHeaderException(string message)
+            : base(message)
+        { }
+
+        public MissingHeaderException(string message, Exception innerException)
+            : base(message, innerException)
+        { }
+    }
 }

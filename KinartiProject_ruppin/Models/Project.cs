@@ -96,12 +96,12 @@ namespace KinartiProject_ruppin.Models
         ExcelFile ProjFile = new ExcelFile();
         public Item Item = new Item();
 
-        public Project(float _projectNum, string _projectName, string _prodStartDate, Item item, string _projectStatus = "טרם התחיל")
+        public Project(float _projectNum, string _projectName, string _ProdEntranceDate, Item item, string _projectStatus = "טרם התחיל")
         {
             //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
             ProjectNum = _projectNum;
             ProjectName = _projectName;
-            ProdStartDate = DateTime.Parse(_prodStartDate);
+            ProdEntranceDate = DateTime.Parse(_ProdEntranceDate);
             Item = item;
             ProjectStatus = _projectStatus;
             AddNewDataToDB();
