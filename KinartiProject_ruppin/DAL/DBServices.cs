@@ -309,7 +309,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT * FROM Part where projectNum=" + projNumStatus + " and itemNum='" + itemNumStatus + "' and groupName is NULL";
+            String selectSTR = "SELECT * FROM Part where projectNum=" + projNumStatus + " and itemNum='" + itemNumStatus + "' and (groupName IS NULL OR	groupName='')";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 

@@ -8,12 +8,15 @@
     
     <style>
 
-        /*/This Is The Menu CSS/*/
-        /*body {
+        /*This Is The Menu CSS*/
+        body {
             margin: 0;
             font-family: 'Montserrat', sans-serif;
+        }
 
-        }*/
+        label {
+            float: right;
+        }
         .content {
             padding: 20px 30px;
             position: center;
@@ -52,8 +55,10 @@
             text-align: center;
             /*this is the station vizualization*/
             /*line-height: 5.3em;
-            min-width: 920px;*/
+            min-width: 920px;
+         } */
         }
+        
 
         #footer {
             height: 1000px;
@@ -332,6 +337,57 @@
         ul.tl li .item-title {
             font-size: 18px;
         }
+
+        .modal-header {
+            background-color: #d7d7d7;
+            height: 80px;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .modal-body {
+            background-color: #f0f0f0;
+            height: 500px;
+            position: relative;
+            padding: 15px;
+        }
+
+        pre {
+            display: block;
+            padding: 0px;
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+            word-break: break-all;
+            word-wrap: break-word;
+            background-color: #f5f5f5;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .modal-footer {
+            background-color: #d7d7d7;
+            height: 50px;
+            padding: 15px;
+            padding-top: 1%;
+            text-align: right;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .modal-title {
+            margin: 0;
+            line-height: 1.42857143;
+            text-align: center;
+        }
+
+        #containerID {
+            margin: 0px;
+            padding: 0px 0px 0px 0px;
+            max-width: 100%;
+        }
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -348,7 +404,7 @@
             str = "";
             for (var i=1; i <= Routesdata.length; i++) {
                 str += "<input id='" + i + "' value='" + allRoutesList[i - 1].RouteName + "' name='radio' type='radio'>";
-                str += "<label><b>&nbsp&nbsp" + allRoutesList[i - 1].RouteName + "</b></label><br/>";
+                str += "<label for='" + i + "'><b>&nbsp&nbsp" + allRoutesList[i - 1].RouteName + "</b></label><br/>";
             }
             $('.RadioContainerButtons').append(str);
         } //the function bring all the route from the data base and display them as radio buttons.
@@ -387,12 +443,12 @@
             alert("ישנה בעיה במשיכת הנתונים אודות המסלול שנבחר להצגה");
         }
 
-        //--------------------------Ainav-----------------------
+        //--------------------------edit route-----------------------
         $(document).on("click", "#updateRouteButton", function () {
-            ajaxCall("GET", "../api/Machine", "", successGetMachine, errorGetMachine);
+            ajaxCall("GET", "../api/Machine", "", successGetMachineUpdateRoute, errorGetMachineUpdateRoute);
         });
 
-        function successGetMachine(Machinedata) {
+        function successGetMachineUpdateRoute(Machinedata) {
             machineList = Machinedata;
             var emptyValue = "";
             var strAllRoutesList = "<div id='selectedShowRoute'>\
@@ -402,11 +458,11 @@
             for (var i = 1; i <= allRoutesList.length; i++) {
                 strAllRoutesList += "<option value=" + i + ">" + allRoutesList[i - 1].RouteName + "</option>";
             }
-            strAllRoutesList += "</select></div>";
+            strAllRoutesList += "</select></div><div id='toRemove'></div>";
 
             //בדף הראשי קיבלנו את כל המסלולים
             //ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute); 
-            var str = "<div class='modal fade in' id='modal-1' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
+            var str = "<div class='modal fade in' id='modal-2' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
 <div class='modal-dialog'><div class='modal-content'>\
 <form id='formID' name='altEditor-form' role='form'>\
 <div class='modal-header'>\
@@ -431,7 +487,7 @@
             $('#stationInRoute').append(strAllRoutesList);
         }
 
-        function errorGetMachine() {
+        function errorGetMachineUpdateRoute() {
             alert("errorGetMachine");
         }
 
@@ -443,11 +499,11 @@
 
         function SuccessGetRouteInfoToForm(routedate) {
             alert("good");
-            $("#selectedShowRoute .toRemove").remove();
+            //$("#selectedShowRoute .toRemove").remove();
             checkedRouteInfo = routedate;
             strStationInRoute = "";
             for (var i = 1; i <= checkedRouteInfo.length; i++) {
-                strStationInRoute += "<div class='toRemove'><label>תחנה" + i + "</label><select id='" + i + "'>";
+                strStationInRoute += "<div><label>תחנה" + i + "</label><select id='" + i + "'>";
                 for (var j = 1; j <= machineList.length; j++) {
                     if (checkedRouteInfo[i - 1].MachineName == machineList[j - 1].MachineName) {
                         strStationInRoute += "<option selected value ='" + j + "'>" + checkedRouteInfo[i - 1].MachineName + "</option>";
@@ -458,11 +514,150 @@
                 }
                 strStationInRoute += "</select></div>";
             }
-            $('#selectedShowRoute').append(strStationInRoute);
+            $('#toRemove').html(strStationInRoute);
         }
         
         function errorGetRouteInfoToForm() {
             alert("הבאת נתוני מסלול נכשלה");
+        }
+
+
+        //------------creat new route-------------------
+
+        $(document).on("click", "#createRoute", function () {
+            ajaxCall("GET", "../api/Machine", "", successGetMachineCreateroute, errorGetMachineCreateroute);
+        });
+
+        var totalStaionInRoute = 0;
+        var stationNumber = 1;
+
+        function successGetMachineCreateroute(Machinedata) {
+            machineList = Machinedata;
+            var str = "<div class='modal fade in' id='modal-1' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
+<div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>יצירת מסלול חדש</h3>\
+</div>\
+<div class='modal-body'>\
+<pre>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>שם המסלול:</label>\
+<input type='text' id='newRouteNameID' name='שם מסלול' placeholder='הכנס שם למסלול חדש' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+</div>\
+<div id='stationInRoute' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הכנס תחנות במסלול</h5>\
+</div >\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+</div>\
+</pre>\
+</div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='createNewRouteButton' value='צור מסלול'/>\
+</div>\
+</form></div></div></div>";
+            $('#containerID').append(str);
+
+            createDDLRouteCheck(window['stationNumber'], window['totalStaionInRoute']);
+        }
+
+        function errorGetMachineCreateroute() {
+            alert("errorGetMachine");
+        }
+
+        function createDDLRouteCheck(stationNumber, totalStaionInRoute) {
+            var strMachineList = "<div id='selectStation'><label>תחנה " + window['stationNumber'] + "</label>\
+<select id='" + stationNumber + "' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+<option value=''>בחר תחנה</option>";
+            for (var i = 1; i <= machineList.length; i++) {
+                strMachineList += "<option value ='" + i + "'>" + machineList[i - 1].MachineName + "</option>";
+            }
+            strMachineList += "</select></div>";
+            $('#stationInRoute').append(strMachineList);
+        }
+
+        $(document).on("change", "#selectStation select", function () {
+            if (($("#" + window['stationNumber'] + " option:selected").text()) != "בחר תחנה") {
+                createDDLRouteCheck(++window['stationNumber'], ++window['totalStaionInRoute']);
+            }
+        });
+
+        //בלחיצת כפתור "צור מסלול" הכנסת הפרטים שבטופס מסלול חדש לתוך הדי.בי שלנו
+        $(document).on("click", "#createNewRouteButton", function () {
+            if (stationNumber == 1) {
+                return;
+            }
+            $("#" + stationNumber).parent().remove();
+            $("#formID").submit(inserNewRouteToDB);
+        });
+
+        function inserNewRouteToDB() {
+            uri = "../api/Route/RouteNameCheck?routeName=" + $("#newRouteNameID").val();
+            ajaxCall("GET", uri, "", successCheckRoute, errorCheckRoute);
+            return false;
+        }
+
+        //בחזרה מהדאטה בייס עם שם מסלול כשקיים וערך ריק אחרת
+        function successCheckRoute(data) {
+            //כשאין שם מסלול כזה זה הערך שיחזור
+            if (data == "NoRoute") {
+                sendStationArr = [];
+                for (var i = 1; i <= totalStaionInRoute; i++) {
+                    id = "#" + i + " option:selected";
+                    MachineNum = $(id).val();
+                    sendStationArr.push(MachineNum);
+                }
+                Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
+                    RouteName: $("#newRouteNameID").val(),
+                    StationArr: sendStationArr
+                }
+                ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+            }
+            else {
+                swal({
+                    title: '!שם מסלול קיים',
+                    text: 'בחר שם אחר למסלול',
+                    type: 'error',
+                    icon: 'error',
+                    buttons: 'אישור'
+                })
+            }
+        }
+
+        function errorCheckRoute() {
+            alert("בעיה בבדיקת שם מסלול קיים בבסיס הנתונים");
+        }
+
+        //יציאה מדף יצירת המסלול ורענון הדף הראשי
+        function refreshParent() {
+            window.location.reload();
+        }
+        //לחיצה על סגור בטופס
+        $(document).on("click", "#closeWindowsButton", function () {
+            //יציאה מדף העריכה לעמוד הראשי
+            refreshParent();
+        });
+
+        //לחיצה על סגור בטופס
+        $(document).on("click", "#closeWindowsX", function () {
+            //יציאה מדף העריכה לעמוד הראשי
+            refreshParent();
+        });
+
+        function successInsertRouteName() {
+            swal({
+                title: '!יצרת מסלול חדש',
+                text: 'המסלול הוכנס לבסיס הנתונים',
+                type: 'success',
+                icon: 'success',
+                buttons: 'אישור'
+            }).then(function (result) {
+                refreshParent();
+            })
+        }
+
+        function errorInsertRouteName() {
         }
 
     </script>
@@ -479,7 +674,7 @@
                 <ul>
                     <li><a href="Project.html">פרוייקטים</a></li>
                     <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
-                    <li><a href="">מסלולים</a></li>
+                    <li><a href="RouteMainPage.html">מסלולים</a></li>
                     <li><a href="">קבוצות מוכנות</a></li>
                     <li><a href="">contact</a></li>
                 </ul>
@@ -490,9 +685,9 @@
         <ul class="snip1217">
             <!--<li class="current"><a href="#">Home</a></li>-->
             <li>
-                <button id="updateRouteButton">עדכן מסלול</button>
+                <a id="updateRouteButton" href="#">עדכן מסלול קיים</a>
             </li>
-            <li><a href="#">צור מסלול חדש</a></li>
+            <li><a id="createRoute" href="#">צור מסלול חדש</a></li>
         </ul>
     </div>
     <div id="footer" style="background-color:white">
