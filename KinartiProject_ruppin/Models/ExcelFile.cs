@@ -23,7 +23,7 @@ namespace KinartiProject_ruppin.Models
 
         [DllImport("user32.dll")]
         static extern int GetWindowThreadProcessId(int hWnd, out int lpdwProcessId);
-
+        //פוקנציה שמחזירה את האיידי של הפרוסס של הקובץ אקסל שאני עובד עליו
         Process GetExcelProcess(Excel.Application excelApp)
         {
             int id;
@@ -49,29 +49,29 @@ namespace KinartiProject_ruppin.Models
 
             //get the excel process ID - for future delete
             var ExcelIdProcess = GetExcelProcess(excelApp);
-
-            //Reading step by step cols and rows.
-            for (int i = 2; i <= rowCount; i++)
+            try
             {
-                Part part = new Part();
-
-                for (int j = 4; j <= colCount; j++)
+                //Reading step by step cols and rows.
+                for (int i = 2; i <= rowCount; i++)
                 {
-                    if (excelRange.Cells[i, j] != null)
-                    {
-                        if (excelRange.Cells[i, j].Value2 == null)
-                        {
-                            temp1 = "";
-                        }
-                        else
-                        {
-                            temp1 = excelRange.Cells[i, j].Value2.ToString();
-                        }
-                    }
+                    Part part = new Part();
 
-                    // Inside the case we can change the Convert.ToInt32(excelRange.Cells[i, j].Value2); values to temp1.....
-                    try
+                    for (int j = 4; j <= colCount; j++)
                     {
+                        //רץ על גודל הקובץ אקסל שיש נתונים
+                        if (excelRange.Cells[i, j] != null)
+                        {
+                            //רץ על הערכים עצמם
+                            if (excelRange.Cells[i, j].Value2 == null)
+                            {
+                                temp1 = "";
+                            }
+                            else
+                            {
+                                temp1 = excelRange.Cells[i, j].Value2.ToString();
+                            }
+                        }
+                        //בודק באיזה עמודה הוא נמצא
                         switch (excelRange.Cells[1, j].Value2.ToString())
                         {
                             case "מספר_ארגז":
@@ -136,95 +136,105 @@ namespace KinartiProject_ruppin.Models
                                 break;
 
                             default:
-                                break;
+                                throw new MissingHeaderException();
+                                //break;
                                 // code block
                         }
-                    }
 
-                    //שגיאת כאשר הוא מזהה שאחד הכותרות קבל ערך נאל
-                    catch (RuntimeBinderException e)
-                    { 
-                        excelBook.Close();
-                        excelApp.Quit();
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
-                        KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                        File.Delete(path);
-                        throw (e);
-                    }
-                    //אקספשן כאשר יש שדה עם טייפ לא נכון שמנסים להכניס
-                    catch(FormatException e)
-                    {                      
-                        excelBook.Close();
-                        excelApp.Quit();
-                        System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
-                        KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                        File.Delete(path);
-                        throw (e);
-                    }
-                    catch(Exception e)
-                    {
 
+
+                        part.PartStatus = "חלק טרם נסרק";
+                        part.GroupName = "";
                     }
-                    part.PartStatus = "חלק טרם נסרק";
-                    part.GroupName = "";
+                    PartList.Add(part);
                 }
-                PartList.Add(part);
+            }
+            catch (COMException e)
+            {
+                throw new COMException("adhtv", e.InnerException);
+            }
+            //כאשר חסרה עמודה(כותרת) בקובץ
+            catch (MissingHeaderException e)
+            {
+                throw new MissingHeaderException("ייתכן כי חסרה עמודה בקובץ - אנא נסה שוב", e.InnerException);
+            }
+            //
+            catch (RuntimeBinderException e)
+            {
+                throw new RuntimeBinderException("המערכת תומכת בקבצי אקסל עם הסיומת xlxs אנא נסה שנית", e.InnerException);
+            }
+            //אקספשן כאשר יש שדה עם טייפ לא נכון שמנסים להכניס
+            catch (FormatException e)
+            {
+                throw new FormatException(" אחד הערכים בקובץ מוגדר בפורמט שאינו מתאים", e.InnerException);
+            }
+            catch (Exception e)
+            {
+                throw new Exception("שגיאת מערכת, צור קשר עם צוות התמיכה", e.InnerException);
             }
 
-            Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), PartList);
+            finally
+            {
+                excelBook.Close();
+                excelApp.Quit();
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+                KillSpecificExcelFileProcess(ExcelIdProcess.Id);
+                File.Delete(path);
+            }
+
             try
             {
+                Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), PartList);
                 Project NewData = new Project(Convert.ToSingle(excelRange.Cells[2, 1].Value2), excelRange.Cells[2, 2].Value2, fileuploaddate, Item);
             }
-
+            //e.TargetSite.MetadataToken == 100667808
+            catch (COMException e)
+            {
+                throw new COMException("בעיית RPC - צור קשר עם צוות התמיכה.", e.InnerException);
+            }
             //כאשר נכנס קובץ אקסל עם ערכים לא נכונים זה קופץ
             catch (System.Data.SqlClient.SqlException e)
             {
-                //שגיאת מפתחות - הכנסה של נתונים קיימים
-                if (e.Number == 2627)
-                {
-                    throw new DuplicatePrimaryKeyException(e.Message);
-                }
-                else
-                {
-                    KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                    File.Delete(path);
-                    throw (e);
-                }
+                throw (e);
             }
 
             //שגיאת מפתחות - הכנסה של נתונים קיימים
             catch (DuplicatePrimaryKeyException e)
             {
-                KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                File.Delete(path);
-                throw (e);
+
+                throw new DuplicatePrimaryKeyException("פרוייקט או פריט זה כבר קיימים במערכת אנא בדוק שוב את הקובץ", e.InnerException);
             }
 
             //כאשר מנסים לעלות קובץ שהוא לא קובץ אקסל
             catch (RuntimeBinderException e)
             {
-                KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                File.Delete(path);
-                throw (e);
+
+                throw new RuntimeBinderException("המערכת תומכת בקבצי אקסל עם הסיומת xlxs אנא נסה שנית", e.InnerException);
             }
             // כל שגיאה כללית אחרת
             catch (Exception e)
             {
+                throw new Exception("שגיאת מערכת, צור קשר עם צוות התמיכה", e.InnerException);
+            }
+
+            finally
+            {
+                excelBook.Close();
+                excelApp.Quit();
+                System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
                 KillSpecificExcelFileProcess(ExcelIdProcess.Id);
                 File.Delete(path);
-                throw (e);
             }
 
             //after reading, relaase the excel project
-            KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-            excelApp.Quit();
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
+            //KillSpecificExcelFileProcess(ExcelIdProcess.Id);
+            //excelApp.Quit();
+            //System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
         }
 
+        //הורג\מסיים את הפרוסס של האקסל עליו עבדתי
         private void KillSpecificExcelFileProcess(int id)
         {
-            //excelFileName = excelFileName.Replace("uploadedFiles/", "");
             var process = Process.GetProcessById(id);
             process.Kill();
         }

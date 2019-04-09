@@ -642,10 +642,21 @@ public class DBServices
         {
             cmd.ExecuteNonQuery(); // execute the command
         }
-        catch (Exception ex)
+        catch (SqlException e)
+        {
+            if (e.Number == 2627)
+            {
+                throw new DuplicatePrimaryKeyException();
+            }
+            else
+            {
+                throw (e);
+            }
+        }
+        catch (Exception e)
         {
             // write to log
-            throw (ex);
+            throw (e);
         }
 
         finally
