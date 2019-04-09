@@ -1247,4 +1247,58 @@ public class DBServices
         command = sbDeletePartFromGroup.ToString();
         return command;
     }
+
+    public string ScanPart(string PartBarCode, string StationName)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildScanBarCodeCommand(PartBarCode, StationName);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+        return "scanned";
+    }
+    //סריקה
+    public string BuildScanBarCodeCommand(string PartBarCode, string StationName)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sbUpdatePartStatus = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '' WHERE barcode = '{0}'", PartBarCode);
+
+        command = sbUpdatePartStatus.ToString();
+        return command;
+    }
 }

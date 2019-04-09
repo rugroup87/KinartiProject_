@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-//using System.Web.Mvc:
 using System.Web.Http;
-
 using KinartiProject_ruppin.Models;
 
 namespace KinartiProject_ruppin.Controllers
