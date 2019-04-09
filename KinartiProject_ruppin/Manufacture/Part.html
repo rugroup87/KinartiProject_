@@ -1117,8 +1117,6 @@
 
         function SuccessGetRouteInfo(routedate) {
             $('#machineRoute').remove();
-            //RouteList = routedate;
-            //str1 = "<h1>מסלול " + routedate.RouteName + "</h1>";
             strRoute = "<div id='machineRoute'><label>תחנות במסלול: </br>";
             for (var i = 0; i < routedate.length; i++) {
                 if (i == routedate.length - 1) {
