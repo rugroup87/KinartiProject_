@@ -462,7 +462,7 @@
 
             //בדף הראשי קיבלנו את כל המסלולים
             //ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute); 
-            var str = "<div class='modal fade in' id='modal-1' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
+            var str = "<div class='modal fade in' id='modal-2' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
 <div class='modal-dialog'><div class='modal-content'>\
 <form id='formID' name='altEditor-form' role='form'>\
 <div class='modal-header'>\
@@ -493,14 +493,17 @@
 
         $(document).on("change", "#selectedShowRoute select", function () {
             selectedRouteName = $(this).val();
-            uri = "../api/Route?routeName=" + ב;
-            ajaxCall("GET", uri, "", SuccessGetRouteInfo1, errorGetRouteInfo1);
+            uri = "../api/Route?routeName=" + selectedRouteName;
+            ajaxCall("GET", uri, "", SuccessGetRouteInfoEdit, errorGetRouteInfoEdit);
         });
 
-        function SuccessGetRouteInfo1(routedate) {
+        function SuccessGetRouteInfoEdit(routedate) {
             alert("good");
+
+
+
         }
-        function errorGetRouteInfo1() {
+        function errorGetRouteInfoEdit() {
             alert("הבאת נתוני מסלול נכשלה");
         }
 
