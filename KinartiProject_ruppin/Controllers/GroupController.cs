@@ -21,7 +21,7 @@ namespace KinartiProject_ruppin.Controllers
             Part[] parts = G.GetGroupParts(GroupName);
             Group group = G.GetSpecificGroup(GroupName);
             List<Route> routes = R.ReadRouteName(group.GroupRouteName);
-            return new {parts, group, routes};
+            return new {parts, group, routes};  
         }
 
         [HttpGet]
