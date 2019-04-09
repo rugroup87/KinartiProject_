@@ -371,13 +371,13 @@
             $('.history-tl-containere').empty();
            str1 = "";
 
-            RouteList = routedate;
+            checkedRouteInfo = routedate;
             routeNameTitle = "<div><h1><u><b>מסלול " + routeName + "</b></u></h1></div>";
             $('.middle').append(routeNameTitle);
             str1 += "<ul class='tl'>";
-            for (var i = 1; i <= RouteList.length; i++) {
+            for (var i = 1; i <= checkedRouteInfo.length; i++) {
                 str1 += "<li class='tl-item' ng-repeat='item in retailer_history'>";
-                str1 += "<div class='item-title'><b>" + RouteList[i - 1].MachineName + "</b></div>";
+                str1 += "<div class='item-title'><b>" + checkedRouteInfo[i - 1].MachineName + "</b></div>";
             }
             str1 += "</ul>";
             $(".history-tl-container").append(str1);
@@ -396,7 +396,7 @@
             machineList = Machinedata;
             var emptyValue = "";
             var strAllRoutesList = "<div id='selectedShowRoute'>\
-                <select oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
+                <select id='chooseRoute' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
             strAllRoutesList += "<option value=" + emptyValue + ">בחר מסלול מהרשימה</option>";
 
             for (var i = 1; i <= allRoutesList.length; i++) {
@@ -436,15 +436,32 @@
         }
 
         $(document).on("change", "#selectedShowRoute select", function () {
-            selectedRouteName = $(this).val();
-            uri = "../api/Route?routeName=" + ב;
-            ajaxCall("GET", uri, "", SuccessGetRouteInfo1, errorGetRouteInfo1);
+            selectedRouteName = $("#selectedShowRoute option:selected").text();
+            uri = "../api/Route?routeName=" + selectedRouteName;
+            ajaxCall("GET", uri, "", SuccessGetRouteInfoToForm, errorGetRouteInfoToForm);
         });
 
-        function SuccessGetRouteInfo1(routedate) {
+        function SuccessGetRouteInfoToForm(routedate) {
             alert("good");
+            $("#selectedShowRoute .toRemove").remove();
+            checkedRouteInfo = routedate;
+            strStationInRoute = "";
+            for (var i = 1; i <= checkedRouteInfo.length; i++) {
+                strStationInRoute += "<div class='toRemove'><label>תחנה" + i + "</label><select id='" + i + "'>";
+                for (var j = 1; j <= machineList.length; j++) {
+                    if (checkedRouteInfo[i - 1].MachineName == machineList[j - 1].MachineName) {
+                        strStationInRoute += "<option selected value ='" + j + "'>" + checkedRouteInfo[i - 1].MachineName + "</option>";
+                    }
+                    else {
+                        strStationInRoute += "<option value ='" + j + "'> " + machineList[j - 1].MachineName + "</option>";
+                    }
+                }
+                strStationInRoute += "</select></div>";
+            }
+            $('#selectedShowRoute').append(strStationInRoute);
         }
-        function errorGetRouteInfo1() {
+        
+        function errorGetRouteInfoToForm() {
             alert("הבאת נתוני מסלול נכשלה");
         }
 
