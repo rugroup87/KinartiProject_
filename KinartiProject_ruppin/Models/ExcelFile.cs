@@ -37,8 +37,8 @@ namespace KinartiProject_ruppin.Models
             List<Part> PartList = new List<Part>();
             string temp1 = "";
             List<string> temp = new List<string>();
-            Excel.Application excelApp = new Excel.Application();
-            Excel.Workbook excelBook = excelApp.Workbooks.Open(path);
+            Excel.Application excelApp = new Excel.Application();//excel
+            Excel.Workbook excelBook = excelApp.Workbooks.Open(path);//specific excel file that we uploaded
             Excel._Worksheet excelSheet = excelBook.Sheets[1];
             Excel.Range excelRange = excelSheet.UsedRange;
 
@@ -208,7 +208,6 @@ namespace KinartiProject_ruppin.Models
             //כאשר מנסים לעלות קובץ שהוא לא קובץ אקסל
             catch (RuntimeBinderException e)
             {
-
                 throw new RuntimeBinderException("המערכת תומכת בקבצי אקסל עם הסיומת xlxs אנא נסה שנית", e.InnerException);
             }
             // כל שגיאה כללית אחרת
