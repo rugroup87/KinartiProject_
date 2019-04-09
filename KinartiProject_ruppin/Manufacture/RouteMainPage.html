@@ -458,7 +458,7 @@
             for (var i = 1; i <= allRoutesList.length; i++) {
                 strAllRoutesList += "<option value=" + i + ">" + allRoutesList[i - 1].RouteName + "</option>";
             }
-            strAllRoutesList += "</select></div>";
+            strAllRoutesList += "</select></div><div id='toRemove'></div>";
 
             //בדף הראשי קיבלנו את כל המסלולים
             //ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute); 
@@ -499,11 +499,11 @@
 
         function SuccessGetRouteInfoToForm(routedate) {
             alert("good");
-            $("#selectedShowRoute .toRemove").remove();
+            //$("#selectedShowRoute .toRemove").remove();
             checkedRouteInfo = routedate;
             strStationInRoute = "";
             for (var i = 1; i <= checkedRouteInfo.length; i++) {
-                strStationInRoute += "<div class='toRemove'><label>תחנה" + i + "</label><select id='" + i + "'>";
+                strStationInRoute += "<div><label>תחנה" + i + "</label><select id='" + i + "'>";
                 for (var j = 1; j <= machineList.length; j++) {
                     if (checkedRouteInfo[i - 1].MachineName == machineList[j - 1].MachineName) {
                         strStationInRoute += "<option selected value ='" + j + "'>" + checkedRouteInfo[i - 1].MachineName + "</option>";
@@ -514,7 +514,7 @@
                 }
                 strStationInRoute += "</select></div>";
             }
-            $('#selectedShowRoute').append(strStationInRoute);
+            $('#toRemove').html(strStationInRoute);
         }
         
         function errorGetRouteInfoToForm() {
