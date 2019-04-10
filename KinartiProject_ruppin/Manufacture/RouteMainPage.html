@@ -1,22 +1,24 @@
 ﻿<!DOCTYPE html>
+<!--<html dir="rtl">-->
 <html>
 <head>
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    
+
     <style>
 
         /*This Is The Menu CSS*/
-        body {
+        /*body {
             margin: 0;
             font-family: 'Montserrat', sans-serif;
-        }
+        }*/
 
         label {
-            float: right;
+            /*float: left;*/
         }
+
         .content {
             padding: 20px 30px;
             position: center;
@@ -24,8 +26,8 @@
         }
 
         #header {
-            padding: 5px 0;
-            background: yellow;
+            /*padding: 0px 0;*/
+            background: #212121;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
@@ -42,7 +44,7 @@
             float: left;
         }*/
 
-        #body {
+        #secoundHeader {
             height: 100%;
             width: 100%;
             position: fixed;
@@ -58,9 +60,9 @@
             min-width: 920px;
          } */
         }
-        
 
-        #footer {
+
+        #body {
             height: 1000px;
             width: 100%;
             position: fixed;
@@ -98,7 +100,7 @@
         ul {
             list-style: none;
             margin: 0;
-            padding: 0;
+            padding: inherit;
             text-align: center;
         }
 
@@ -114,7 +116,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #337ab6;
+            color: white;
             text-transform: uppercase;
         }
 
@@ -125,7 +127,7 @@
                 position: absolute;
                 left: 0;
                 bottom: 15px;
-                background: #ffffff;
+                background: #00c2ff;
                 transition: width .5s linear;
             }
 
@@ -166,7 +168,7 @@
                 }
 
                     nav li:hover {
-                        background: rgba(0,0,0,.1);
+                        background: #00c2ff
                     }
 
                 nav a:after {
@@ -187,68 +189,68 @@
             letter-spacing: 1px;
         }
 
-        .snip1217 * {
-            -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-            -webkit-transition: all 0.35s ease;
-            transition: all 0.35s ease;
-        }
-
-        .snip1217 li {
-            display: inline-block;
-            list-style: outside none none;
-            margin: 0.5em 1.5em;
-            padding: 0;
-        }
-
-        .snip1217 a {
-            padding: 0.3em 0;
-            margin-right: 200px;
-            margin-left: 200px;
-            margin-top: 5%;
-            color: rgba(255, 255, 255, 0.5);
-            position: relative;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-            .snip1217 a:before,
-            .snip1217 a:after {
-                height: 3px;
-                position: absolute;
-                content: '';
+            .snip1217 * {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
                 -webkit-transition: all 0.35s ease;
                 transition: all 0.35s ease;
-                background-color: yellow;
-                width: 0;
             }
 
-            .snip1217 a:before {
-                top: 0;
-                left: 0;
+            .snip1217 li {
+                display: inline-block;
+                list-style: outside none none;
+                margin: 0.5em 1.5em;
+                padding: 0;
             }
 
-            .snip1217 a:after {
-                bottom: 0;
-                right: 0;
+            .snip1217 a {
+                padding: 0.3em 0;
+                margin-right: 200px;
+                margin-left: 200px;
+                margin-top: 5%;
+                color: white;
+                position: relative;
+                text-decoration: none;
+                display: inline-block;
             }
 
-            .snip1217 a:hover,
-            .snip1217 .current a {
-                color: yellow;
-            }
-
-                .snip1217 a:hover:before,
-                .snip1217 .current a:before,
-                .snip1217 a:hover:after,
-                .snip1217 .current a:after {
-                    width: 100%;
+                .snip1217 a:before,
+                .snip1217 a:after {
+                    height: 3px;
+                    position: absolute;
+                    content: '';
+                    -webkit-transition: all 0.35s ease;
+                    transition: all 0.35s ease;
+                    background-color: #00c2ff;
+                    width: 0;
                 }
+
+                .snip1217 a:before {
+                    top: 0;
+                    left: 0;
+                }
+
+                .snip1217 a:after {
+                    bottom: 0;
+                    right: 0;
+                }
+
+                .snip1217 a:hover,
+                .snip1217 .current a {
+                    color: #00c2ff;
+                }
+
+                    .snip1217 a:hover:before,
+                    .snip1217 .current a:before,
+                    .snip1217 a:hover:after,
+                    .snip1217 .current a:after {
+                        width: 100%;
+                    }
 
         /*/this is the radio button css/*/
 
 
-        #footer .RadioContainer {
+        #body .titleRadioContainer {
             float: right;
             font-size: 34px;
             padding-top: 0;
@@ -257,7 +259,7 @@
             overflow-y: auto;
         }
 
-        #footer .RadioContainerButtons {
+        #body .containerRadioButtons {
             /*position: absolute;
             right: 0;
             width: 100px;
@@ -274,7 +276,7 @@
 
         /*/this is the station vizualization/*/
 
-        #footer .middle {
+        #body .middleBody {
             float: left;
             position: inherit;
             padding-top: 0;
@@ -292,7 +294,7 @@
             position: fixed;
             float: right;
             /*/margin-top: 7%;*/
-            margin:125px 575px;
+            margin: 125px 575px;
         }
 
             .history-tl-container ul.tl {
@@ -357,8 +359,8 @@
             display: block;
             padding: 0px;
             margin: 0 0 10px;
-            font-size: 13px;
-            line-height: 1.42857143;
+            font-size: 16px;
+            line-height: 2.42857143;
             color: #333;
             word-break: break-all;
             word-wrap: break-word;
@@ -384,7 +386,7 @@
         }
 
         #containerID {
-            margin: 0px;
+            margin: 0px auto;
             padding: 0px 0px 0px 0px;
             max-width: 100%;
         }
@@ -395,18 +397,19 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
 
-    <script>$(document).ready(function () {
+    <script>
+        $(document).ready(function () {
             ajaxCall("GET", "../api/Route", "", SuccessGetRoute, ErrorGetRoute);
         });
 
         function SuccessGetRoute(Routesdata) {
             allRoutesList = Routesdata;
             str = "";
-            for (var i=1; i <= Routesdata.length; i++) {
+            for (var i = 1; i <= Routesdata.length; i++) {
                 str += "<input id='" + i + "' value='" + allRoutesList[i - 1].RouteName + "' name='radio' type='radio'>";
                 str += "<label for='" + i + "'><b>&nbsp&nbsp" + allRoutesList[i - 1].RouteName + "</b></label><br/>";
             }
-            $('.RadioContainerButtons').append(str);
+            $('.containerRadioButtons').append(str);
         } //the function bring all the route from the data base and display them as radio buttons.
 
         function ErrorGetRoute() {
@@ -414,22 +417,22 @@
         }
 
         $(document).on("click", "input[type = 'radio']", function () {
-                    $(".history-tl-container").empty();
-                    routeName = $(this).val();
-                    uriCheckedRoute = "../api/Route?routeName=" + routeName;
-                    ajaxCall("GET", uriCheckedRoute, "", SuccessGetRouteInfo, ErrorGetRouteInfo);
-                    return false;
+            $(".history-tl-container").empty();
+            routeName = $(this).val();
+            uriCheckedRoute = "../api/Route?routeName=" + routeName;
+            ajaxCall("GET", uriCheckedRoute, "", SuccessGetRouteInfo, ErrorGetRouteInfo);
+            //return false;
         });  //the function bring the data about the route on the screen after clicking on some route name -radio button
 
 
         function SuccessGetRouteInfo(routedate) {
-            $('.middle').empty();
+            $('.middleBody').empty();
             $('.history-tl-containere').empty();
-           str1 = "";
+            str1 = "";
 
             checkedRouteInfo = routedate;
-            routeNameTitle = "<div><h1><u><b>מסלול " + routeName + "</b></u></h1></div>";
-            $('.middle').append(routeNameTitle);
+            routeNameTitle = "<div><h1><u><b>מסלול " + checkedRouteInfo.RouteName + "</b></u></h1></div>";
+            $('.middleBody').append(routeNameTitle);
             str1 += "<ul class='tl'>";
             for (var i = 1; i <= checkedRouteInfo.length; i++) {
                 str1 += "<li class='tl-item' ng-repeat='item in retailer_history'>";
@@ -452,7 +455,7 @@
             machineList = Machinedata;
             var emptyValue = "";
             var strAllRoutesList = "<div id='selectedShowRoute'>\
-                <select id='chooseRoute' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
+                        <select id='chooseRoute' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
             strAllRoutesList += "<option value=" + emptyValue + ">בחר מסלול מהרשימה</option>";
 
             for (var i = 1; i <= allRoutesList.length; i++) {
@@ -461,7 +464,7 @@
             strAllRoutesList += "</select></div><div id='toRemove'></div>";
 
             //בדף הראשי קיבלנו את כל המסלולים
-            //ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute); 
+            //ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute);
             var str = "<div class='modal fade in' id='modal-2' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
 <div class='modal-dialog'><div class='modal-content'>\
 <form id='formID' name='altEditor-form' role='form'>\
@@ -516,7 +519,7 @@
             }
             $('#toRemove').html(strStationInRoute);
         }
-        
+
         function errorGetRouteInfoToForm() {
             alert("הבאת נתוני מסלול נכשלה");
         }
@@ -662,6 +665,7 @@
 
     </script>
 </head>
+
 <body>
     <div id="header">
         <div class="container" id="containerID">
@@ -681,7 +685,7 @@
             </nav>
         </div>
     </div>
-    <div id="body">
+    <div id="secoundHeader">
         <ul class="snip1217">
             <!--<li class="current"><a href="#">Home</a></li>-->
             <li>
@@ -690,14 +694,14 @@
             <li><a id="createRoute" href="#">צור מסלול חדש</a></li>
         </ul>
     </div>
-    <div id="footer" style="background-color:white">
-        <div class="RadioContainer">
+    <div id="body" style="background-color:white">
+        <div class="titleRadioContainer">
             <p>
                 <u><b>לחץ על מסלול מהרשימה</b></u>
             </p>
         </div>
-        <div class="RadioContainerButtons"></div>
-        <div class="middle"></div>
+        <div class="containerRadioButtons"></div>
+        <div class="middleBody"></div>
         <div class="history-tl-container"></div>
 
     </div>
