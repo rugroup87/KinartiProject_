@@ -177,6 +177,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\BarCodeScanController.cs" />
     <Compile Include="Controllers\FileUploudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BarCode.cs" />
     <Compile Include="Models\ExcelFile.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Item.cs" />
@@ -219,6 +221,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Manufacture\Clicks.html" />
     <Content Include="Manufacture\Item.html" />
     <Content Include="Manufacture\Part.html" />
     <Content Include="Manufacture\Project.html" />

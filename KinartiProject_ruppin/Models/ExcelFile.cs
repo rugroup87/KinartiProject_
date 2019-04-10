@@ -41,16 +41,20 @@ namespace KinartiProject_ruppin.Models
             Excel.Workbook excelBook = excelApp.Workbooks.Open(path);//specific excel file that we uploaded
             Excel._Worksheet excelSheet = excelBook.Sheets[1];
             Excel.Range excelRange = excelSheet.UsedRange;
-
+            
+            //get the excel process ID - for future delete
+            var ExcelIdProcess = GetExcelProcess(excelApp);
 
             // Calculating rows and cols.
             int rowCount = excelRange.Rows.Count;
             int colCount = excelRange.Columns.Count;
-
-            //get the excel process ID - for future delete
-            var ExcelIdProcess = GetExcelProcess(excelApp);
             try
             {
+                if (rowCount < 2 || colCount < 4)
+                {
+                    throw new MissingHeaderException();
+                }
+
                 //Reading step by step cols and rows.
                 for (int i = 2; i <= rowCount; i++)
                 {
@@ -141,51 +145,23 @@ namespace KinartiProject_ruppin.Models
                                 // code block
                         }
 
-
-
                         part.PartStatus = "חלק טרם נסרק";
                         part.GroupName = "";
                     }
                     PartList.Add(part);
                 }
+
+                Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), PartList);
+                Project NewData = new Project(Convert.ToSingle(excelRange.Cells[2, 1].Value2), excelRange.Cells[2, 2].Value2, fileuploaddate, Item);
             }
-            catch (COMException e)
+            catch (MissingHeaderException)
             {
-                throw new COMException("adhtv", e.InnerException);
-            }
-            //כאשר חסרה עמודה(כותרת) בקובץ
-            catch (MissingHeaderException e)
-            {
-                throw new MissingHeaderException("ייתכן כי חסרה עמודה בקובץ - אנא נסה שוב", e.InnerException);
-            }
-            //
-            catch (RuntimeBinderException e)
-            {
-                throw new RuntimeBinderException("המערכת תומכת בקבצי אקסל עם הסיומת xlxs אנא נסה שנית", e.InnerException);
+                throw new MissingHeaderException("ייתכן כי הקובץ ריק או חסרות לו מספר עמודות - בדוק את הקובץ לפני העלאה");
             }
             //אקספשן כאשר יש שדה עם טייפ לא נכון שמנסים להכניס
             catch (FormatException e)
             {
                 throw new FormatException(" אחד הערכים בקובץ מוגדר בפורמט שאינו מתאים", e.InnerException);
-            }
-            catch (Exception e)
-            {
-                throw new Exception("שגיאת מערכת, צור קשר עם צוות התמיכה", e.InnerException);
-            }
-
-            finally
-            {
-                excelBook.Close();
-                excelApp.Quit();
-                System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
-                KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-                File.Delete(path);
-            }
-
-            try
-            {
-                Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), PartList);
-                Project NewData = new Project(Convert.ToSingle(excelRange.Cells[2, 1].Value2), excelRange.Cells[2, 2].Value2, fileuploaddate, Item);
             }
             //e.TargetSite.MetadataToken == 100667808
             catch (COMException e)
@@ -215,7 +191,6 @@ namespace KinartiProject_ruppin.Models
             {
                 throw new Exception("שגיאת מערכת, צור קשר עם צוות התמיכה", e.InnerException);
             }
-
             finally
             {
                 excelBook.Close();
@@ -224,11 +199,6 @@ namespace KinartiProject_ruppin.Models
                 KillSpecificExcelFileProcess(ExcelIdProcess.Id);
                 File.Delete(path);
             }
-
-            //after reading, relaase the excel project
-            //KillSpecificExcelFileProcess(ExcelIdProcess.Id);
-            //excelApp.Quit();
-            //System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
         }
 
         //הורג\מסיים את הפרוסס של האקסל עליו עבדתי
