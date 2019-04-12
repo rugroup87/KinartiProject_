@@ -475,7 +475,7 @@
         }
 
         /*make unclickable label with this id*/
-        #unclickable {
+        .unclickable {
             pointer-events: none;
         }
         /*//////////////////////The Route in form of group style////////////////////////////////////*/
@@ -693,21 +693,66 @@
                 //מביא את האיידי של השורה עליה לחצו
                 console.log($(this).context.parentNode.parentNode.parentNode.id);
                 //מוחק חלק מתוך קבוצה - אבל עדיין חלק יהיה קיים בחלקים אחרים ויהיה אפשר לשייך אותו לאיפושהו
-                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id;
+                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id + "&PartCount=" + $('#PartNo').val() + "&GroupName=" + $('#mainH_form').html();
                 ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
+            });
+
+            $(document).on("click", "#DeleteGroup", function () {
+                var PartsBarCode = [];
+                //מביא מערך של הברקודים של החלקים בקבוצה
+                console.log($("#mainH_form").html());
+                $('#TableID tbody tr td:nth-child(1)').each(function () {
+                    //add item to array
+                    PartsBarCode.push($(this).text());
+                });
+                var oData = {
+                    GroupName: $("#mainH_form").html(),
+                    PartsBarCodeNo: PartsBarCode
+                }
+                //מוחק את הקבוצה והחלקים שיש בתוכה
+                // שים לב, צריך בהמשך להראות לו שהוא יכו ללהיות מוחק קבוצה שכבר בתהליך או לא לאפשר לו זאת בכלל.
+                ajaxCall("PUT", "../api/DeleteGroup", JSON.stringify(oData), SuccessDeleteGroup, ErrorDeleteGroup);
+            });
+
+
+            //לחיצה על סגור בטופס
+            $(document).on("click", "#closeWindowsButton, #closeWindowsX", function () {
+                //יציאה מדף העריכה לעמוד הראשי
+                $("#altEditor-modal").remove();
+
+            });
+            //מרפרש את הדף
+            $(document).on("click", "#refreshWindowsX, #refreshWindowsButton", function () {
+                refreshParent();
+            });
+
+
+            //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
+            $(document).on("click", "#createNewGroupButton", function () {
+                $("#formID").submit(inserNewGroupToDB);
             });
 
         });
 
+        //רענון הטבלה כששומרים רשומה
+        function refreshParent() {
+            window.location.reload();
+        }
+
+        function SuccessDeleteGroup() {
+
+        }
+        function ErrorDeleteGroup() { }
+
         function SuccessDeletePartFromGroup(barcode) {
             $("#" + barcode).remove();
-            window.location.reload();
+            refreshParent()
         }
         function ErrorDeletePartFromGroup() { }
 
         function SuccessUpdateGroupEstTime()
         {
-            window.location.reload();
+            refreshParent()
             //$("#altEditor-modal").remove();
             //צריך לעשות פה סוואל
         }
@@ -717,13 +762,13 @@
             //Need to add Status value
             //class="active" marks the circle in green - related to the progress bar
             console.log(Data)
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='refreshWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
 <h3 class='modal-title'>קבוצה</h3>\
 <h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
 <div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-<label>מספר חלקים בקבוצה:</label><input type='text' id='unclickable' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
+<label>מספר חלקים בקבוצה:</label><input type='text' id='PartNo' name='מספר חלקים בקבוצה' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + Data.parts.length + "'></div>\
 <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-<label>סטטוס:</label><input type='text' id='unclickable' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
+<label>סטטוס:</label><input type='text' id='#' name='סטטוס' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
 <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
 <label>זמן הכנה:</label><input type='number' id='PrepTime' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
 <label>זמן נגרייה:</label><input type='number' id='CarpTime' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
@@ -743,13 +788,13 @@
 
             }
             str += "</ul ></div >";
-            str += "<table><thead><tr><th colspan='4'>חלקים בקבוצה: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
+            str += "<table id='TableID'><thead><tr><th colspan='4'>חלקים בקבוצה: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
             for (var k = 0; k < Data.parts.length; k++) {
                 str += "<tr id='" + Data.parts[k].PartBarCode + "'><td>" + Data.parts[k].PartBarCode + "</td><td>" + Data.parts[k].PartName + "</td><td>" + Data.parts[k].PartStatus + "</td><td><a href='#'><i id='DeleteIcon' class='fas fa-trash'></i></a></td></tr>"
             }
             str += "</tbody></table>"
-            str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='#' data-dismiss='modal'>כרגע סתם כפתור</button></div ></form ></pre ></div >\
-                <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
+            str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='DeleteGroup' data-dismiss='modal'>מחק קבוצה</button></div ></form ></pre ></div >\
+                <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='refreshWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
 
             $('#containerID').append(str);
         }
@@ -761,7 +806,7 @@
 
             var str = "<ul>";
             // Addint the groups to the side menu
-            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #f9f9f9;' class='nav-text'> קבוצות מוכנות </span></li>";
+            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span style='color: #f9f9f9;' class='unclickable nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
             for (var i = 0; i < Data.Glist.length; i++) {
@@ -1035,28 +1080,6 @@
         }
         function errorUpdateStatus() {
         }
-
-        //רענון הטבלה כששומרים רשומה
-        function refreshParent() {
-            window.location.reload();
-        }
-
-        //לחיצה על סגור בטופס
-        $(document).on("click", "#closeWindowsButton", function () {
-            //יציאה מדף העריכה לעמוד הראשי
-            $("#altEditor-modal").remove();
-        });
-        //לחיצה על סגור בטופס
-        $(document).on("click", "#closeWindowsX", function () {
-            //יציאה מדף העריכה לעמוד הראשי
-            $("#altEditor-modal").remove();
-        });
-
-
-        //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
-        $(document).on("click", "#createNewGroupButton", function () {
-            $("#formID").submit(inserNewGroupToDB);
-        });
 
         function inserNewGroupToDB() {
             var partArr = [];

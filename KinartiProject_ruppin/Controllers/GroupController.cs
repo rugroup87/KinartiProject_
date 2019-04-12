@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+//ספרייה לשימוש של ג'ייסון
+using Newtonsoft.Json.Linq;
 using KinartiProject_ruppin.Models;
 
 namespace KinartiProject_ruppin.Controllers
@@ -50,10 +52,29 @@ namespace KinartiProject_ruppin.Controllers
 
         [HttpPut]
         [Route("api/DeletePartFromGroup")]
-        public string DeletePartFromGroup(string partBarcode)
+        public string DeletePartFromGroup(string partBarcode, string PartCount, string GroupName)
         {
             Group G = new Group();
-            return G.DeletePartFromGroup(partBarcode);
+            return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), GroupName);
+        }
+
+        [HttpPut]
+        [Route("api/DeleteGroup")]
+        public void DeleteGroup([FromBody] String deletG)
+        {
+
+            //JToken token = JObject.Parse(deletG);
+            //string s = (string)token.SelectToken("GroupName");
+
+            //System.Reflection.PropertyInfo g = deletG.GetType().GetProperty("GroupName");
+            //System.Reflection.PropertyInfo[] a = deletG.GetType().GetProperties();
+
+
+            //System.Reflection.PropertyInfo b = deletG.GetType().GetProperty("PartsBarCodeNo");
+            //string[] n1 = (string[])b.GetValue(deletG, null);
+            //Group G = new Group();
+
+            //G.DeleteGroup(deletG);
         }
     }
 }

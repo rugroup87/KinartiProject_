@@ -75,10 +75,18 @@ namespace KinartiProject_ruppin.Models
             return numAffected;
         }
 
-        public string DeletePartFromGroup(string partBarcode)
+        public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
+        {
+            --PartCount;
+            DBServices dbs = new DBServices();
+            return dbs.DeletePartFromGroup(partBarcode, PartCount, GroupName);
+        }
+
+
+        public void DeleteGroup(object deletG)
         {
             DBServices dbs = new DBServices();
-            return dbs.DeletePartFromGroup(partBarcode);
+            dbs.DeleteGroup(deletG);
         }
     }
 }

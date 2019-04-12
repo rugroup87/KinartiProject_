@@ -722,7 +722,7 @@ public class DBServices
 
 
         // use a string builder to create the dynamic string
-        sbProj.AppendFormat("INSERT INTO Project (projectNum, projectName, prodStartDate, projectStatus) VALUES({0}, '{1}', '{2}', '{3}')", NewData.ProjectNum, NewData.ProjectName, NewData.ProdStartDate, NewData.ProjectStatus);
+        sbProj.AppendFormat("INSERT INTO Project (projectNum, projectName, prodEntranceDate, projectStatus) VALUES({0}, '{1}', '{2}', '{3}')", NewData.ProjectNum, NewData.ProjectName, NewData.ProdEntranceDate, NewData.ProjectStatus);
         sbItem.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName, itemStatus) VALUES({0}, {1}, '{2}', '{3}')", NewData.ProjectNum, NewData.Item.ItemNum, NewData.Item.ItemName, NewData.Item.ItemStatus);
         sbPartAtt.AppendFormat(@"INSERT INTO Part (partNum, partName, partStatus, setNum, barcode, partKantim, PartFirstMachine,
     PartSecondMachine, PartQuantity, PartMaterial, PartColor, PartCropType, PartCategory, PartComment, PartLength,
@@ -1192,7 +1192,7 @@ public class DBServices
     }
 
     //מוחק חלק מקבוצה
-    public string DeletePartFromGroup(string partBarcode)
+    public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
     {
 
         SqlConnection con;
@@ -1208,7 +1208,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildDeletePartFromGroupCommand(partBarcode);      // helper method to build the insert string
+        String cStr = BuildDeletePartFromGroupCommand(partBarcode, PartCount, GroupName);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1234,17 +1234,81 @@ public class DBServices
     }
 
     //בניית פקודה למחיקת חלק מקבוצה
-    public string BuildDeletePartFromGroupCommand(string partBarcode)
+    public string BuildDeletePartFromGroupCommand(string partBarcode, int PartCount, string GroupName)
     {
         String command;
         SqlConnection con;
         con = connect("KinartiConnectionString");
         StringBuilder sbDeletePartFromGroup = new StringBuilder();
+        StringBuilder sbDecreasePartCount = new StringBuilder();
 
         // use a string builder to create the dynamic string
         sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode = '{0}'", partBarcode);
+        sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
+        //sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE groupName = '{0}'", GroupName);
 
-        command = sbDeletePartFromGroup.ToString();
+        command = sbDeletePartFromGroup.ToString() + sbDecreasePartCount.ToString();
+        return command;
+    }
+
+    //מוחק את הקבוצה והחלקים שיש בקבוצה זו
+    public string DeleteGroup(object deletG)
+    {
+
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildDeleteGroupCommand(deletG);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+        return "";
+    }
+
+    //פקודת מסד נתונים למחיקת הקבוצה והחלקים שלה
+    public string BuildDeleteGroupCommand(object deletG)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sbDeletePartFromGroup = new StringBuilder();
+        StringBuilder sbDeleteGroup = new StringBuilder();
+        StringBuilder sbDecreasePartCount = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        //sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode = '{0}'", partBarcode);
+        //sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
+        //sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE groupName = '{0}'", );
+
+        command = sbDeletePartFromGroup.ToString() + sbDecreasePartCount.ToString();
         return command;
     }
 
