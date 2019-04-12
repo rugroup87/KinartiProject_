@@ -102,9 +102,9 @@
                 color: #43a4f7;
             }
 
-            nav a:hover:after {
-                width: 100%;
-            }
+                nav a:hover:after {
+                    width: 100%;
+                }
 
         @media screen and (max-width: 660px) {
             header {
@@ -244,7 +244,7 @@
                 padding: 15px;
             }
 
-            @media(min-width:992px){
+            @media(min-width:992px) {
                 pre {
                     overflow-x: hidden;
                 }
@@ -263,7 +263,6 @@
                 border: 3px solid #ccc;
                 border-radius: 10px;
                 height: 100%;
-                
             }
 
             .modal-footer {
@@ -303,11 +302,15 @@
             #example {
                 width: 100%;
             }
-            /*This is For the Edit button location*/
-            a.dt-button.buttons-selected {
-                margin-left: 80px;
+
+            .dt-buttons{
+                margin-left: 50px;
             }
 
+            /*This is For the Edit button location*/
+            /*a.dt-button.buttons-selected-formAddToExistGroup {
+                margin-left: 80px;
+            }*/
             /*-----------------------------Side Menu Style--------------------------------*/
             @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
         }
@@ -471,11 +474,10 @@
 
         i.fa.fa-sitemap.fa-2x {
             color: #f9f9f9;
-            
         }
 
         /*make unclickable label with this id*/
-        #unclickable {
+        .unclickable {
             pointer-events: none;
         }
         /*//////////////////////The Route in form of group style////////////////////////////////////*/
@@ -627,6 +629,11 @@
         .fa, .fas {
             margin-right: 20%;
         }
+
+        /*בתוך טופס של הוספת לקבוצה - שם הקבוצה לוקח את כל רוחב הטופס ומתחתיו הטבלת חלקים*/
+        #readyGroups {
+            float: none;
+        }
     </style>
 
     <script src="../Scripts/ajaxCalls.js"></script>
@@ -637,6 +644,7 @@
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
     <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
     <script>
@@ -697,6 +705,10 @@
                 ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
             });
 
+            $(document).on("click", "#DeletePartFromExistGroup", function () {
+                $(this).closest('tr').remove();
+            });
+
         });
 
         function SuccessDeletePartFromGroup(barcode) {
@@ -705,8 +717,7 @@
         }
         function ErrorDeletePartFromGroup() { }
 
-        function SuccessUpdateGroupEstTime()
-        {
+        function SuccessUpdateGroupEstTime() {
             window.location.reload();
             //$("#altEditor-modal").remove();
             //צריך לעשות פה סוואל
@@ -721,9 +732,9 @@
 <h3 class='modal-title'>קבוצה</h3>\
 <h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
 <div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-<label>מספר חלקים בקבוצה:</label><input type='text' id='unclickable' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
+<label>מספר חלקים בקבוצה:</label><input type='text' name='מספר חלקים בקבוצה' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + Data.parts.length + "'></div>\
 <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-<label>סטטוס:</label><input type='text' id='unclickable' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
+<label>סטטוס:</label><input type='text' name='סטטוס' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
 <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
 <label>זמן הכנה:</label><input type='number' id='PrepTime' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
 <label>זמן נגרייה:</label><input type='number' id='CarpTime' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
@@ -749,7 +760,7 @@
             }
             str += "</tbody></table>"
             str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='#' data-dismiss='modal'>כרגע סתם כפתור</button></div ></form ></pre ></div >\
-                <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
+                    <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
 
             $('#containerID').append(str);
         }
@@ -761,7 +772,7 @@
 
             var str = "<ul>";
             // Addint the groups to the side menu
-            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #f9f9f9;' class='nav-text'> קבוצות מוכנות </span></li>";
+            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span style='color: #f9f9f9;' class='unclickable nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
             for (var i = 0; i < Data.Glist.length; i++) {
@@ -960,10 +971,10 @@
                     "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
                     "infoPostFix": "עמודות",
                     "paginate":
-                        {
-                            "previous": "הקודם",
-                            "next": "הבא",
-                        }
+                    {
+                        "previous": "הקודם",
+                        "next": "הבא",
+                    }
                 },
                 data: partList,
                 columns: columnDefs,
@@ -985,12 +996,15 @@
                         action: function (nButton, oConfig, oFlash) {
                             formCreateNewGroup(oConfig);
                         }
+                    },
+                    {
+                        extend: 'selected', // Bind to Selected row
+                        text: 'הוספה לקבוצה קיימת',
+                        name: 'formAddToExistGroup',      // do not change name
+                        action: function (nButton, oConfig, oFlash) {
+                            formAddToExistGroup(oConfig);
+                        }
                     }
-                    //{
-                    //    extend: 'selected', // Bind to Selected row
-                    //    text: 'Delete',
-                    //    name: 'delete'      // do not change name
-                    //}
                 ]
             });
 
@@ -1073,9 +1087,8 @@
                 EstCarpTime: $("#estCarpTimeID").val(),
                 EstColorTime: $("#estColorID").val(),
                 ArrPart: partArr,
-                GroupStatus: "קבוצה מוכנה לעבודה",
-                CurrentGroupStation: "טרם נסרק"
-                }
+                GroupStatus: "קבוצה מוכנה לעבודה"
+            }
             ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
             return false;
         }
@@ -1111,7 +1124,7 @@
         //    //let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
         //    //                width=600,height=630,left=400,top=200`;
         //    //open('/Bool/createNewRout.html', 'createGroupFromForm', params);
-           
+
         //    open('/Manufacture/TempAinav.html#modal-1');
 
         //});
@@ -1161,7 +1174,7 @@
 </div>\
 <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
 <label>מספר החלקים בקבוצה:</label>\
-<input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled>\
+<input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + data_rows.data().length + "'>\
 </div>\
 <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5>\
 <label>הכנה:</label><input type='number' min='0' id='estPrepTimeID' name='זמן הכנה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
@@ -1173,10 +1186,10 @@
 <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
 <input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/>\
 </div></form></div></div></div>";
-//כפתור הסוספת מסלול חדש מתחת לדיב שצבע נגמר בו
-//            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-//<button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button>\
-//</div>\
+            //כפתור הסוספת מסלול חדש מתחת לדיב שצבע נגמר בו
+            //            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //<button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button>\
+            //</div>\
             var routelistStr = "";
             for (var i = 1; i <= Routesdata.length; i++) {
                 routelistStr += "<option value='" + i + "'>" + Routesdata[i - 1].RouteName + "</option>";
@@ -1186,6 +1199,59 @@
         }
 
         function errorGetRoute() {
+        }
+
+        ////תפיסת לחיצת כפתור הוספה לקבוצה ופתיחת חלון חדש לטופס 
+        function formAddToExistGroup(dt) {
+            //    תפיסת השורות שאותן רוצים לערוך
+            data_rows = dt.rows({ selected: true });
+            var groupList = [];
+            //מביא את כל שמות הקבוצה מתוך תפריט הצד של קבוצות מוכנות
+            $('.main-menu ul li span').each(function () {
+                //הוספת מתוך התפריט רק למי שיש תכונה אידי ובה שם שרשרנו את שם הקבוצה
+                if ($(this).attr('id')) {
+                    groupList.push($(this).attr('id'));
+                }
+            });
+            var enmptyValue = "";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>הוספת חלקים לקבוצה קיימת</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
+</div>\
+<div class='modal-body'><pre>\
+<div id='readyGroups' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>שם הקבוצה אליה תרצה להוסיף:</label>\
+<select id='groupsID' name='קבוצות מוכנות' onChange='selectedGroup($(\"#groupsID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר קבוצה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+<option value='" + enmptyValue + "'>בחר קבוצה</option>\
+</select>\
+</div>\
+<div id='byGroupNameAddingInfo' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+</div>\
+</pre></div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='addToExistGroupButton' value='הוסף'/>\
+</div></form></div></div></div>";
+
+            var strReadyGroups = "";
+            for (var i = 0; i < groupList.length; i++) {
+                strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
+            }
+            $('#containerID').append(str);
+            $('#groupsID').append(strReadyGroups);
+        }
+
+        function selectedGroup() {
+            $('#byGroupNameAddingInfo').html("");
+            str = "<table><thead><tr><th colspan='4'>החלקים שבחרת להוסיף: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
+            for (var k = 0; k < data_rows[0].length; k++) {
+                str += "<tr id='" + data_rows.data()[k].PartNum + "'><td>" + data_rows.data()[k].PartNum + "</td><td>" + data_rows.data()[k].PartName + "</td><td>" + data_rows.data()[k].PartStatus + "</td><td><a href='#'><i id='DeletePartFromExistGroup' class='fas fa-trash'></i></a></td></tr>"
+            }
+            str += "</tbody></table>"
+            $('#byGroupNameAddingInfo').append(str);
+
         }
 
     </script>

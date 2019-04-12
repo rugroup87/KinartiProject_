@@ -794,7 +794,7 @@ public class DBServices
 
     }
 
-    private String BuildNewGroupCommand(Group group)
+    private string BuildNewGroupCommand(Group group)
     {
         String command;
         SqlConnection con;
@@ -804,8 +804,8 @@ public class DBServices
         StringBuilder sb2 = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.CurrentGroupStation);
-        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, currentGroupStation) ";
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus);
+        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, groupStatus) ";
         String prefix2 = " Update Part SET groupName='" + group.GroupName + "' WHERE projectNum ='" + group.ProjectNum + "' AND itemNum ='" + group.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < group.ArrPart.Length; i++)
         {
