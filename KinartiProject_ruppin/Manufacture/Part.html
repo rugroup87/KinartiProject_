@@ -752,11 +752,9 @@
         }
 
         function SuccessDeleteGroup() {
-
+            refreshParent()
         }
         function ErrorDeleteGroup() { }
-
-        });
 
         function SuccessDeletePartFromGroup(barcode) {
             $("#" + barcode).remove();

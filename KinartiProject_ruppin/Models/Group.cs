@@ -83,10 +83,10 @@ namespace KinartiProject_ruppin.Models
         }
 
 
-        public void DeleteGroup(object deletG)
+        public void DeleteGroup(string groupName, string[] barcodes)
         {
             DBServices dbs = new DBServices();
-            dbs.DeleteGroup(deletG);
+            dbs.DeleteGroup(groupName, barcodes);
         }
     }
 }

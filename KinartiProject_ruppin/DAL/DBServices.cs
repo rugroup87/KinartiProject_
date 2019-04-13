@@ -1252,7 +1252,7 @@ public class DBServices
     }
 
     //מוחק את הקבוצה והחלקים שיש בקבוצה זו
-    public string DeleteGroup(object deletG)
+    public string DeleteGroup(string groupName, string[] barcodes)
     {
 
         SqlConnection con;
@@ -1268,7 +1268,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildDeleteGroupCommand(deletG);      // helper method to build the insert string
+        String cStr = BuildDeleteGroupCommand(groupName, barcodes);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1294,7 +1294,7 @@ public class DBServices
     }
 
     //פקודת מסד נתונים למחיקת הקבוצה והחלקים שלה
-    public string BuildDeleteGroupCommand(object deletG)
+    public string BuildDeleteGroupCommand(string groupName, string[] barcodes)
     {
         String command;
         SqlConnection con;
@@ -1303,12 +1303,17 @@ public class DBServices
         StringBuilder sbDeleteGroup = new StringBuilder();
         StringBuilder sbDecreasePartCount = new StringBuilder();
 
-        // use a string builder to create the dynamic string
-        //sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode = '{0}'", partBarcode);
-        //sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
-        //sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE groupName = '{0}'", );
+        sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode in(");
+        for (int i = 0; i < (barcodes.Length-1); i++)
+        {
+            sbDeletePartFromGroup.AppendFormat("'{0}',", barcodes[i]);
+        }
+        sbDeletePartFromGroup.AppendFormat("'{0}')", barcodes[barcodes.Length - 1]);
 
-        command = sbDeletePartFromGroup.ToString() + sbDecreasePartCount.ToString();
+        //sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
+        sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE groupName = '{0}'", groupName);
+
+        command = sbDeletePartFromGroup.ToString() + sbDeleteGroup.ToString();
         return command;
     }
 
