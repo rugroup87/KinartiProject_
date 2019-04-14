@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> <!--dataTables-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+        
+    <style>
+    </style>
+
+    <script src="../Scripts/ajaxCalls.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
+    <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
+    <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
+    <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+
+    <script>
+        $(document).ready(function () {
+
+            $(document).on("click", "button", function () {
+                var BarCodeNumber = $('#' + this.className).val();
+
+                uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.className;
+
+
+                ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
+            });
+
+
+        });
+
+
+        function ScanSuccessPart() {
+
+        }
+
+        function errorScanPart() {
+
+        }
+
+
+    </script>
+</head>
+<body>
+    <div id="barcode">
+        <div>
+            <input type="text" id="CNC" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="CNC">Scan</button>
+        </div>
+        <div>
+            <input type="text" id="חיתוך" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="חיתוך">Scan</button>
+        </div>
+        <div>
+            <input type="text" id="צבע" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="צבע">Scan</button>
+        </div>
+    </div>
+</body>
+</html>

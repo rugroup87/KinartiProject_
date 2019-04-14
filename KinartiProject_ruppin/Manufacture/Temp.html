@@ -1,77 +1,246 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> <!--dataTables-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+﻿    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
-    <style>
+        <script src="../Scripts/ajaxCalls.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
+        <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
+        <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
+        <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
+        <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+        <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
-    </style>
-    <script src="../Scripts/ajaxCalls.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
-    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
-    <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
-    <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
-    <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
-    <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
-    <script>$(document).ready(function () {
+        <style>
+            body {
+                line-height: 1.3em;
+                min-width: 920px;
+            }
 
-            $(document).on("click", "button", function () {
-                console.log(this.className)
-                console.log($("#CNC input").val());
+            .history-tl-container {
+                font-family: "Roboto",sans-serif;
+                width: 50%;
+                margin: auto;
+                display: block;
+                position: relative;
+            }
 
-                $("#CNC").click(function () {
-                    alert("Text: " + $("#CNC").text());
+                .history-tl-container ul.tl {
+                    margin: 20px 0;
+                    padding: 0;
+                    display: inline-block;
+                }
+
+                    .history-tl-container ul.tl li {
+                        list-style: none;
+                        margin: auto;
+                        margin-left: 200px;
+                        min-height: 50px;
+                        /*background: rgba(255,255,0,0.1);*/
+                        border-left: 1px dashed #86D6FF;
+                        padding: 0 0 50px 30px;
+                        position: relative;
+                    }
+
+                        .history-tl-container ul.tl li:last-child {
+                            border-left: 0;
+                        }
+
+                        .history-tl-container ul.tl li::before {
+                            position: absolute;
+                            left: -18px;
+                            top: -5px;
+                            content: " ";
+                            border: 8px solid rgba(255, 255, 255, 0.74);
+                            border-radius: 500%;
+                            background: #258CC7;
+                            height: 20px;
+                            width: 20px;
+                            transition: all 500ms ease-in-out;
+                        }
+
+                        .history-tl-container ul.tl li:hover::before {
+                            border-color: #258CC7;
+                            transition: all 1000ms ease-in-out;
+                        }
+
+            ul.tl li .item-title {
+            }
+
+            ul.tl li .item-detail {
+                color: rgba(0,0,0,0.5);
+                font-size: 12px;
+            }
+
+            ul.tl li .timestamp {
+                color: #8D8D8D;
+                position: absolute;
+                width: 100px;
+                left: -50%;
+                text-align: right;
+                font-size: 12px;
+            }
+
+            /*//////////////////////////////////////////////////////////////////*/
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                color: #333;
+            }
+
+            table {
+                text-align: left;
+                line-height: 40px;
+                border-collapse: separate;
+                border-spacing: 0;
+                border: 2px solid #ed1c40;
+                width: 500px;
+                margin: 50px auto;
+                border-radius: .25rem;
+            }
+
+            thead tr:first-child {
+                background: #ed1c40;
+                color: #fff;
+                border: none;
+            }
+
+            th:first-child,
+            td:first-child {
+                padding: 0 15px 0 20px;
+            }
+
+            th {
+                font-weight: 500;
+                text-align: center;
+            }
+
+            thead tr:last-child th {
+                border-bottom: 3px solid #ddd;
+            }
+
+            tbody tr:hover {
+                background-color: #f2f2f2;
+                cursor: default;
+            }
+
+            tbody tr:last-child td {
+                border: none;
+            }
+
+            tbody td {
+                border-bottom: 1px solid #ddd;
+            }
+
+            td:last-child {
+                text-align: right;
+                padding-right: 10px;
+            }
+
+            .button {
+                color: #aaa;
+                cursor: pointer;
+                vertical-align: middle;
+                margin-top: -4px;
+            }
+
+            .edit:hover {
+                color: #0a79df;
+            }
+
+            .delete:hover {
+                color: #dc2a2a;
+            }
+            /*this is for the icons style - space between them*/
+            .fa, .fas {
+                margin-right: 20%;
+            }
+        </style>
+        <script>
+
+            $(document).ready(function () {
+
+                $(document).on("click", "#one", function () {
+                    //console.log("work")
+                    alert("Ok");
+                    //uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                    //ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
                 });
 
-                //uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "?StationName=" + StationName;
-
-
-                //ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
             });
+        </script>
+    </head>
+    <body>
 
-
-        });
-
-        function ScanBarCode(StationName) {
-            var BarCodeNumber = $("#" + StationName).val();
-                //console.log($(""));
-
-
-        }
-
-        function ScanSuccessPart() {
-
-        }
-
-        function errorScanPart() {
-
-        }</script>
-</head>
-<body>
-    <div id="barcode">
-        <div>
-            <input type="text" id="CNC" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-            <button type="button" class="CNC">Scan</button>
+        <!--<link href='//fonts.googleapis.com/css?family=Roboto:200,400,600' rel='stylesheet' type='text/css'>-->
+        <div class="history-tl-container">
+            <ul class="tl">
+                <li class="tl-item" ng-repeat="item in retailer_history">
+                    <div class="item-title">Start from Shire</div>
+                </li>
+                <li class="tl-item" ng-repeat="item in retailer_history">
+                    <div class="item-title">Kill some Orcs</div>
+                </li>
+                <li class="tl-item" ng-repeat="item in retailer_history">
+                    <div class="item-title">Throw that goddamn ring in the lava</div>
+                </li>
+            </ul>
         </div>
-        <div>
-            <input type="text" id="צבע" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-            <button type="button" class="חיתוך">Scan</button>
-        </div>
-        <div>
-            <input type="text" id="צבע" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-            <button type="button" class="צבע">Scan</button>
-        </div>
-    </div>
-</body>
-</html>
+
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="4">חלקים בקבוצה: </th>
+                </tr>
+                <tr>
+                    <th>ברקוד</th>
+                    <th>שם חלק</th>
+                    <th colspan="3">סטטוס</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Atualizar página da equipe</td>
+                    <td>xyyux</td>
+                    <td>
+                        <i class="material-icons button edit">edit</i>
+                        <i class="material-icons button delete">delete</i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Design da nova marca</td>
+                    <td>xyyux</td>
+                    <td>
+                        <i class="material-icons button edit">edit</i>
+                        <i class="material-icons button delete">delete</i>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Encontrar desenvolvedor front-end</td>
+                    <td>xyyux</td>
+                    <td>
+                        <i id="one" class="fas fa-trash"></i>
+                        <i class="fas fa-pencil-alt"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        https://codepen.io/leoespsanto/pen/pEftw
+        https://codepen.io/geoffyuen/pen/FCBEg
+
+    </body>
+    </html>

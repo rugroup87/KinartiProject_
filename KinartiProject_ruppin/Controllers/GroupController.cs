@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-//using System.Web.Mvc:
 using System.Web.Http;
 
+//ספרייה לשימוש של ג'ייסון
+using Newtonsoft.Json.Linq;
 using KinartiProject_ruppin.Models;
 
 namespace KinartiProject_ruppin.Controllers
@@ -17,25 +18,60 @@ namespace KinartiProject_ruppin.Controllers
         public object Get(string GroupName)
         {
             Group G = new Group();
+            Route R = new Route();
             Part[] parts = G.GetGroupParts(GroupName);
             Group group = G.GetSpecificGroup(GroupName);
-            //Route route = 
-            return new {parts, group };
+            List<Route> routes = R.ReadRouteName(group.GroupRouteName);
+            return new {parts, group, routes};  
         }
 
         [HttpGet]
         [Route("api/GetGroups")]
-        public IEnumerable<Group> Get(string projectNum, string itemNum)
+        public object Get(string projectNum, string itemNum)
         {
+            Machine M = new Machine();
+            List<Machine> mlist;
             Group G = new Group();
             Group[] Glist;
             Glist = G.GetGroups(projectNum, itemNum);
-            return Glist;
+            mlist = M.GetAllMachines();
+            return new {Glist, mlist };
         }
 
         public int Post([FromBody]Group group)
         {
             return group.InsertNewGroup();
+        }
+
+        [HttpPut]
+        [Route("api/UpdateGroupEstTime")]
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        {
+            Group G = new Group();
+            G.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+        }
+
+        [HttpPut]
+        [Route("api/DeletePartFromGroup")]
+        public string DeletePartFromGroup(string partBarcode, string PartCount, string GroupName)
+        {
+            Group G = new Group();
+            return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), GroupName);
+        }
+
+        [HttpPut]
+        [Route("api/DeleteGroup")]
+        public void DeleteGroup([FromBody] dynamic deletG)
+        {
+            Group G = new Group();
+            string groupName = deletG.GroupName;
+            string[] barcodes = deletG.PartsBarCodeNo.ToObject<string[]>();
+
+
+            //System.Reflection.PropertyInfo g = deletG.GetType().GetProperty("GroupName");
+            //string n1 = (string)g.GetValue(deletG, null);
+
+            G.DeleteGroup(groupName, barcodes);
         }
     }
 }

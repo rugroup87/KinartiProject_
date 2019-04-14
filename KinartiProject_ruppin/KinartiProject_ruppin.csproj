@@ -177,6 +177,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\BarCodeScanController.cs" />
     <Compile Include="Controllers\FileUploudController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ItemController.cs" />
@@ -192,9 +193,11 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BarCode.cs" />
     <Compile Include="Models\ExcelFile.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\MyExceptions.cs" />
     <Compile Include="Models\Objectdata.cs" />
     <Compile Include="Models\Part.cs" />
     <Compile Include="Models\Machine.cs" />
@@ -220,11 +223,14 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Manufacture\Clicks.html" />
     <Content Include="Manufacture\Item.html" />
     <Content Include="Manufacture\Part.html" />
     <Content Include="Manufacture\Project.html" />
-    <Content Include="Manufacture\Route_Main_Page.html" />
+    <Content Include="Manufacture\RouteMainPage.html" />
     <Content Include="Manufacture\Temp.html" />
+    <Content Include="Manufacture\TempAinav.html" />
+    <Content Include="Manufacture\Temp_updateRoute.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

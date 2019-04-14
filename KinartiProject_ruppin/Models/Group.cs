@@ -12,6 +12,7 @@ namespace KinartiProject_ruppin.Models
         public string GroupName { get; set; }
         public string GroupStatus { get; set; }
         public string GroupRouteName { get; set; }
+        public string CurrentGroupStation { get; set; } // ברקוד של מספר!! מכונה
         public int GroupPartCount { get; set; }
         public int EstPrepTime { get; set; }
         public int EstCarpTime { get; set; }
@@ -21,7 +22,7 @@ namespace KinartiProject_ruppin.Models
         //הג'ייסון לא נכנס לי לבנאי הזה ולכן אין סטטוס כי הוא הולך לבנאי הריק - לבדוק למה
         public Group(float _projectNum, string _itemNum, string _groupName, string _groupRouteName,
            int _groupPartCount, int _estPrepTime, int _estCarpTime, int _estColorTime,
-           string[] _arrPart, string _groupStatus = "קבוצה מוכנה לעבודה")
+           string[] _arrPart, string _CurrentGroupStation, string _groupStatus = "קבוצה מוכנה לעבודה")
         {
             ProjectNum = _projectNum;
             ItemNum = _itemNum;
@@ -33,6 +34,7 @@ namespace KinartiProject_ruppin.Models
             EstColorTime = _estColorTime;
             GroupStatus = _groupStatus;
             ArrPart = _arrPart;
+            CurrentGroupStation = _CurrentGroupStation;
         }
 
         //בנאי ריק
@@ -53,23 +55,11 @@ namespace KinartiProject_ruppin.Models
             return dbs.GetSpecificGroup(GroupName);
         }
 
-
-
-        ////מחזיר לנו את החלקים של הקבוצה שנבחרה כולל את המידע של הקבוצה 
-        //public Part[] GetGroupParts(string GroupName)
-        //{
-        //    DBServices dbs = new DBServices();
-        //    Part[] parts = dbs.GetGroupParts(GroupName);
-        //    Group g = dbs.GetSpecificGroup(GroupName);
-        //    var result = Add_Multiply(g, parts);
-        //    return result;
-        //}
-        ////השימוש ב טאפל.. מאפשר להחזיר 2 פרמטרים
-        //private static Tuple<Group, Part[]> Add_Multiply(Group g, Part[] parts)
-        //{
-        //    var tuple = new Tuple<Group, Part[]>(g, parts);
-        //    return tuple;
-        //}
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        {
+            DBServices dbs = new DBServices();
+            dbs.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+        }
 
         //מחזיר את כל הקבוצות אשר שייכוח לפרויקט ופריט מסויים
         public Group[] GetGroups(string projectNum, string itemNum)
@@ -83,6 +73,20 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             int numAffected = dbs.InsertNewGroup(this);
             return numAffected;
+        }
+
+        public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
+        {
+            --PartCount;
+            DBServices dbs = new DBServices();
+            return dbs.DeletePartFromGroup(partBarcode, PartCount, GroupName);
+        }
+
+
+        public void DeleteGroup(string groupName, string[] barcodes)
+        {
+            DBServices dbs = new DBServices();
+            dbs.DeleteGroup(groupName, barcodes);
         }
     }
 }

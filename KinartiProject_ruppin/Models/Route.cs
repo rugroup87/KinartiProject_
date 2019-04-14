@@ -37,6 +37,14 @@ namespace KinartiProject_ruppin.Models
             return rl;      
         }
 
+        public List<Route> GetRouteWithoutOld_()
+        {
+            DBServices dbs = new DBServices();
+            List<Route> rl = new List<Route>();
+            rl = dbs.GetRouteWithoutOld_();
+            return rl;
+        }
+
         public int InsertStation()
         {
             DBServices dbs = new DBServices();

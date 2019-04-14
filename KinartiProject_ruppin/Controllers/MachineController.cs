@@ -15,7 +15,7 @@ namespace KinartiProject_ruppin.Controllers
         public IEnumerable<Machine> Get()
         {
             Machine m = new Machine();
-            return m.Read();
+            return m.GetAllMachines();
         }
     }
 }

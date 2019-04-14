@@ -20,7 +20,7 @@
 
         header {
             padding: 5px 0;
-            background: #212121;
+            background: #404040;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
@@ -35,7 +35,7 @@
             margin-right: 20px;
         }
 
-            .logo-box a {
+        .logo-box a {
                 outline: none;
                 display: block;
             }
@@ -69,7 +69,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #337ab7;
+            color: #f9f9f9;
             text-transform: uppercase;
         }
 
@@ -83,8 +83,11 @@
                 background: #ffffff;
                 transition: width .5s linear;
             }
-
-            nav a:hover:after {
+            /*/The color of the menu when hover/*/
+            nav a:hover {
+                color: #43a4f7;
+            }
+                nav a:hover:after {
                 width: 100%;
             }
 
@@ -128,6 +131,7 @@
                     content: none;
                 }
         }
+
         /*This Is The DT CSS*/
         table.dataTable tbody > tr.selected,
         table.dataTable tbody > tr > .selected {
@@ -157,33 +161,39 @@
             transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
         }
 
-        @media (min-width: 768px) {
-            .col-sm-3 {
-                width: 100%;
-            }
-        }
-
         .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
             position: relative;
             min-height: 1px;
             padding-right: 15px;
         }
 
+
+        /*@media (min-width: 768px) {
+            .col-sm-3 {
+                width: 100%;
+            }
+        }*/
+        /*@media (min-width: 768px) {
+            .modal-content {
+                -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+                box-shadow: 0 5px 150px rgba(0,0,0,.5);
+            }
+        }*/
+
         @media (min-width: 768px) {
             .modal-dialog {
                 width: 600px;
                 margin: 20px auto;
             }
-        }
-
-        @media (min-width: 768px) {
+            .col-sm-3 {
+                width: 100%;
+            }
             .modal-content {
                 -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 box-shadow: 0 5px 150px rgba(0,0,0,.5);
             }
         }
-
-
+        
         button.close {
             -webkit-appearance: none;
             padding-left: 10px;
@@ -196,12 +206,15 @@
             .col-md-3 {
                 width: 50%;
             }
-        }
-
-        @media (min-width: 992px) {
             .container {
                 width: 100%;
+            }
         }
+
+        /*@media (min-width: 992px) {
+            .container {
+                width: 100%;
+        }*/
 
         .modal-header {
             background-color: #d7d7d7;
@@ -213,7 +226,7 @@
 
         .modal-body {
             background-color: #f0f0f0;
-            height: 500px;
+            height: 450px;
             position: relative;
             padding: 15px;
         }
@@ -272,12 +285,20 @@
             width: 100%;
         }
 
+        /*This is For the Edit button location*/
+        a.dt-button.buttons-selected {
+            margin-left: 80px;
+        }
+
+        /*make unclickable label with this id*/
+        .unclickable {
+            pointer-events: none;
+        }
+
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <!--<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
-    <!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  bootstrap-->
     <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
     <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
@@ -292,10 +313,11 @@
         $(document).ready(function () {
             StatusArr = [];
             $.fn.dataTable.moment('D/M/YYYY');
-            $.fn.dataTable.moment(' D/M/YYYY HH:mm');
+            $.fn.dataTable.moment('D/M/YYYY HH:mm');
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
+            todayDate = new Date().toISOString().split('T')[0];
         });
 
         function getSuccessStatus(statusArr) {
@@ -396,8 +418,22 @@
                 defaultContent: "",
                 "className": "dt-center",
                 id: "ProjectStatus",
-                "targets": "_all",
-                render: function (data) { return createSelect(data); }
+                    "targets": "_all",
+                    render: function (data) { return createSelect(data); }
+                    //function (data, type, full, meta) {
+                    //    if (type === 'filter' || type === 'sort') {
+                    //        var api = new $.fn.dataTable.Api(meta.settings);
+                    //        var td = api.cell({ row: meta.row, column: meta.col }).node();
+                    //        var $input = $('select, input', td);
+                    //        if ($input.length && $input.is('select')) {
+                    //            data = $('option:selected', $input).text();
+                    //        } else {
+                    //            data = $input.val();
+                    //        }
+                    //    }
+
+                    //    return data;
+                    //}                
             }, {
                 title: "הערות",
                 data: 'Comment',
@@ -418,10 +454,6 @@
                                 return data;
                             }
                         }
-                     
-                     //return type === 'display' && data.length > 20 && data !== null ?
-                     //     '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>' :
-                     //     data;
                     }
             }, {
                 title: "ת. כניסה לעבודה",
@@ -479,8 +511,24 @@
                     //}
                 ]
             });
-
         }
+
+        $(document).on("click", "#checkbox", function (e) {
+            $.fn.dataTableExt.afnFiltering.push(function (oSettings, aData, iDataIndex) {
+                var checked = $('#checkbox').is(':checked');
+                var s = myTable.column(4).data()[iDataIndex]
+                if (checked) {
+                    return true;
+                }
+                if (!checked && s != "סיום פרוייקט") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+            myTable.draw();
+        });
 
         function errorProject(err) {
             swal("Error: " + err);
@@ -488,7 +536,6 @@
 
         // the function creates a dropdown list box of ProjectStatus  
         function createSelect(selItem) {
-
             var sel = "<select>";
             for (var i = 0; i < StatusArr.length; ++i) {
                 if (StatusArr[i] == selItem) {
@@ -537,13 +584,12 @@
         $(document).on("click", "#saveEditForm", function () {
             Project = {
                 ProjectNum: $("#hProjNum").text(),
-                //ProjectName: $("#hProjName").text(),
                 //המשתנים הבאים נעביר כמחרוזות ולא כתאריכים ולכן לכל אחד מהם יש בנאי משלהם
-                ProdStartDate: $("#prodStartDateID").val(),
-                SupplyDate: $("#supplyDateID").val(),
-                //ProjectStatus: $("#projectStatusID"),
-                Comment: $("#commentID").val(),
-                //ProdEntranceDate: $("#prodEntranceDateID")
+                ProdStartDateString: $("#prodStartDateID").val(),
+                SupplyDateString: $("#supplyDateID").val(),
+                //ProdStartDate: $("#prodStartDateID").val(),
+                //SupplyDate: $("#supplyDateID").val(),
+                Comment: $("#commentID").val()
             }
             ajaxCall("PUT", "../api/project/UpdateProject", JSON.stringify(Project), successUpdatesProject, errorUpdatesProject);
             
@@ -578,11 +624,11 @@
             var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
             var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
        
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' id='prodStartDateID' name='ת. תחילת ייצור' placeholder='ת. תחילת ייצור' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='ת. אספקה' placeholder='ת. אספקה' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class='form-control  form-control-sm' value='" + data_row.ProjectStatus + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='form-control  form-control-sm' value= '" + prodEntranceDateForm + "' disabled> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' name='setTodaysDate' id='prodStartDateID' placeholder='ת. תחילת ייצור' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='setTodaysDate' placeholder='ת. אספקה' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class=' unclickable form-control  form-control-sm' value='" + data_row.ProjectStatus + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='unclickable form-control  form-control-sm' value= '" + prodEntranceDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
             $('#containerID').append(str);
         }
 
-        //פונקציה שמסדרת רת התאריכים בצורה נוחה לטפסים
+        //פונקציה שמסדרת את התאריכים בצורה נוחה לטפסים
         function dateToForm(formDate) {
             var day;
             var month;
@@ -622,7 +668,7 @@
                 <ul>
                     <li><a href="Project.html">פרוייקטים</a></li>
                     <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
-                    <li><a href="">מסלולים</a></li>
+                    <li><a href="RouteMainPage.html">מסלולים</a></li>
                     <li><a href="">קבוצות מוכנות</a></li>
                     <li><a href="">contact</a></li>
                 </ul>
@@ -632,6 +678,8 @@
     <br />
 
     <div class="container" id="containerID">
+        <input id="checkbox" type="checkbox" style="margin-right:30px;" checked>
+        <label>הראה בנוסף פרויקטים שהסתיימו</label>
         <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
     </div>
 </body>

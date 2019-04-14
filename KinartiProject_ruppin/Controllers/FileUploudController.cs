@@ -43,7 +43,7 @@ namespace KinartiProject_ruppin.Controllers
                         // Save the uploaded file  
                         httpPostedFile.SaveAs(fileSavePath);
                         //FilesLinks.Add("uploadedFiles/" + fname);
-                        FilePath = "uploadedFiles/" + fname;
+                        FilePath = @"uploadedFiles\" + fname;
                     }
                 }
                 NewFile.WorkOnExcelFile(FilePath, UploadDate);

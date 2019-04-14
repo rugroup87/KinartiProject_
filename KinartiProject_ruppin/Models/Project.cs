@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data;
+using System.Globalization;
 
 namespace KinartiProject_ruppin.Models
 {
@@ -20,7 +21,8 @@ namespace KinartiProject_ruppin.Models
         //    }
         //    set => prodstartdate = value;
         //}
-        //Item [] ItemArr;
+        //Item[] ItemArr;
+
         private Nullable<DateTime> prodstartdate;
         public Nullable<DateTime> ProdStartDate
         {
@@ -41,6 +43,8 @@ namespace KinartiProject_ruppin.Models
                 prodstartdate = value;
             }
         }
+        public string ProdStartDateString { get; set; }
+
         private Nullable<DateTime> supplydate;
         public Nullable<DateTime> SupplyDate
         {
@@ -61,7 +65,7 @@ namespace KinartiProject_ruppin.Models
                 supplydate = value;
             }
         }
-        //public string SupplyDate1 { get; set; }
+        public string SupplyDateString { get; set; }
 
         public string ProjectStatus { get; set; }
         public string Comment { get; set; }
@@ -92,12 +96,12 @@ namespace KinartiProject_ruppin.Models
         ExcelFile ProjFile = new ExcelFile();
         public Item Item = new Item();
 
-        public Project(float _projectNum, string _projectName, string _prodStartDate, Item item, string _projectStatus = "תרם התחיל")
+        public Project(float _projectNum, string _projectName, string _ProdEntranceDate, Item item, string _projectStatus = "טרם התחיל")
         {
             //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
             ProjectNum = _projectNum;
             ProjectName = _projectName;
-            ProdStartDate = DateTime.Parse(_prodStartDate);
+            ProdEntranceDate = DateTime.Parse(_ProdEntranceDate);
             Item = item;
             ProjectStatus = _projectStatus;
             AddNewDataToDB();
@@ -116,18 +120,25 @@ namespace KinartiProject_ruppin.Models
             //ItemArr = itemarr;
         }
 
-        public Project(float _projectNum, string _prodStartDate, string _supplyDate, string _comment)
+        //public Project(float _projectNum, string _prodStartDate, string _supplyDate, string _comment)
+        //{
+        //    ProjectNum = _projectNum;
+        //    ProdStartDate = DateTime.Parse(_prodStartDate);
+        //    SupplyDate = DateTime.Parse(_supplyDate);
+        //    Comment = _comment;
+        //}
+
+        public Project(float _projectNum, string _prodStartDateString, string _supplyDateString, string _comment)
         {
             ProjectNum = _projectNum;
-            ProdStartDate = DateTime.Parse(_prodStartDate);
-            SupplyDate = DateTime.Parse(_supplyDate);
+            ProdStartDateString = _prodStartDateString;
+            SupplyDateString = _supplyDateString;
             Comment = _comment;
         }
 
         public Project()
         {
         }
-
 
         public List<Project> GetAllProject()
         {
@@ -146,9 +157,15 @@ namespace KinartiProject_ruppin.Models
         public int UpdateProject()
         {
             //srting a = this.prodstartdate.ToString("yyyy-MM-dd HH:mm:ss");
+            //srting abc = DateTime.ParseExact(this.prodstartdate, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            //abc.ToString("yyyy-MM-dd HH:mm:ss");
+            //(this.prodstartdate).Value.ToString("yyyy-MM-dd");
+            //(this.supplydate).Value.ToString("yyyy-MM-dd");
             DBServices dbs = new DBServices();
             return dbs.UpdateProject(this);
         }
+
+        
 
         /// //////////////////////////////////////////////////////////////////////////////////
         public void AddNewDataToDB()

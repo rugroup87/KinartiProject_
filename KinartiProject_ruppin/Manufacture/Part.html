@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿<!-- שורה 646: צריך לשים לב שהמערך שם כרגע מציג רק משהו אחר ספציפי כי נתתי לו ערך במיקום 2 בגלל שבדטה בייס זה כרגע נאל-->
+
+<!DOCTYPE html>
 <html dir="rtl">
 <head>
     <meta charset="utf-8" />
@@ -9,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
@@ -16,7 +19,7 @@
 
 
         label {
-            float:right;
+            float: right;
         }
         /*This Is The Menu CSS*/
         body {
@@ -26,15 +29,16 @@
 
         header {
             padding: 5px 0;
-            background: #212121;
+            background: #404040;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
         .container {
             padding: 0 auto;
             /*max-width: 960px;*/
-            margin-right: 5%;
+            margin-right: 4%;
         }
+
         .TopMenuContainer {
             padding: 0px auto;
             margin: 0px auto;
@@ -79,7 +83,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #337ab7;
+            color: #f9f9f9;
             text-transform: uppercase;
         }
 
@@ -93,10 +97,14 @@
                 background: #ffffff;
                 transition: width .5s linear;
             }
-
-            nav a:hover:after {
-                width: 100%;
+            /*/The color of the menu when hover/*/
+            nav a:hover {
+                color: #43a4f7;
             }
+
+                nav a:hover:after {
+                    width: 100%;
+                }
 
         @media screen and (max-width: 660px) {
             header {
@@ -177,14 +185,20 @@
             position: relative;
             min-height: 1px;
             padding-right: 15px;
-            float:right;
-            margin: 0 25%;
+            float: right;
+            /*margin: 0 25%;*/
         }
 
         @media (min-width: 768px) {
             .modal-dialog {
                 width: 600px;
                 margin: 20px auto;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                width: 96%;
             }
         }
 
@@ -212,7 +226,7 @@
 
         @media (min-width: 992px) {
             .container {
-                width: 100%;
+                width: 95%;
             }
 
             .modal-header {
@@ -230,6 +244,12 @@
                 padding: 15px;
             }
 
+            @media(min-width:992px) {
+                pre {
+                    overflow-x: hidden;
+                }
+            }
+
             pre {
                 display: block;
                 padding: 0px;
@@ -243,6 +263,7 @@
                 border: 3px solid #ccc;
                 border-radius: 10px;
                 height: 100%;
+                
             }
 
             .modal-footer {
@@ -260,10 +281,10 @@
                 text-align: center;
             }
 
-        #mainH_form, #secondH_form {
-            display: inline-block;
-            padding-right: 2%;
-        }
+            #mainH_form, #secondH_form {
+                display: inline-block;
+                padding-right: 2%;
+            }
 
             #ProjName {
                 text-align: center;
@@ -275,21 +296,26 @@
 
             #containerID {
                 margin: 0px;
-                padding: 0px 0px 0px 0px;
-                max-width: 100%;
+                padding-right: 20px;
+                width: 102%;
             }
 
             #example {
                 width: 100%;
             }
-            /*This is For the Edit button location*/
-            a.dt-button.buttons-selected {
-                margin-left: 80px;
+
+            .dt-buttons{
+                margin-left: 50px;
             }
 
-            /*---------------------------------------------------------------------------------------*/
+            /*This is For the Edit button location*/
+            /*a.dt-button.buttons-selected-formAddToExistGroup {
+                margin-left: 80px;
+            }*/
+            /*-----------------------------Side Menu Style--------------------------------*/
             @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
         }
+
         @import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
 
         .fa-2x {
@@ -304,6 +330,7 @@
             text-align: center;
             vertical-align: middle;
             font-size: 20px;
+            color: #f9f9f9;
         }
 
 
@@ -313,7 +340,7 @@
         }
 
         .main-menu {
-            background: #212121;
+            background: #404040;
             border-right: 1px solid #e5e5e5;
             position: fixed;
             top: 0;
@@ -345,7 +372,7 @@
                     display: table;
                     border-collapse: collapse;
                     border-spacing: 0;
-                    color: #337ab7;
+                    color: #f9f9f9;
                     font-family: arial;
                     font-size: 14px;
                     text-decoration: none;
@@ -447,15 +474,14 @@
         }
 
         i.fa.fa-sitemap.fa-2x {
-            color: #3efb9b;
+            color: #f9f9f9;
         }
 
         /*make unclickable label with this id*/
-        #unclickable {
+        .unclickable {
             pointer-events: none;
         }
-        /*////////////////////////////////////////////////////////////////////////////////////////////////*/
-
+        /*//////////////////////The Route in form of group style////////////////////////////////////*/
         body {
             line-height: 1.3em;
             min-width: 920px;
@@ -463,26 +489,27 @@
 
         .history-tl-container {
             font-family: "Roboto",sans-serif;
-            width: 50%;
+            /*width: 50%;*/
             margin: auto;
             display: block;
             position: relative;
+            float: left;
         }
 
             .history-tl-container ul.tl {
                 margin: 20px 0;
                 padding: 0;
-                display: inline-block;
+                display: table;
             }
 
                 .history-tl-container ul.tl li {
                     list-style: none;
                     margin: auto;
-                    margin-left: 200px;
+                    margin-left: 170px;
                     min-height: 50px;
                     /*background: rgba(255,255,0,0.1);*/
-                    border-left: 1px dashed #86D6FF;
-                    padding: 0 0 50px 30px;
+                    border-left: 1px solid #86D6FF;
+                    padding: 0 0 40px 30px;
                     position: relative;
                 }
 
@@ -492,12 +519,12 @@
 
                     .history-tl-container ul.tl li::before {
                         position: absolute;
-                        left: -18px;
-                        top: -5px;
+                        left: -11px;
+                        top: 0px;
                         content: " ";
-                        border: 8px solid rgba(255, 255, 255, 0.74);
+                        border: 8px solid rgba(255, 255, 255, 0.7);
                         border-radius: 500%;
-                        background: #258CC7;
+                        background: #337ab7;
                         height: 20px;
                         width: 20px;
                         transition: all 500ms ease-in-out;
@@ -524,7 +551,90 @@
             text-align: right;
             font-size: 12px;
         }
-        
+        /*///////////////////////////////Table in Form Style ///////////////////////////*/
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            color: #333;
+        }
+
+        table {
+            text-align: left;
+            line-height: 40px;
+            border-collapse: separate;
+            border-spacing: 0;
+            /*border: 2px solid #ed1c40;*/
+            width: 500px;
+            margin: 50px auto;
+            border-radius: .25rem;
+        }
+
+        thead tr:first-child {
+            background: #5ea8e699;
+            color: #fff;
+            border: none;
+        }
+
+        th:first-child,
+        td:first-child {
+            padding: 0 15px 0 20px;
+        }
+
+        th {
+            font-weight: 500;
+            text-align: center;
+        }
+
+        thead tr:last-child th {
+            border-bottom: 3px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background-color: #f2f2f2;
+            cursor: default;
+        }
+
+        tbody tr:last-child td {
+            border: none;
+        }
+
+        tbody td {
+            border-bottom: 1px solid #ddd;
+        }
+
+        td:last-child {
+            text-align: right;
+            padding-right: 10px;
+        }
+
+        .button {
+            color: #aaa;
+            cursor: pointer;
+            vertical-align: middle;
+            margin-top: -4px;
+        }
+
+        .edit:hover {
+            color: #0a79df;
+        }
+
+        .delete:hover {
+            color: #dc2a2a;
+        }
+        /*this is for the icons style - space between them*/
+        .fa, .fas {
+            margin-right: 20%;
+        }
+
+        /*בתוך טופס של הוספת לקבוצה - שם הקבוצה לוקח את כל רוחב הטופס ומתחתיו הטבלת חלקים*/
+        #readyGroups {
+            float: none;
+        }
     </style>
 
     <script src="../Scripts/ajaxCalls.js"></script>
@@ -535,6 +645,7 @@
     <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
     <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
     <script>
@@ -556,7 +667,7 @@
             var statusRelateTo = "Part";
             uri = "../api/status?relateTo=" + statusRelateTo;
             uriGroup = "../api/GetGroups?projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum');
-            
+
 
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
             ajaxCall("GET", uriGroup, "", GetSuccessGroups, ErrorGetGroups);
@@ -571,104 +682,148 @@
                 $("div#example_wrapper").css({ marginRight: "0px" });
             });
 
-            $(".main-menu").on("mouseout", function () {
-                $("div#example_wrapper").css({ marginRight: "0px" });
-            });
 
             // get the value(name) of the clicked Group
             $(document).on("click", ".main-menu ul li span", function () {
-                //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה 
-                uriGroupParts = "../api/GetGroupParts?groupName=" + $(this).text();
+                //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה
+                console.log($(this).id);
+                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));
                 ajaxCall("GET", uriGroupParts, "", GetSuccessGroupParts, ErrorGetGroupParts);
                 console.log($(this).text());
             });
 
-            //// prevent page from jumping to top from  # href link
-            //$('.menu-parent li.menu-child > a').click(function (e) {
-            //    e.preventDefault();
-            //});
+            $(document).on("click", "#SaveGroupChanges", function () {
+                //מעדכן את הערכת זמנים של קבוצה מוכנה
+                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                ajaxCall("PUT", uriUpdateTime, "", SuccessUpdateGroupEstTime, ErrorUpdateGroupEstTime);
+            });
 
-            //// remove link from menu items that have children
-            //$(".menu-parent li.menu-child > a").attr("href", "#");
+            $(document).on("click", "#DeleteIcon", function () {
+                //מביא את האיידי של השורה עליה לחצו
+                console.log($(this).context.parentNode.parentNode.parentNode.id);
+                //מוחק חלק מתוך קבוצה - אבל עדיין חלק יהיה קיים בחלקים אחרים ויהיה אפשר לשייך אותו לאיפושהו
+                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id + "&PartCount=" + $('#PartNo').val() + "&GroupName=" + $('#mainH_form').html();
+                ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
+            });
 
-            ////  function to open / close menu items
-            //$(".menu-parent a").click(function () {
-            //    var link = $(this);
-            //    var closest_ul = link.closest("ul");
-            //    var parallel_active_links = closest_ul.find(".active")
-            //    var closest_li = link.closest("li");
-            //    var link_status = closest_li.hasClass("active");
-            //    var count = 0;
+            $(document).on("click", "#DeleteGroup", function () {
+                var PartsBarCode = [];
+                //מביא מערך של הברקודים של החלקים בקבוצה
+                console.log($("#mainH_form").html());
+                $('#TableID tbody tr td:nth-child(1)').each(function () {
+                    //add item to array
+                    PartsBarCode.push($(this).text());
+                });
+                var oData = {
+                    GroupName: $("#mainH_form").html(),
+                    PartsBarCodeNo: PartsBarCode
+                }
+                //מוחק את הקבוצה והחלקים שיש בתוכה
+                // שים לב, צריך בהמשך להראות לו שהוא יכו ללהיות מוחק קבוצה שכבר בתהליך או לא לאפשר לו זאת בכלל.
+                ajaxCall("PUT", "../api/DeleteGroup", JSON.stringify(oData), SuccessDeleteGroup, ErrorDeleteGroup);
+            });
 
-            //    closest_ul.find("ul").slideUp(function () {
-            //        if (++count == closest_ul.find("ul").length)
-            //            parallel_active_links.removeClass("active");
-            //    });
+            $(document).on("click", "#DeletePartFromExistGroup", function () {
+                $(this).closest('tr').remove();
+            });
 
-            //    if (!link_status) {
-            //        closest_li.children("ul").slideDown();
-            //        closest_li.addClass("active");
-            //    }
-            //})
+            //לחיצה על סגור בטופס
+            $(document).on("click", "#closeWindowsButton, #closeWindowsX", function () {
+                //יציאה מדף העריכה לעמוד הראשי
+                $("#altEditor-modal").remove();
+
+            });
+            //מרפרש את הדף
+            $(document).on("click", "#refreshWindowsX, #refreshWindowsButton", function () {
+                refreshParent();
+            });
+
+
+            //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
+            $(document).on("click", "#createNewGroupButton", function () {
+                $("#formID").submit(inserNewGroupToDB);
+            });
 
         });
 
-        //function Form_Of_Parts_For_Specific_Group() {
+        //רענון הטבלה כששומרים רשומה
+        function refreshParent() {
+            window.location.reload();
+        }
 
-        //}
+        function SuccessDeleteGroup() {
+            refreshParent()
+        }
+        function ErrorDeleteGroup() { }
+
+        function SuccessDeletePartFromGroup(barcode) {
+            $("#" + barcode).remove();
+            refreshParent()
+        }
+        function ErrorDeletePartFromGroup() { }
+
+        function SuccessUpdateGroupEstTime()
+        {
+            refreshParent()
+            //$("#altEditor-modal").remove();
+            //צריך לעשות פה סוואל
+        }
+        function ErrorUpdateGroupEstTime() { }
+
         function GetSuccessGroupParts(Data) {
             //Need to add Status value
             //class="active" marks the circle in green - related to the progress bar
             console.log(Data)
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button> \
-                        <h3 class='modal-title'>קבוצה</h3> \
-                        <h4 class='modal-title' id='mainH_form'>" + urlParams.get('groupName') + "</h4></div>\
-                        <div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                        <label>מספר חלקים בקבוצה:</label><input type='text' id='groupNameID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.parts.length + "'></div>\
-                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                        <label>סטטוס:</label><input type='text' id='routeNameID' name='סטטוס' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
-                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
-                        <label>זמן הכנה:</label><input type='number' id='#' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
-                        <label>זמן נגרייה:</label><input type='number' id='#' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
-                        <label>זמן צבע:</label><input type='number' id='#' name='זמן צבע' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstColorTime + "'>\
-                        </div >\
-                        <label>שם מסלול הקבוצה:" + Data.group.GroupRouteName + "</label>\
-                        <div class='history-tl-container'>\
-                            < ul class='tl' >";
-            for (var i = 0; i < length; i++) {
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button id='refreshWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>קבוצה</h3>\
+<h4 class='modal-title' id='mainH_form'>" + Data.group.GroupName + "</h4></div>\
+<div class='modal-body'><pre><form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מספר חלקים בקבוצה:</label><input type='text' id='PartNo' name='מספר חלקים בקבוצה' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + Data.parts.length + "'></div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>סטטוס:</label><input type='text' id='#' name='סטטוס' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + Data.group.GroupStatus + "'></div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>זמן הכנה:</label><input type='number' id='PrepTime' name='זמן הכנה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstPrepTime + "'>\
+<label>זמן נגרייה:</label><input type='number' id='CarpTime' name='זמן נגרייה' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstCarpTime + "'>\
+<label>זמן צבע:</label><input type='number' id='PaintTime' name='זמן צבע' style='overflow:hidden' class='form-control form-control-sm' value='" + Data.group.EstColorTime + "'>\
+</div >\
+<label>שם מסלול : " + Data.group.GroupRouteName + "</label>\
+<div class='history-tl-container'><ul class='tl'>";
+            for (var i = 0; i < Data.routes.length; i++) {
+                //Data.routes[i].MachineName == Data.routes[Data.group.CurrentGroupStation].MachineName
+                //Data.group.CurrentGroupStation
+                if (i == 2) {
+                    str += "<li class='tl-item' ng-repeat='item in retailer_history'><div class='item-title' style='color: #ff0000;'>" + Data.routes[i].MachineName + "</div></li>";
+                }
+                else {
+                    str += "<li class='tl-item' ng-repeat='item in retailer_history'><div class='item-title'>" + Data.routes[i].MachineName + "</div></li>";
+                }
 
             }
+            str += "</ul ></div >";
+            str += "<table id='TableID'><thead><tr><th colspan='4'>חלקים בקבוצה: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
+            for (var k = 0; k < Data.parts.length; k++) {
+                str += "<tr id='" + Data.parts[k].PartBarCode + "'><td>" + Data.parts[k].PartBarCode + "</td><td>" + Data.parts[k].PartName + "</td><td>" + Data.parts[k].PartStatus + "</td><td><a href='#'><i id='DeleteIcon' class='fas fa-trash'></i></a></td></tr>"
+            }
+            str += "</tbody></table>"
+            str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='DeleteGroup' data-dismiss='modal'>מחק קבוצה</button></div ></form ></pre ></div >\
+                <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='refreshWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
 
-
-    //                            <li class='tl-item' ng-repeat='item in retailer_history'>\
-    //                                <div class='item-title'>Start from Shire</div>\
-    //                            </li>
-    //                <li class="tl-item" ng-repeat="item in retailer_history">
-    //                    <div class="item-title">Kill some Orcs</div>
-    //                </li>
-    //                <li class="tl-item" ng-repeat="item in retailer_history">
-    //                    <div class="item-title">Throw that goddamn ring in the lava</div>
-    //                </li>
-    //    </ul >
-    //</div >
-    //                    <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><button type='button' data-content='remove' class='btn btn-default' id='#' data-dismiss='modal'>כרגע סתם כפתור</button></div></form></pre></div>\
-    //                    <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='#'>עוד כפתור</button></div></div></div></div>";
             $('#containerID').append(str);
         }
         function ErrorGetGroupParts() {
 
         }
 
-        function GetSuccessGroups(GroupArr) {
+        function GetSuccessGroups(Data) {
 
             var str = "<ul>";
             // Addint the groups to the side menu
-            str += "<li style='border-bottom: 3px solid #4588ba;'><i class='fa fa-sitemap fa-2x'></i> <span id='unclickable' style='color: #3efb9b;' class='nav-text'> קבוצות מוכנות </span></li>";
+            str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span style='color: #f9f9f9;' class='unclickable nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
-            for (var i = 0; i < GroupArr.length; i++) {
+            for (var i = 0; i < Data.Glist.length; i++) {
 
-                str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + GroupArr[i].GroupName + "' class='nav-text'>" + GroupArr[i].GroupName + "</span></a></li>"
+                str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "   כעת ב - " + Data.mlist[2].MachineName + "</span></a></li>"
             }
             str += "</ul>"
             $('.main-menu').append(str);
@@ -701,12 +856,12 @@
                     "className": "dt-center",
                     "targets": "_all"
                 }, {
-                title: "שם חלק",
-                data: 'PartName',
-                //width: '15%',
-                //defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all"
+                    title: "שם חלק",
+                    data: 'PartName',
+                    //width: '15%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
                 }, {
                     title: "ברקוד",
                     data: 'PartBarCode',
@@ -721,43 +876,43 @@
                     //defaultContent: "",
                     "className": "dt-center",
                     "targets": "_all"
-                },  {
-                title: "סטטוס",
-                data: 'PartStatus',
-                //width: '15%',
-                //defaultContent: "",
-                "className": "dt-center",
-                id: "PartStatus",
-                "targets": "_all",
-                render: function (data) { return createSelect(data); }
-            }, {
-                title: "הערות",
-                data: 'PartComment',
-                //width: '25%',
-                //defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all",
-                //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
-                render: function (data, type, row) {
-                    if (data == null) {
-                        return data;
-                    }
-                    else {
-                        if (type === 'display' && data.length > 30) {
-                            return '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>'
-                        }
-                        else {
+                }, {
+                    title: "סטטוס",
+                    data: 'PartStatus',
+                    //width: '15%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    id: "PartStatus",
+                    "targets": "_all",
+                    render: function (data) { return createSelect(data); }
+                }, {
+                    title: "הערות",
+                    data: 'PartComment',
+                    //width: '25%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
+                    //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
+                    render: function (data, type, row) {
+                        if (data == null) {
                             return data;
                         }
+                        else {
+                            if (type === 'display' && data.length > 30) {
+                                return '<span data-toggle="tooltip" title="' + data + '">' + data.substr(0, 30) + '…</span>'
+                            }
+                            else {
+                                return data;
+                            }
+                        }
                     }
-                }
-            }, {
-                title: "יח'",
-                data: 'PartQuantity',
-                //width: '10%',
-                //defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all"
+                }, {
+                    title: "יח'",
+                    data: 'PartQuantity',
+                    //width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all"
                 }, {
                     title: "קאנט",
                     data: 'PartKantim',
@@ -862,10 +1017,10 @@
                     "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
                     "infoPostFix": "עמודות",
                     "paginate":
-                        {
-                            "previous": "הקודם",
-                            "next": "הבא",
-                        }
+                    {
+                        "previous": "הקודם",
+                        "next": "הבא",
+                    }
                 },
                 data: partList,
                 columns: columnDefs,
@@ -887,12 +1042,15 @@
                         action: function (nButton, oConfig, oFlash) {
                             formCreateNewGroup(oConfig);
                         }
+                    },
+                    {
+                        extend: 'selected', // Bind to Selected row
+                        text: 'הוספה לקבוצה קיימת',
+                        name: 'formAddToExistGroup',      // do not change name
+                        action: function (nButton, oConfig, oFlash) {
+                            formAddToExistGroup(oConfig);
+                        }
                     }
-                    //{
-                    //    extend: 'selected', // Bind to Selected row
-                    //    text: 'Delete',
-                    //    name: 'delete'      // do not change name
-                    //}
                 ]
             });
 
@@ -903,7 +1061,7 @@
         }
 
 
-         //the function creates a dropdown list box of ProjectStatus
+        //the function creates a dropdown list box of PartStatus
         function createSelect(selItem) {
 
             var sel = "<select>";
@@ -919,7 +1077,7 @@
             return sel;
         }
 
-        //תפיסת השינוי בסטטוס הפרוייקט
+
         $(document).on("change", "#example select", function () {
             var oData = {
                 //תפיסה של סטטוס החלק החדש ששונה אליו
@@ -938,28 +1096,6 @@
         function errorUpdateStatus() {
         }
 
-        //רענון הטבלה כששומרים רשומה
-        function refreshParent() {
-            window.location.reload();
-        }
-
-        //לחיצה על סגור בטופס
-        $(document).on("click", "#closeWindowsButton", function () {
-            //יציאה מדף העריכה לעמוד הראשי
-            $("#altEditor-modal").remove();
-        });
-        //לחיצה על סגור בטופס
-        $(document).on("click", "#closeWindowsX", function () {
-            //יציאה מדף העריכה לעמוד הראשי
-            $("#altEditor-modal").remove();
-        });
-
-
-        //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
-        $(document).on("click", "#createNewGroupButton", function () {
-            $("#formID").submit(inserNewGroupToDB);
-        });
-
         function inserNewGroupToDB() {
             var partArr = [];
             for (var i = 0; i < data_rows.data().length; i++) {
@@ -975,8 +1111,8 @@
                 EstCarpTime: $("#estCarpTimeID").val(),
                 EstColorTime: $("#estColorID").val(),
                 ArrPart: partArr,
-                GroupStatus: ""
-                }
+                GroupStatus: "קבוצה מוכנה לעבודה"
+            }
             ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
             return false;
         }
@@ -987,6 +1123,7 @@
                 title: 'יצרת קבוצה חדשה!',
                 text: 'בעוד כשנייה תועבר לדף הראשי',
                 type: 'success',
+                icon: 'success',
                 timer: 2000,
                 buttons: false
             })
@@ -999,27 +1136,28 @@
         }
 
 
-        //הצגת של המסלול הנבחר בטופס יצירת הקבוצה
+        //הצגה של המסלול הנבחר בטופס יצירת הקבוצה
         function selectOption(selectedRoute) {
             uriGetSelctedRoutName = "../api/Route?routeName=" + selectedRoute;
             ajaxCall("GET", uriGetSelctedRoutName, "", SuccessGetRouteInfo, errorGetRouteInfo);
         }
 
         //--------------------------------------------------------------------------------------------------------------
-        //בלחיצה על יצרית מסלול חדש בתוך הטופס
-        $(document).on("click", "#createNewRoute", function () {
-            let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-                        width=600,height=630,left=400,top=200`;
-            open('/Bool/createNewRout.html', 'createGroupFromForm', params);
-        });
+        // בלחיצה על יצירת מסלול חדש בתוך הטופס מעבר לחלון אינטרנט חדש ---- לבטל כשמסיימים דף מסלולים
+        //$(document).on("click", "#createNewRoute", function () {
+        //    //let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+        //    //                width=600,height=630,left=400,top=200`;
+        //    //open('/Bool/createNewRout.html', 'createGroupFromForm', params);
+
+        //    open('/Manufacture/TempAinav.html#modal-1');
+
+        //});
 
         function SuccessGetRouteInfo(routedate) {
             $('#machineRoute').remove();
-            //RouteList = routedate;
-            //str1 = "<h1>מסלול " + routedate.RouteName + "</h1>";
             strRoute = "<div id='machineRoute'><label>תחנות במסלול: </br>";
             for (var i = 0; i < routedate.length; i++) {
-                if (i==routedate.length-1) {
+                if (i == routedate.length - 1) {
                     strRoute += routedate[i].MachineName + "</label></div>"
                 }
                 else {
@@ -1036,21 +1174,108 @@
         function formCreateNewGroup(dt) {
             //    תפיסת השורות שאותן רוצים לערוך
             data_rows = dt.rows({ selected: true });
-            ajaxCall("GET", "../api/Route", "", successGetRoute, errorGetRoute);
+            ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute);
         }
 
         function successGetRoute(Routesdata) {
             var enmptyValue = "";
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'><form id='formID' name='altEditor-form' role='form'><div class='modal-header'><button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4></div><div class='modal-body'><pre><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>שם קבוצה:</label><input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required></div><div id='routeNameDiv' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מסלול:</label><select id='routeNameID' name='שם מסלול' onChange='selectOption($(\"#routeNameID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר מסלול מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required><option value='" + enmptyValue + "'>בחר מסלול מהרשימה</option></select></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><label>מספר החלקים בקבוצה:</label><input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='form-control form-control-sm' value='" + data_rows.data().length + "' disabled></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5><label>הכנה:</label><input type='number' min='0' id='estPrepTimeID' name='זמן הכנה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'><label>נגריה:</label><input type='number' min='0' id='estCarpTimeID' name='זמן נגריה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'><label>צבע:</label><input type='number' min='0' id='estColorID' name='זמן צבע משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'></div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button></div></pre></div><div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button><input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/></div></form></div></div></div>";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
+</div>\
+<div class='modal-body'><pre>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>שם קבוצה:</label>\
+<input type='text' id='groupNameID' name='שם קבוצה' placeholder='הכנס שם קבוצה' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+</div>\
+<div id='routeNameDiv' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מסלול:</label>\
+<select id='routeNameID' name='שם מסלול' onChange='selectOption($(\"#routeNameID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר מסלול מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+<option value='" + enmptyValue + "'>בחר מסלול מהרשימה</option>\
+</select>\
+</div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>מספר החלקים בקבוצה:</label>\
+<input type='number' id='partCountID' name='מספר חלקים בקבוצה' style='overflow:hidden' class='unclickable form-control form-control-sm' value='" + data_rows.data().length + "'>\
+</div>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הערכות זמנים (בדקות)</h5>\
+<label>הכנה:</label><input type='number' min='0' id='estPrepTimeID' name='זמן הכנה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
+<label>נגריה:</label><input type='number' min='0' id='estCarpTimeID' name='זמן נגריה משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
+<label>צבע:</label><input type='number' min='0' id='estColorID' name='זמן צבע משוער' oninvalid=\"this.setCustomValidity('הכנס הערכת זמנים בדקות חיוביות בלבד')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm'>\
+</div>\
+</pre></div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='createNewGroupButton' value='צור קבוצה'/>\
+</div></form></div></div></div>";
+            //כפתור הסוספת מסלול חדש מתחת לדיב שצבע נגמר בו
+            //            <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //<button type='button' data-content='remove' class='btn btn-default' id='createNewRoute' data-dismiss='modal'>צור מסלול חדש</button>\
+            //</div>\
             var routelistStr = "";
             for (var i = 1; i <= Routesdata.length; i++) {
                 routelistStr += "<option value='" + i + "'>" + Routesdata[i - 1].RouteName + "</option>";
             }
-            $('#containerID').append(str); 
+            $('#containerID').append(str);
             $('#routeNameID').append(routelistStr);
         }
 
         function errorGetRoute() {
+        }
+
+        ////תפיסת לחיצת כפתור הוספה לקבוצה ופתיחת חלון חדש לטופס 
+        function formAddToExistGroup(dt) {
+            //    תפיסת השורות שאותן רוצים לערוך
+            data_rows = dt.rows({ selected: true });
+            var groupList = [];
+            //מביא את כל שמות הקבוצה מתוך תפריט הצד של קבוצות מוכנות
+            $('.main-menu ul li span').each(function () {
+                //הוספת מתוך התפריט רק למי שיש תכונה אידי ובה שם שרשרנו את שם הקבוצה
+                if ($(this).attr('id')) {
+                    groupList.push($(this).attr('id'));
+                }
+            });
+            var enmptyValue = "";
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>הוספת חלקים לקבוצה קיימת</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
+</div>\
+<div class='modal-body'><pre>\
+<div id='readyGroups' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>שם הקבוצה אליה תרצה להוסיף:</label>\
+<select id='groupsID' name='קבוצות מוכנות' onChange='selectedGroup($(\"#groupsID option:selected\").text())' oninvalid=\"this.setCustomValidity('אנא בחר קבוצה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+<option value='" + enmptyValue + "'>בחר קבוצה</option>\
+</select>\
+</div>\
+<div id='byGroupNameAddingInfo' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+</div>\
+</pre></div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='addToExistGroupButton' value='הוסף'/>\
+</div></form></div></div></div>";
+
+            var strReadyGroups = "";
+            for (var i = 0; i < groupList.length; i++) {
+                strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
+            }
+            $('#containerID').append(str);
+            $('#groupsID').append(strReadyGroups);
+        }
+
+        function selectedGroup() {
+            $('#byGroupNameAddingInfo').html("");
+            str = "<table><thead><tr><th colspan='4'>החלקים שבחרת להוסיף: </th></tr><tr><th>ברקוד</th><th> שם חלק</th><th colspan='3'>סטטוס</th></tr></thead><tbody>"
+            for (var k = 0; k < data_rows[0].length; k++) {
+                str += "<tr id='" + data_rows.data()[k].PartNum + "'><td>" + data_rows.data()[k].PartNum + "</td><td>" + data_rows.data()[k].PartName + "</td><td>" + data_rows.data()[k].PartStatus + "</td><td><a href='#'><i id='DeletePartFromExistGroup' class='fas fa-trash'></i></a></td></tr>"
+            }
+            str += "</tbody></table>"
+            $('#byGroupNameAddingInfo').append(str);
+
         }
 
     </script>
@@ -1067,7 +1292,7 @@
                 <ul>
                     <li><a href="Project.html">פרוייקטים</a></li>
                     <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
-                    <li><a href="">מסלולים</a></li>
+                    <li><a href="RouteMainPage.html">מסלולים</a></li>
                     <li><a href="">קבוצות מוכנות</a></li>
                     <li><a href="">contact</a></li>
                 </ul>

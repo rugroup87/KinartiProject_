@@ -25,7 +25,7 @@
 
         header {
             padding: 5px 0;
-            background: #212121;
+            background: #404040;
             box-shadow: 0 4px 6px rgba(0,0,0,.2);
         }
 
@@ -74,7 +74,7 @@
             text-decoration: none;
             display: block;
             position: relative;
-            color: #337ab7;
+            color: #f9f9f9;
             text-transform: uppercase;
         }
 
@@ -91,6 +91,9 @@
 
             nav a:hover:after {
                 width: 100%;
+            }
+            nav a:hover {
+                color: #43a4f7;
             }
 
         @media screen and (max-width: 660px) {
@@ -284,6 +287,7 @@
             #example {
                 width: 100%;
             }
+
     </style>
 
     <script src="../Scripts/ajaxCalls.js"></script>
@@ -320,49 +324,15 @@
         });
 
         $(document).on("change", "#Filters .FilterValues", function () {
-            //console.log($("#Filters option:selected").val())
-           
-            //$('#Filters :selected').each(function () {
-            //    selected[$(this).val()] = $(this).text();
-            //});
-            //console.log(selected);
+
             console.log($(this).val());
             $('#Filters :selected').each(function (i, sel) {
-                //if ($(sel).val() != "")
-                //{
-                    selected[i] = [$(sel).val()];
-                //}
+                selected[i] = [$(sel).val()];
             });
             myTable.column(0).search(selected[0]).draw();
-            myTable.column(5).search(selected[1]).draw();
+            myTable.column(3).search(selected[1]).draw();
             myTable.column(2).search(selected[2]).draw();
-            //var FilterMone = 0;
-            //for (var k = 0; k < selected.length; k++)
-            //{
-                //if (selected[k] != "")
-                //{
-                    //FilterMone++;
-                    //switch (k)
-                    //{
-                    //    case 0:
-                    //        myTable.column(0).search(selected[0]).draw();
-                    //        break;
-                    //    case 1:
-                    //        myTable.column(5).search(selected[1]).draw();
-                    //        break;
-                    //    case 2:
-                    //        myTable.column(2).search(selected[2]).draw();
-                    //        break;
-                    //    default:
-                    //    // code block
-                    //}     
-                //}
-            //}
-            //if (FilterMone == 0) {
-            //    myTable.column(0).search("").draw();
-            //    myTable.column(5).search("").draw();
-            //    myTable.column(2).search("").draw();
-            //}
+
         });
 
         function successGetProjectItems(itemslist) {
@@ -540,7 +510,7 @@
                 <ul>
                     <li><a href="Project.html">פרוייקטים</a></li>
                     <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
-                    <li><a href="">מסלולים</a></li>
+                    <li><a href="RouteMainPage.html">מסלולים</a></li>
                     <li><a href="">קבוצות מוכנות</a></li>
                     <li><a href="">contact</a></li>
                 </ul>
@@ -556,7 +526,9 @@
     </div>
     <!--This Is The DataTable HTML-->
     <div class="container">
-        <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
+        <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
+
+        </table>
     </div>
 </body>
 </html>
