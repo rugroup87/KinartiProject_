@@ -687,7 +687,7 @@
             $(document).on("click", ".main-menu ul li span", function () {
                 //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה
                 console.log($(this).id);
-                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));
+                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id")) + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') ;
                 ajaxCall("GET", uriGroupParts, "", GetSuccessGroupParts, ErrorGetGroupParts);
                 console.log($(this).text());
             });
@@ -741,9 +741,14 @@
 
             //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
             $(document).on("click", "#createNewGroupButton", function () {
-                $("#formID").submit(inserNewGroupToDB);
+                $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
             });
 
+            //בלחיצת כפתור "הוסף לקבוצה קיימת" 
+            $(document).on("click", "#addToExistGroupButton", function () {
+                $("#formIDaddToExistGroup").submit(addPartToExistGroup);
+            });
+            
         });
 
         //רענון הטבלה כששומרים רשומה
@@ -1180,7 +1185,7 @@
         function successGetRoute(Routesdata) {
             var enmptyValue = "";
             var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
-<form id='formID' name='altEditor-form' role='form'>\
+<form id='formIDcreateNewGroup' name='altEditor-form' role='form'>\
 <div class='modal-header'>\
 <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
 <h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
@@ -1239,7 +1244,7 @@
             });
             var enmptyValue = "";
             var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
-<form id='formID' name='altEditor-form' role='form'>\
+<form id='formIDaddToExistGroup' name='altEditor-form' role='form'>\
 <div class='modal-header'>\
 <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
 <h3 class='modal-title'>הוספת חלקים לקבוצה קיימת</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
@@ -1276,6 +1281,55 @@
             str += "</tbody></table>"
             $('#byGroupNameAddingInfo').append(str);
 
+        }
+
+        function addPartToExistGroup() {
+            var partArr = [];
+            for (var i = 0; i < data_rows.data().length; i++) {
+                partArr.push(data_rows.data()[i].PartNum)
+            }
+            var oData = {
+                ArrPart: partArr,
+                ProjNum: urlParams.get('ProjectNum'),
+                ItemNum: urlParams.get('ItemNum'),
+                GroupName: $('#groupsID option:selected').text(),
+                PartCountAdding: data_rows.data().length
+            }
+            ajaxCall("POST", "../api/AddingPartToExistGroup", JSON.stringify(oData), SuccessAddPartToExistGroup, ErrorAddPartToExistGroup);
+            return false;
+
+        }
+        
+        function SuccessAddPartToExistGroup(checkAccomplishGroup) {
+            //במידה ולא יצרנו קבוצה השלמה
+            if (!checkAccomplishGroup) {
+                swal({
+                    title: 'חלקים נוספו בהצלחה!',
+                    text: 'הקבוצה הקיימת עודכנה בחלקים שנוספו',
+                    type: 'success',
+                    icon: 'success',
+                    buttons: 'אישור'
+                }).then(function (result) {
+                    refreshParent();
+                })
+            }
+                else {
+                    swal({
+                        title: '!קבוצת השלמה נוצרה',
+                        text: 'החלקים שבחרת להוסיף נוספו לקבוצה: השלמה_' + $('#groupsID option:selected').text(),
+                        type: 'success',
+                        icon: 'info',
+                        buttons: 'אישור'
+                    }).then(function (result) {
+                        refreshParent();
+                    })
+                }
+
+            
+        }
+
+        function ErrorAddPartToExistGroup(err) {
+            alert(err);
         }
 
     </script>

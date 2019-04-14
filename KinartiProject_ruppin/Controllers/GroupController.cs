@@ -15,12 +15,12 @@ namespace KinartiProject_ruppin.Controllers
     {
         [HttpGet]
         [Route("api/GetGroupParts")]
-        public object Get(string GroupName)
+        public object Get(string GroupName, string projectNum, string itemNum)
         {
             Group G = new Group();
             Route R = new Route();
-            Part[] parts = G.GetGroupParts(GroupName);
-            Group group = G.GetSpecificGroup(GroupName);
+            Part[] parts = G.GetGroupParts(GroupName, projectNum, itemNum);
+            Group group = G.GetSpecificGroup(GroupName, projectNum, itemNum);
             List<Route> routes = R.ReadRouteName(group.GroupRouteName);
             return new {parts, group, routes};  
         }
@@ -41,6 +41,20 @@ namespace KinartiProject_ruppin.Controllers
         public int Post([FromBody]Group group)
         {
             return group.InsertNewGroup();
+        }
+
+        [HttpPost]
+        [Route("api/AddingPartToExistGroup")]
+        public int AddingPartToExistGroup([FromBody] dynamic partsToGroup)
+        {
+            Group G = new Group();
+            string groupName = partsToGroup.GroupName;
+            string[] partNumToAddArr = partsToGroup.ArrPart.ToObject<string[]>();
+            string projectNum = partsToGroup.ProjNum;
+            string itemNum = partsToGroup.ItemNum;
+            int partCountToAdd = partsToGroup.PartCountAdding;
+            return G.AddingPartToExistGroup(groupName, partNumToAddArr, projectNum, itemNum, partCountToAdd);
+
         }
 
         [HttpPut]

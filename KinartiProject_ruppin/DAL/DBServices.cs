@@ -358,7 +358,7 @@ public class DBServices
 
     }
 
-    public Part[] GetGroupParts(string GroupName)
+    public Part[] GetGroupParts(string GroupName, string projectNum, string itemNum)
     {
 
         SqlConnection con;
@@ -379,7 +379,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT * FROM Part where groupName = '" + GroupName + "'";
+            String selectSTR = "SELECT * FROM Part where groupName = '" + GroupName + "' AND projectNum =" + Convert.ToSingle(projectNum) + "  AND itemNum ='" + itemNum + "'";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             //int PID = Convert.ToInt32(cmd.ExecuteScalar());
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -458,9 +458,18 @@ public class DBServices
                 g.GroupStatus = Convert.ToString(dr["groupStatus"]);
                 g.GroupRouteName = Convert.ToString(dr["routeName"]);
                 g.CurrentGroupStation = Convert.ToString(dr["currentGroupStation"]);
-                g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
-                g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
-                g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                if (!DBNull.Value.Equals(dr["estCarpTime"]))
+                {
+                    g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estPrepTime"]))
+                {
+                    g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estColorTime"]))
+                {
+                    g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                }
                 Glist.Add(g);
             }
             return Glist.ToArray();
@@ -474,7 +483,7 @@ public class DBServices
 
     }
 
-    public Group GetSpecificGroup(string GroupName)
+    public Group GetSpecificGroup(string GroupName, string projectNum, string itemNum)
     {
 
         SqlConnection con;
@@ -495,19 +504,34 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT * FROM Groups where groupName = '" + GroupName + "'";
+            String selectSTR = "SELECT * FROM Groups where groupName = '" + GroupName + "' AND projectNum =" + Convert.ToSingle(projectNum) + "  AND itemNum ='" + itemNum + "'";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
             while (dr.Read())
             {
+                g.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                g.ItemNum = Convert.ToString(dr["itemNum"]);
                 g.GroupName = Convert.ToString(dr["groupName"]);
                 g.GroupStatus = Convert.ToString(dr["groupStatus"]);
                 g.GroupRouteName = Convert.ToString(dr["routeName"]);
                 g.CurrentGroupStation = Convert.ToString(dr["currentGroupStation"]);
-                g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
-                g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
-                g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                //g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                //g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
+                //g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                if (!DBNull.Value.Equals(dr["estCarpTime"]))
+                {
+                    g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estPrepTime"]))
+                {
+                    g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estColorTime"]))
+                {
+                    g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                }
+                g.GroupPartCount = Convert.ToInt32(dr["partCount"]);
             }
             return g;
         }
@@ -804,8 +828,8 @@ public class DBServices
         StringBuilder sb2 = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus);
-        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, groupStatus) ";
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus, "Groups");
+        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, groupStatus, relateTO) ";
         String prefix2 = " Update Part SET groupName='" + group.GroupName + "' WHERE projectNum ='" + group.ProjectNum + "' AND itemNum ='" + group.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < group.ArrPart.Length; i++)
         {
@@ -1186,7 +1210,7 @@ public class DBServices
 
         // use a string builder to create the dynamic string
         sbUpdateGroupEstTime.AppendFormat("UPDATE Groups SET estPrepTime = {0}, estCarpTime = {1}, estColorTime = {2} WHERE groupName = '{3}'", prepTime, carpTime, paintTime, groupName);
-       
+
         command = sbUpdateGroupEstTime.ToString();
         return command;
     }
@@ -1304,7 +1328,7 @@ public class DBServices
         StringBuilder sbDecreasePartCount = new StringBuilder();
 
         sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode in(");
-        for (int i = 0; i < (barcodes.Length-1); i++)
+        for (int i = 0; i < (barcodes.Length - 1); i++)
         {
             sbDeletePartFromGroup.AppendFormat("'{0}',", barcodes[i]);
         }
@@ -1368,6 +1392,204 @@ public class DBServices
         sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '' WHERE barcode = '{0}'", PartBarCode);
 
         command = sbUpdatePartStatus.ToString();
+        return command;
+    }
+
+    public string CheckGroupPosition(string groupName)
+    {
+        string returnedGroup = "inProgress";
+        SqlConnection con;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT currentGroupStation FROM Groups where currentGroupStation IS NULL OR currentGroupStation = (SELECT machineNum FROM StationInRoute WHERE routeName = '" + groupName + "' AND position = 1)";
+
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+                returnedGroup = Convert.ToString(dr["currentGroupStation"]);
+            }
+            return returnedGroup;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //הוספת לקבוצה קיימת שנמצאת בתחנה הראשונה לכל היותר
+    public int AddingPartToExistGroup(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildAddingPartToExistGroupCommand(groupInfo, partNumToAddArr, partCountToAdd);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (SqlException ex)
+        {
+            if (ex.Number == 2627)
+            {
+                return -999;
+            }
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private string BuildAddingPartToExistGroupCommand(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+        // use a string builder to create the dynamic string
+        String prefix = " Update Part SET groupName='" + groupInfo.GroupName + "' WHERE projectNum ='" + groupInfo.ProjectNum + "' AND itemNum ='" + groupInfo.ItemNum + "' AND partNum IN(";
+        for (int i = 0; i < partNumToAddArr.Length; i++)
+        {
+            sb.AppendFormat("'" + partNumToAddArr[i] + "'");
+            if (i == partNumToAddArr.Length - 1)
+            {
+                sb.AppendFormat(")");
+            }
+            else
+            {
+                sb.AppendFormat(", ");
+            }
+        }
+        // use a string builder to create the dynamic string
+        sb2.AppendFormat(" UPDATE Groups SET partCount  = '{0}' where projectNum  = '{1}' and itemNum='{2}'", (groupInfo.GroupPartCount + partCountToAdd).ToString(), groupInfo.ProjectNum, groupInfo.ItemNum);
+        command = prefix + sb.ToString() + sb2.ToString();
+        return command;
+    }
+
+    //בניית קבוצת השלמה לקבוצה שקיימת ונמצאת באמצע המסלול
+    public int AccomplishGroup(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = AccomplishGroupCommand(groupInfo, partNumToAddArr, partCountToAdd);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            //אפשר להוסיף זריקה לאקספשיונס של מספר השורות שעודכנו שווה למספר השורות שעודכנו
+            return numEffected;
+        }
+        catch (SqlException ex)
+        {
+            if (ex.Number == 2627)
+            {
+                return -999;
+            }
+            return 0;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+
+    }
+
+    private string AccomplishGroupCommand(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+
+        StringBuilder sb = new StringBuilder();
+        StringBuilder sb2 = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}')", groupInfo.ProjectNum, groupInfo.ItemNum, "השלמה_" + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups");
+        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, groupStatus, relateTO) ";
+        String prefix2 = " Update Part SET groupName='השלמה_" + groupInfo.GroupName + "' WHERE projectNum ='" + groupInfo.ProjectNum + "' AND itemNum ='" + groupInfo.ItemNum + "' AND partNum IN(";
+        for (int i = 0; i < partNumToAddArr.Length; i++)
+        {
+            sb2.AppendFormat("'" + partNumToAddArr[i] + "'");
+            if (i == partNumToAddArr.Length - 1)
+            {
+                sb2.AppendFormat(")");
+            }
+            else
+            {
+                sb2.AppendFormat(", ");
+            }
+        }
+        command = prefix + sb.ToString() + prefix2 + sb2.ToString();
         return command;
     }
 }

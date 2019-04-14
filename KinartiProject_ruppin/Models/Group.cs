@@ -43,16 +43,16 @@ namespace KinartiProject_ruppin.Models
         }
 
         //מחזיר לנו את החלקים של הקבוצה שנבחרה כולל את המידע של הקבוצה 
-        public Part[] GetGroupParts(string GroupName)
+        public Part[] GetGroupParts(string GroupName, string projectNum, string itemNum)
         {
             DBServices dbs = new DBServices();
-            return dbs.GetGroupParts(GroupName);
+            return dbs.GetGroupParts(GroupName, projectNum, itemNum);
         }
         //מחזיר את הנתונים של הקבוצה הספציפית
-        public Group GetSpecificGroup(string GroupName)
+        public Group GetSpecificGroup(string GroupName, string projectNum, string itemNum)
         {
             DBServices dbs = new DBServices();
-            return dbs.GetSpecificGroup(GroupName);
+            return dbs.GetSpecificGroup(GroupName, projectNum, itemNum);
         }
 
         public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
@@ -73,6 +73,26 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             int numAffected = dbs.InsertNewGroup(this);
             return numAffected;
+        }
+
+        public int AddingPartToExistGroup(string groupName, string[] partNumToAddArr, string projectNum, string itemNum, int partCountToAdd)
+        {
+            DBServices dbs = new DBServices();
+            Group groupInfo = dbs.GetSpecificGroup(groupName, projectNum, itemNum);
+            string groupPosition = dbs.CheckGroupPosition(groupInfo.GroupName);
+            int numAffected;
+            if (groupPosition == "inProgress")
+            {
+                numAffected = dbs.AccomplishGroup(groupInfo, partNumToAddArr, partCountToAdd);
+                //במידה ויצרנו קבוצת השלמה נחזיר אמת
+                return 1;
+            }
+            else
+            {
+                numAffected = dbs.AddingPartToExistGroup(groupInfo, partNumToAddArr, partCountToAdd);
+                //במידה והוספנו לקבוצה קיימת נחזיר שקר
+                return 0;
+            }
         }
 
         public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
