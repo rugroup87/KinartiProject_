@@ -210,7 +210,9 @@
     <Content Include="Bool\createNewRout.html" />
     <Content Include="Bool\Dashboard.html" />
     <Content Include="Bool\login.html" />
+    <Content Include="Bool\New_Route_Page.html" />
     <Content Include="Bool\Route.html" />
+    <Content Include="Bool\try.html" />
     <Content Include="Bool\Update_Route.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -221,6 +223,7 @@
     <Content Include="Manufacture\Item.html" />
     <Content Include="Manufacture\Part.html" />
     <Content Include="Manufacture\Project.html" />
+    <Content Include="Manufacture\Route_Main_Page.html" />
     <Content Include="Manufacture\Temp.html" />
     <Content Include="Scripts\ajaxCalls.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -271,7 +274,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CSS\" />
-    <Folder Include="NewFolder1\" />
     <Folder Include="uploadedFiles\" />
   </ItemGroup>
   <ItemGroup>

@@ -813,24 +813,25 @@ using KinartiProject_ruppin.Models;
             return command;
         }
 
-        public string BuildUpdateCommand(Route route)
-            {
-                String command;
-                StringBuilder sbMachineNum = new StringBuilder();
-                //StringBuilder sbStationArr = new StringBuilder();
-                //StringBuilder sbStationArrInsert = new StringBuilder();
-                // use a string builder to create the dynamic string
-                for (int i = 0; i < route.StationArr.Length; i++)
-                {
-                    var pos = i + 1;
-                    sbMachineNum.AppendFormat(" update StationInRoute SET machineNum={0} where routeName='{1}' and position={2}", route.StationArr[i],route.RouteName, pos);
-            
-                }
-               command = sbMachineNum.ToString();
-                return command;
-            }
+    public string BuildUpdateOldRouteCommand(string routeName)
+    {
+        String command;
+        StringBuilder sbUpDateRoutName_In_RouteTable = new StringBuilder();
+        StringBuilder sbUpDateRoutName_In_StationInRouteTable = new StringBuilder();
+        StringBuilder sbUpDateRoutName_In_GroupsTable = new StringBuilder();
+        StringBuilder sbUpDateRoutNameFinal_In_StationInRouteTable = new StringBuilder();
+        StringBuilder sbUpDateRoutNameFinal_In_GroupsTable = new StringBuilder();
 
-        public List<Route> GetAllRoutes()
+        sbUpDateRoutName_In_StationInRouteTable.AppendFormat(" update StationInRoute SET routeName='tempRouteName' where routeName='{0}'", routeName);
+        sbUpDateRoutName_In_GroupsTable.AppendFormat(" update Groups SET routeName='tempRouteName' where routeName='{0}'", routeName);
+        sbUpDateRoutName_In_RouteTable.AppendFormat(" update Route SET routeName='{0}' where routeName='{1}'","old_"+ routeName, routeName);
+        sbUpDateRoutNameFinal_In_StationInRouteTable.AppendFormat(" update StationInRoute SET routeName='{0}' where routeName='tempRouteName'", "old_" + routeName);
+        sbUpDateRoutNameFinal_In_GroupsTable.AppendFormat(" update Groups SET routeName='{0}' where routeName='tempRouteName'", "old_" + routeName);
+        command = sbUpDateRoutName_In_StationInRouteTable.ToString() + sbUpDateRoutName_In_GroupsTable.ToString() + sbUpDateRoutName_In_RouteTable.ToString() + sbUpDateRoutNameFinal_In_StationInRouteTable.ToString() + sbUpDateRoutNameFinal_In_GroupsTable.ToString();
+        return command;
+    }
+
+            public List<Route> GetAllRoutes()
         {
             SqlConnection con;
             List<Route> rl = new List<Route>();
@@ -847,7 +848,7 @@ using KinartiProject_ruppin.Models;
             }
             try
             {
-                String selectSTR = "SELECT * FROM Route ";
+                String selectSTR = "SELECT * FROM Route where routeName!='tempRouteName'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -946,47 +947,101 @@ using KinartiProject_ruppin.Models;
 
             }
 
-        public int UpdateRoute(Route route)
-     {
-            SqlConnection con;
-            SqlCommand cmd;
+    //public int UpdateRoute(Route route)
+    //{
+    //    SqlConnection con;
+    //    SqlCommand cmd;
 
-                try
-                {
-                    con = connect("KinartiConnectionString"); // create the connection
-                }
-                catch (Exception ex)
-                {
-                    // write to log
-                    throw (ex);
-                }
+    //    try
+    //    {
+    //        con = connect("KinartiConnectionString"); // create the connection
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        write to log
+    //                throw (ex);
+    //    }
 
-                String cStr = BuildUpdateCommand(route);      // helper method to build the insert string
-            
-                cmd = CreateCommand(cStr, con);             // create the command
+    //    String cStr = BuildUpdateCommand(route);      // helper method to build the insert string
 
-                try
-                {
-                    int numEffected = cmd.ExecuteNonQuery(); // execute the command
-                    return numEffected;
-                }
-                catch (Exception ex)
-                {
-                    return 0;
-                    // write to log
-                    throw (ex);
-                }
+    //    cmd = CreateCommand(cStr, con);             // create the command
 
-                finally
-                {
-                    if (con != null)
-                    {
-                        // close the db connection
-                        con.Close();
-                    }
-                }
+    //    try
+    //    {
+    //        int numEffected = cmd.ExecuteNonQuery(); // execute the command
+    //        return numEffected;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return 0;
+    //        write to log
+    //                throw (ex);
+    //    }
+
+    //    finally
+    //    {
+    //        if (con != null)
+    //        {
+    //            close the db connection
+    //                    con.Close();
+    //        }
+    //    }
+    //}
+
+    //public string BuildUpdateCommand(Route route)
+    //{
+    //    String command;
+    //    StringBuilder sbMachineNum = new StringBuilder();
+
+    //    use a string builder to create the dynamic string
+    //    for (int i = 0; i < route.StationArr.Length; i++)
+    //    {
+    //        var pos = i + 1;
+    //        sbMachineNum.AppendFormat(" update StationInRoute SET machineNum={0} where routeName='{1}' and position={2}", route.StationArr[i], route.RouteName, pos);
+
+    //    }
+    //    command = sbMachineNum.ToString();
+    //    return command;
+    //}
+
+    public int UpdateOldRoute(string routeName)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        String cStr = BuildUpdateOldRouteCommand(routeName);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            int numEffected = cmd.ExecuteNonQuery(); // execute the command
+            return numEffected;
+        }
+        catch (Exception ex)
+        {
+            return 0;
+            // write to log
+            throw (ex);
         }
 
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+    }
 
         public int InsertStation(Route route)
             {

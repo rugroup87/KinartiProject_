@@ -1,0 +1,711 @@
+﻿<!DOCTYPE html>
+<!--<html dir="rtl">-->
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <style>
+
+        /*This Is The Menu CSS*/
+        /*body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }*/
+
+        label {
+            /*float: left;*/
+
+        }
+
+        .content {
+            padding: 20px 30px;
+            position: center;
+            border-radius: 15px;
+        }
+
+        #header {
+            /*padding: 0px 0;*/
+            background: #212121;
+            box-shadow: 0 4px 6px rgba(0,0,0,.2);
+        }
+
+        /*#header {
+            font-family: Arial;
+            background-color: red;
+            height: 15%;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 200px;
+            float: left;
+        }*/
+
+        #secoundHeader {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 0;
+            top: 7.4%;
+            padding-top: 0%;
+            float: left;
+            right: 0;
+            background-color: #212121;
+            text-align: center;
+            /*this is the station vizualization*/
+            /*line-height: 5.3em;
+            min-width: 920px;
+         } */
+        }
+
+
+        #body {
+            height: 1000px;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 15%;
+            padding-top: 0%;
+            float: left;
+            right: 0;
+            background-color: green;
+            float: left;
+            overflow-y: auto;
+        }
+
+
+        .logo-box {
+            float: left;
+            margin-right: 20px;
+        }
+
+            .logo-box a {
+                outline: none;
+                display: block;
+            }
+
+            .logo-box img {
+                display: block;
+            }
+
+        nav {
+            overflow: hidden;
+            margin-right: 20%;
+            margin-left: 20%;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding:inherit;
+            text-align: center;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-left: 25px;
+            height: 70px;
+            line-height: 70px;
+            transition: .5s linear;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            position: relative;
+            color: white;
+            text-transform: uppercase;
+        }
+
+            nav a:after {
+                content: "";
+                width: 0;
+                height: 2px;
+                position: absolute;
+                left: 0;
+                bottom: 15px;
+                background: #00c2ff;
+                transition: width .5s linear;
+            }
+
+            nav a:hover:after {
+                width: 100%;
+
+            }
+
+        @media screen and (max-width: 660px) {
+            header {
+                text-align: center;
+            }
+
+            .logo-box {
+                float: none;
+                display: inline-block;
+                margin: 0 0 16px 0;
+            }
+
+            ul {
+                float: none;
+            }
+
+            nav li:first-of-type {
+                margin-left: 0;
+            }
+        }
+
+        @media screen and (max-width: 550px) {
+            nav {
+                overflow: visible;
+            }
+
+                nav li {
+                    display: block;
+                    margin: 0;
+                    height: 40px;
+                    line-height: 40px;
+                }
+
+                    nav li:hover {
+                        background: #00c2ff
+                    }
+
+                nav a:after {
+                    content: none;
+                }
+        }
+
+
+        /*/this is the button CSS/*/
+
+        @import url(https://fonts.googleapis.com/css?family=Raleway:400,500,800);
+
+        .snip1217 {
+            font-family: 'Raleway', Arial, sans-serif;
+            text-align: center;
+            /text-transform: uppercase;
+            / font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+            .snip1217 * {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-transition: all 0.35s ease;
+                transition: all 0.35s ease;
+            }
+
+            .snip1217 li {
+                display: inline-block;
+                list-style: outside none none;
+                margin: 0.5em 1.5em;
+                padding: 0;
+            }
+
+            .snip1217 a {
+                padding: 0.3em 0;
+                margin-right: 200px;
+                margin-left: 200px;
+                margin-top: 5%;
+                color: white;
+                position:relative;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+                .snip1217 a:before,
+                .snip1217 a:after {
+                    height: 3px;
+                    position: absolute;
+                    content: '';
+                    -webkit-transition: all 0.35s ease;
+                    transition: all 0.35s ease;
+                    background-color: #00c2ff;
+                    width: 0;
+                }
+
+                .snip1217 a:before {
+                    top: 0;
+                    left: 0;
+                }
+
+                .snip1217 a:after {
+                    bottom: 0;
+                    right: 0;
+                }
+
+                .snip1217 a:hover,
+                .snip1217 .current a {
+                    color: #00c2ff;
+                }
+
+                    .snip1217 a:hover:before,
+                    .snip1217 .current a:before,
+                    .snip1217 a:hover:after,
+                    .snip1217 .current a:after {
+                        width: 100%;
+                    }
+
+        /*/this is the radio button css/*/
+
+
+        #body .titleRadioContainer {
+            float: right;
+            font-size: 34px;
+            padding-top: 0;
+            direction: rtl;
+            padding-right: 15px;
+            overflow-y: auto;
+        }
+
+        #body .containerRadioButtons {
+            /*position: absolute;
+            right: 0;
+            width: 100px;
+
+            border: 3px solid blue;*/
+            height: 120px;
+            font-size: 20px;
+            padding-top: 100px;
+            position: absolute;
+            padding-top: 3%;
+            margin-left: 90%;
+            direction: rtl;
+        }
+
+        /*/this is the station vizualization/*/
+
+        #body .middleBody {
+            float: left;
+            position: inherit;
+            padding-top: 0;
+            margin-left: 45%;
+            font-size: 40px;
+            direction: rtl;
+        }
+
+
+        .history-tl-container {
+            font-family: "Roboto",sans-serif;
+            width: 43%;
+            margin: auto;
+            display: block;
+            position: fixed;
+            float: right;
+            /*/margin-top: 7%;*/
+            margin: 125px 575px;
+        }
+
+            .history-tl-container ul.tl {
+                margin: 20px 0;
+                padding: 0px 300px;
+                display: inline-block;
+            }
+
+                .history-tl-container ul.tl li {
+                    list-style: none;
+                    margin: auto;
+                    margin-left: 200px;
+                    min-height: 50px;
+                    /*/background: rgba(255,255,0,0.1);*/
+                    border-left: 1px dashed black;
+                    padding: 0 0 50px 30px;
+                    position: relative;
+                }
+
+                    .history-tl-container ul.tl li:last-child {
+                        border-left: 0;
+                    }
+
+                    .history-tl-container ul.tl li::before {
+                        position: absolute;
+                        left: -15px;
+                        top: -5px;
+                        content: " ";
+                        border: 12px solid yellow;
+                        border-radius: 500%;
+                        background: black;
+                        height: 30px;
+                        width: 30px;
+                        transition: all 500ms ease-in-out;
+                    }
+
+                    .history-tl-container ul.tl li:hover::before {
+                        border-color: #258CC7;
+                        transition: all 1000ms ease-in-out;
+                    }
+
+        ul.tl li .item-title {
+            font-size: 18px;
+        }
+
+        .modal-header {
+            background-color: #d7d7d7;
+            height: 80px;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .modal-body {
+            background-color: #f0f0f0;
+            height: 500px;
+            position: relative;
+            padding: 15px;
+        }
+
+        pre {
+            display: block;
+            padding: 0px;
+            margin: 0 0 10px;
+            font-size: 16px;
+            line-height: 2.42857143;
+            color: #333;
+            word-break: break-all;
+            word-wrap: break-word;
+            background-color: #f5f5f5;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .modal-footer {
+            background-color: #d7d7d7;
+            height: 50px;
+            padding: 15px;
+            padding-top: 1%;
+            text-align: right;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .modal-title {
+            margin: 0;
+            line-height: 1.42857143;
+            text-align: center;
+        }
+
+        #containerID {
+            margin: 0px auto;
+            padding: 0px 0px 0px 0px;
+            max-width: 100%;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            ajaxCall("GET", "../api/Route", "", SuccessGetRoute, ErrorGetRoute);
+        });
+
+        function SuccessGetRoute(Routesdata) {
+            allRoutesList = Routesdata;
+            str = "";
+            for (var i = 1; i <= Routesdata.length; i++) {
+                str += "<input id='" + i + "' value='" + allRoutesList[i - 1].RouteName + "' name='radio' type='radio'>";
+                str += "<label for='" + i + "'><b>&nbsp&nbsp" + allRoutesList[i - 1].RouteName + "</b></label><br/>";
+            }
+            $('.containerRadioButtons').append(str);
+        } //the function bring all the route from the data base and display them as radio buttons.
+
+        function ErrorGetRoute() {
+            alert("ישנה בעיה במשיכת המסלולים מבסיס הנתונים");
+        }
+
+        $(document).on("click", "input[type = 'radio']", function () {
+            $(".history-tl-container").empty();
+            routeName = $(this).val();
+            uriCheckedRoute = "../api/Route?routeName=" + routeName;
+            ajaxCall("GET", uriCheckedRoute, "", SuccessGetRouteInfo, ErrorGetRouteInfo);
+            //return false;
+        });  //the function bring the data about the route on the screen after clicking on some route name -radio button
+
+
+        function SuccessGetRouteInfo(routedate) {
+            $('.middleBody').empty();
+            $('.history-tl-containere').empty();
+            str1 = "";
+
+            checkedRouteInfo = routedate;
+            routeNameTitle = "<div><h1><u><b>מסלול " + checkedRouteInfo.RouteName + "</b></u></h1></div>";
+            $('.middleBody').append(routeNameTitle);
+            str1 += "<ul class='tl'>";
+            for (var i = 1; i <= checkedRouteInfo.length; i++) {
+                str1 += "<li class='tl-item' ng-repeat='item in retailer_history'>";
+                str1 += "<div class='item-title'><b>" + checkedRouteInfo[i - 1].MachineName + "</b></div>";
+            }
+            str1 += "</ul>";
+            $(".history-tl-container").append(str1);
+        }  //the function display the data about the route on the screen after clicking on some route name -radio button
+
+        function ErrorGetRouteInfo() {
+            alert("ישנה בעיה במשיכת הנתונים אודות המסלול שנבחר להצגה");
+        }
+
+        //--------------------------edit route-----------------------
+        $(document).on("click", "#updateRouteButton", function () {
+            ajaxCall("GET", "../api/Machine", "", successGetMachineUpdateRoute, errorGetMachineUpdateRoute);
+        });
+
+        function successGetMachineUpdateRoute(Machinedata) {
+            machineList = Machinedata;
+            var emptyValue = "";
+            var strAllRoutesList = "<div id='selectedShowRoute'>\
+                    <select id='chooseRoute' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
+            strAllRoutesList += "<option value=" + emptyValue + ">בחר מסלול מהרשימה</option>";
+
+            for (var i = 1; i <= allRoutesList.length; i++) {
+                strAllRoutesList += "<option value=" + i + ">" + allRoutesList[i - 1].RouteName + "</option>";
+            }
+            strAllRoutesList += "</select></div><div id='toRemove'></div>";
+
+            //בדף הראשי קיבלנו את כל המסלולים
+            //ajaxCall("GET", "../api/Route/GetRouteWithoutOld_", "", successGetRoute, errorGetRoute);
+            var str = "<div class='modal fade in' id='modal-2' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
+<div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>עדכן מסלול</h3>\
+</div>\
+<div class='modal-body'>\
+<pre>\
+<div id='stationInRoute' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>בחר מסלול אותו תרצה לערוך:</label>\
+</div >\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+</div>\
+</pre>\
+</div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='createNewRouteButton' value='צור מסלול'/>\
+</div>\
+</form></div></div></div>";
+            $('#containerID').append(str);
+            $('#stationInRoute').append(strAllRoutesList);
+        }
+
+        function errorGetMachineUpdateRoute() {
+            alert("errorGetMachine");
+        }
+
+        $(document).on("change", "#selectedShowRoute select", function () {
+            selectedRouteName = $("#selectedShowRoute option:selected").text();
+            uri = "../api/Route?routeName=" + selectedRouteName;
+            ajaxCall("GET", uri, "", SuccessGetRouteInfoToForm, errorGetRouteInfoToForm);
+        });
+
+        function SuccessGetRouteInfoToForm(routedate) {
+            alert("good");
+            //$("#selectedShowRoute .toRemove").remove();
+            checkedRouteInfo = routedate;
+            strStationInRoute = "";
+            for (var i = 1; i <= checkedRouteInfo.length; i++) {
+                strStationInRoute += "<div><label>תחנה" + i + "</label><select id='" + i + "'>";
+                for (var j = 1; j <= machineList.length; j++) {
+                    if (checkedRouteInfo[i - 1].MachineName == machineList[j - 1].MachineName) {
+                        strStationInRoute += "<option selected value ='" + j + "'>" + checkedRouteInfo[i - 1].MachineName + "</option>";
+                    }
+                    else {
+                        strStationInRoute += "<option value ='" + j + "'> " + machineList[j - 1].MachineName + "</option>";
+                    }
+                }
+                strStationInRoute += "</select></div>";
+            }
+            $('#toRemove').html(strStationInRoute);
+        }
+
+        function errorGetRouteInfoToForm() {
+            alert("הבאת נתוני מסלול נכשלה");
+        }
+
+
+        //------------creat new route-------------------
+
+        $(document).on("click", "#createRoute", function () {
+            ajaxCall("GET", "../api/Machine", "", successGetMachineCreateroute, errorGetMachineCreateroute);
+        });
+
+        var totalStaionInRoute = 0;
+        var stationNumber = 1;
+
+        function successGetMachineCreateroute(Machinedata) {
+            machineList = Machinedata;
+            var str = "<div class='modal fade in' id='modal-1' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
+<div class='modal-dialog'><div class='modal-content'>\
+<form id='formID' name='altEditor-form' role='form'>\
+<div class='modal-header'>\
+<button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+<h3 class='modal-title'>יצירת מסלול חדש</h3>\
+</div>\
+<div class='modal-body'>\
+<pre>\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+<label>שם המסלול:</label>\
+<input type='text' id='newRouteNameID' name='שם מסלול' placeholder='הכנס שם למסלול חדש' oninvalid=\"this.setCustomValidity('אנא הזן שם לקבוצה כדי להמשיך')\"  oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+</div>\
+<div id='stationInRoute' class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'><h5>הכנס תחנות במסלול</h5>\
+</div >\
+<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+</div>\
+</pre>\
+</div>\
+<div class='modal-footer'>\
+<button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='createNewRouteButton' value='צור מסלול'/>\
+</div>\
+</form></div></div></div>";
+            $('#containerID').append(str);
+
+            createDDLRouteCheck(window['stationNumber'], window['totalStaionInRoute']);
+        }
+
+        function errorGetMachineCreateroute() {
+            alert("errorGetMachine");
+        }
+
+        function createDDLRouteCheck(stationNumber, totalStaionInRoute) {
+            var strMachineList = "<div id='selectStation'><label>תחנה " + window['stationNumber'] + "</label>\
+<select id='" + stationNumber + "' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>\
+<option value=''>בחר תחנה</option>";
+            for (var i = 1; i <= machineList.length; i++) {
+                strMachineList += "<option value ='" + i + "'>" + machineList[i - 1].MachineName + "</option>";
+            }
+            strMachineList += "</select></div>";
+            $('#stationInRoute').append(strMachineList);
+        }
+
+        $(document).on("change", "#selectStation select", function () {
+            if (($("#" + window['stationNumber'] + " option:selected").text()) != "בחר תחנה") {
+                createDDLRouteCheck(++window['stationNumber'], ++window['totalStaionInRoute']);
+            }
+        });
+
+        //בלחיצת כפתור "צור מסלול" הכנסת הפרטים שבטופס מסלול חדש לתוך הדי.בי שלנו
+        $(document).on("click", "#createNewRouteButton", function () {
+            if (stationNumber == 1) {
+                return;
+            }
+            $("#" + stationNumber).parent().remove();
+            $("#formID").submit(inserNewRouteToDB);
+        });
+
+        function inserNewRouteToDB() {
+            uri = "../api/Route/RouteNameCheck?routeName=" + $("#newRouteNameID").val();
+            ajaxCall("GET", uri, "", successCheckRoute, errorCheckRoute);
+            return false;
+        }
+
+        //בחזרה מהדאטה בייס עם שם מסלול כשקיים וערך ריק אחרת
+        function successCheckRoute(data) {
+            //כשאין שם מסלול כזה זה הערך שיחזור
+            if (data == "NoRoute") {
+                sendStationArr = [];
+                for (var i = 1; i <= totalStaionInRoute; i++) {
+                    id = "#" + i + " option:selected";
+                    MachineNum = $(id).val();
+                    sendStationArr.push(MachineNum);
+                }
+                Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
+                    RouteName: $("#newRouteNameID").val(),
+                    StationArr: sendStationArr
+                }
+                ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+            }
+            else {
+                swal({
+                    title: '!שם מסלול קיים',
+                    text: 'בחר שם אחר למסלול',
+                    type: 'error',
+                    icon: 'error',
+                    buttons: 'אישור'
+                })
+            }
+        }
+
+        function errorCheckRoute() {
+            alert("בעיה בבדיקת שם מסלול קיים בבסיס הנתונים");
+        }
+
+        //יציאה מדף יצירת המסלול ורענון הדף הראשי
+        function refreshParent() {
+            window.location.reload();
+        }
+        //לחיצה על סגור בטופס
+        $(document).on("click", "#closeWindowsButton", function () {
+            //יציאה מדף העריכה לעמוד הראשי
+            refreshParent();
+        });+
+
+        //לחיצה על סגור בטופס
+        $(document).on("click", "#closeWindowsX", function () {
+            //יציאה מדף העריכה לעמוד הראשי
+            refreshParent();
+        });
+
+        function successInsertRouteName() {
+            swal({
+                title: '!יצרת מסלול חדש',
+                text: 'המסלול הוכנס לבסיס הנתונים',
+                type: 'success',
+                icon: 'success',
+                buttons: 'אישור'
+            }).then(function (result) {
+                refreshParent();
+            })
+        }
+
+        function errorInsertRouteName() {
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="header">
+        <div class="container" id="containerID">
+            <div class="logo-box">
+                <a href="/">
+                    <img src="https://html5book.ru/wp-content/uploads/2015/01/logo-header.png">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="Project.html">פרוייקטים</a></li>
+                    <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
+                    <li><a href="RouteMainPage.html">מסלולים</a></li>
+                    <li><a href="">קבוצות מוכנות</a></li>
+                    <li><a href="">contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div id="secoundHeader">
+        <ul class="snip1217">
+            <!--<li class="current"><a href="#">Home</a></li>-->
+            <li>
+                <a id="updateRouteButton" href="#">עדכן מסלול קיים</a>
+            </li>
+            <li><a id="createRoute" href="#">צור מסלול חדש</a></li>
+        </ul>
+    </div>
+    <div id="body" style="background-color:white">
+        <div class="titleRadioContainer">
+            <p>
+                <u><b>לחץ על מסלול מהרשימה</b></u>
+            </p>
+        </div>
+        <div class="containerRadioButtons"></div>
+        <div class="middleBody"></div>
+        <div class="history-tl-container"></div>
+
+    </div>
+</body>
+</html>

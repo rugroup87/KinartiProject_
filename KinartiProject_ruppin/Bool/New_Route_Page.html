@@ -1,0 +1,449 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> <!--dataTables-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
+    <style>
+        /*This Is The Menu CSS*/
+        /*body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+
+        }*/
+        .content {
+            padding: 20px 30px;
+            position: center;
+            border-radius: 15px;
+        }
+
+        #header {
+            padding: 5px 0;
+            background: yellow;
+            box-shadow: 0 4px 6px rgba(0,0,0,.2);
+        }
+
+        /*#header {
+            font-family: Arial;
+            background-color: red;
+            height: 15%;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            overflow-x: hidden;
+            padding-top: 200px;
+            float: left;
+        }*/
+
+        #body {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 0;
+            top: 7.4%;
+            
+            padding-top:0%;
+            float: left;
+            right: 0;
+            background-color: #212121;
+            text-align: center;
+            /*this is the station vizualization*/
+            /*line-height: 5.3em;
+            min-width: 920px;*/
+        }
+
+        #footer {
+            height: 1000px;
+            width: 100%;
+            position: fixed;
+            z-index: 1;
+            top: 15%;
+            padding-top: 0%;
+            float: left;
+            right: 0;
+            background-color: green;
+            float: left;
+            overflow-y:auto;
+        }
+
+
+        .logo-box {
+            float: left;
+            margin-right: 20px;
+        }
+
+            .logo-box a {
+                outline: none;
+                display: block;
+            }
+
+            .logo-box img {
+                display: block;
+            }
+
+        nav {
+            overflow: hidden;
+            margin-right: 20%;
+            margin-left: 20%;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-left: 25px;
+            height: 70px;
+            line-height: 70px;
+            transition: .5s linear;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            position: relative;
+            color: #337ab6;
+            text-transform: uppercase;
+        }
+
+            nav a:after {
+                content: "";
+                width: 0;
+                height: 2px;
+                position: absolute;
+                left: 0;
+                bottom: 15px;
+                background: #ffffff;
+                transition: width .5s linear;
+            }
+
+            nav a:hover:after {
+                width: 100%;
+            }
+
+        @media screen and (max-width: 660px) {
+            header {
+                text-align: center;
+            }
+
+            .logo-box {
+                float: none;
+                display: inline-block;
+                margin: 0 0 16px 0;
+            }
+
+            ul {
+                float: none;
+            }
+
+            nav li:first-of-type {
+                margin-left: 0;
+            }
+        }
+
+        @media screen and (max-width: 550px) {
+            nav {
+                overflow: visible;
+            }
+
+                nav li {
+                    display: block;
+                    margin: 0;
+                    height: 40px;
+                    line-height: 40px;
+                }
+
+                    nav li:hover {
+                        background: rgba(0,0,0,.1);
+                    }
+
+                nav a:after {
+                    content: none;
+                }
+        }
+
+
+        /*this is the button CSS*/
+
+        @import url(https://fonts.googleapis.com/css?family=Raleway:400,500,800);
+
+        .snip1217 {
+            font-family: 'Raleway', Arial, sans-serif;
+            text-align: center;
+            /*text-transform: uppercase;*/
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+            .snip1217 * {
+                -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+                -webkit-transition: all 0.35s ease;
+                transition: all 0.35s ease;
+            }
+
+            .snip1217 li {
+                display: inline-block;
+                list-style: outside none none;
+                margin: 0.5em 1.5em;
+                padding: 0;
+            }
+
+            .snip1217 a {
+                padding: 0.3em 0;
+                margin-right: 200px;
+                margin-left: 200px;
+                margin-top: 5%;
+                color: rgba(255, 255, 255, 0.5);
+                position: relative;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+                .snip1217 a:before,
+                .snip1217 a:after {
+                    height: 3px;
+                    position: absolute;
+                    content: '';
+                    -webkit-transition: all 0.35s ease;
+                    transition: all 0.35s ease;
+                    background-color: yellow;
+                    width: 0;
+                }
+
+                .snip1217 a:before {
+                    top: 0;
+                    left: 0;
+                }
+
+                .snip1217 a:after {
+                    bottom: 0;
+                    right: 0;
+                }
+
+                .snip1217 a:hover,
+                .snip1217 .current a {
+                    color: yellow;
+                }
+
+                    .snip1217 a:hover:before,
+                    .snip1217 .current a:before,
+                    .snip1217 a:hover:after,
+                    .snip1217 .current a:after {
+                        width: 100%;
+                    }
+
+        /*this is the radio button css*/
+
+
+        #footer .RadioContainer {
+            float: right;
+            font-size: 34px;
+            padding-top: 0;
+            direction: rtl;
+            padding-right: 15px;
+            overflow-y: auto;
+        }
+
+        #footer .RadioContainerButtons {
+            /*position: absolute;
+            right: 0;
+            width: 100px;
+            
+            border: 3px solid blue;*/
+            height: 120px;
+            font-size: 20px;
+            padding-top: 100px;
+            position: absolute;
+            padding-top: 3%;
+            margin-left: 90%;
+            direction: rtl;
+        }
+
+        /*this is the station vizualization*/
+
+        #footer .middle {
+            float: left;
+            position: inherit;
+            padding-top: 0;
+            margin-left: 45%;
+            font-size: 40px;
+            direction:rtl;
+        }
+
+
+        .history-tl-container {
+            font-family: "Roboto",sans-serif;
+            width: 43%;
+            margin: auto;
+            display: block;
+            position: fixed;
+            float:right;
+            /*margin-top: 7%;*/
+            margin:125px 575px;
+        }
+
+            .history-tl-container ul.tl {
+                margin: 20px 0;
+                padding: 0px 300px;
+                display: inline-block;
+            }
+
+                .history-tl-container ul.tl li {
+                    list-style: none;
+                    margin: auto;
+                    margin-left: 200px;
+                    min-height: 50px;
+                    /*background: rgba(255,255,0,0.1);*/
+                    border-left: 1px dashed black;
+                    padding: 0 0 50px 30px;
+                    position: relative;
+                }
+
+                    .history-tl-container ul.tl li:last-child {
+                        border-left: 0;
+                    }
+
+                    .history-tl-container ul.tl li::before {
+                        position: absolute;
+                        left: -15px;
+                        top: -5px;
+                        content: " ";
+                        border: 12px solid yellow;
+                        border-radius: 500%;
+                        background: black;
+                        height: 30px;
+                        width: 30px;
+                        transition: all 500ms ease-in-out;
+                    }
+
+                    .history-tl-container ul.tl li:hover::before {
+                        border-color: #258CC7;
+                        transition: all 1000ms ease-in-out;
+                    }
+
+        ul.tl li .item-title {
+            font-size:18px;
+        }
+
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
+    <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
+    <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
+    <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!--<script src="js/altEditor/dataTables.altEditor.free.js"></script>  dataTables.altEditor-->
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <script>
+        
+        $(document).ready(function () {
+            ajaxCall("GET", "../api/Route", "", SuccessGetRoute, ErrorGetRoute);
+        });
+
+        function SuccessGetRoute(Routesdata) {
+            str = "";
+            for (var i=1; i <= Routesdata.length; i++) {
+                str += "<input id='" + i + "' value='" + Routesdata[i - 1].RouteName + "' name='radio' type='radio'>";
+                str += "<label><b>&nbsp&nbsp" + Routesdata[i - 1].RouteName + "</b></label><br/>";
+            }
+            $('.RadioContainerButtons').append(str);
+        } //the function bring all the route from the data base and display them as radio buttons.
+       
+        function ErrorGetRoute() {
+            alert("ישנה בעיה במשיכת המסלולים מבסיס הנתונים");
+        }
+        
+        $(document).on("click", "input[type = 'radio']", function () {
+                    $(".history-tl-container").empty();
+                    routeName = $(this).val();
+                    uriCheckedRoute = "../api/Route?routeName=" + routeName;
+                    ajaxCall("GET", uriCheckedRoute, "", SuccessGetRouteInfo, ErrorGetRouteInfo);
+                    return false;     
+        });  //the function bring the data about the route on the screen after clicking on some route name -radio button
+                
+
+        function SuccessGetRouteInfo(routedate) {
+            $('.middle').empty();
+            $('.history-tl-containere').empty();
+           str1 = "";
+
+            RouteList = routedate;
+            routeNameTitle = "<div><h1><u><b>מסלול " + routeName + "</b></u></h1></div>";
+            $('.middle').append(routeNameTitle);
+            str1 += "<ul class='tl'>";
+            for (var i = 1; i <= RouteList.length; i++) {
+                str1 += "<li class='tl-item' ng-repeat='item in retailer_history'>";
+                str1 += "<div class='item-title'><b>" + RouteList[i - 1].MachineName + "</b></div>";
+            }
+            str1 += "</ul>";
+            $(".history-tl-container").append(str1);
+        }  //the function display the data about the route on the screen after clicking on some route name -radio button
+
+        function ErrorGetRouteInfo() {
+            alert("ישנה בעיה במשיכת הנתונים אודות המסלול שנבחר להצגה");
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="header">
+        <div class="container">
+            <div class="logo-box">
+                <a href="/">
+                    <img src="https://html5book.ru/wp-content/uploads/2015/01/logo-header.png">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="Project.html">פרוייקטים</a></li>
+                    <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
+                    <li><a href="">מסלולים</a></li>
+                    <li><a href="">קבוצות מוכנות</a></li>
+                    <li><a href="">contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <div id="body">
+        <ul class="snip1217">
+            <!--<li class="current"><a href="#">Home</a></li>-->
+            <li><a href="#">עדכן מסלול קיים</a></li>
+            <li><a href="#">צור מסלול חדש</a></li>  
+        </ul>
+    </div>
+
+    <div id="footer" style="background-color:white">
+        <div class="RadioContainer">
+            <p>
+                <u><b>לחץ על מסלול מהרשימה</b></u>
+            </p>
+        </div>
+
+        <div class="RadioContainerButtons"></div>
+
+        <div class="middle"></div>
+
+        <div class="history-tl-container"></div>
+
+
+
+    </div>
+</body>
+</html>

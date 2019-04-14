@@ -45,11 +45,20 @@ namespace KinartiProject_ruppin.Controllers
             r.InsertStation();
         }
 
+        //[HttpPost]
+        //[Route("api/Route/UpdateRoute")]
+        //public void UpdateRoute([FromBody]Route r)
+        //{
+        //    r.UpdateRoute();
+        //}
+
         [HttpPost]
-        [Route("api/Route/UpdateRoute")]
-        public void UpdateRoute([FromBody]Route r)
+        [Route("api/Route/Update_Old_Route")]
+        public void Update_Old_Route(string routeName)
         {
-            r.UpdateRoute();
+            Route r = new Route();
+           r.UpdateOldRoute(routeName);
+           
         }
 
 
