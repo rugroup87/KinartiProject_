@@ -828,8 +828,8 @@ public class DBServices
         StringBuilder sb2 = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus, "Groups");
-        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, groupStatus, relateTO) ";
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}','{10}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus, "Groups",0);
+        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, groupStatus, relateTO,scannedPartsCount) ";
         String prefix2 = " Update Part SET groupName='" + group.GroupName + "' WHERE projectNum ='" + group.ProjectNum + "' AND itemNum ='" + group.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < group.ArrPart.Length; i++)
         {
@@ -1395,6 +1395,7 @@ public class DBServices
         return command;
     }
 
+    //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
     public string CheckGroupPosition(string groupName)
     {
         string returnedGroup = "inProgress";
@@ -1433,8 +1434,8 @@ public class DBServices
         }
     }
 
-    //הוספת לקבוצה קיימת שנמצאת בתחנה הראשונה לכל היותר
-    public int AddingPartToExistGroup(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    //הוספה לקבוצה קיימת שנמצאת בתחנה הראשונה לכל היותר
+    public int AddingPartToExistGroup(Group groupInfo, string[] partNumToAddArr)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1449,7 +1450,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildAddingPartToExistGroupCommand(groupInfo, partNumToAddArr, partCountToAdd);      // helper method to build the insert string
+        String cStr = BuildAddingPartToExistGroupCommand(groupInfo, partNumToAddArr);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1484,7 +1485,7 @@ public class DBServices
 
     }
 
-    private string BuildAddingPartToExistGroupCommand(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    private string BuildAddingPartToExistGroupCommand(Group groupInfo, string[] partNumToAddArr)
     {
         String command;
         SqlConnection con;
@@ -1507,13 +1508,13 @@ public class DBServices
             }
         }
         // use a string builder to create the dynamic string
-        sb2.AppendFormat(" UPDATE Groups SET partCount  = '{0}' where projectNum  = '{1}' and itemNum='{2}'", (groupInfo.GroupPartCount + partCountToAdd).ToString(), groupInfo.ProjectNum, groupInfo.ItemNum);
+        sb2.AppendFormat(" UPDATE Groups SET partCount  = '{0}' where projectNum  = '{1}' and itemNum='{2}'", (groupInfo.GroupPartCount + partNumToAddArr.Length).ToString(), groupInfo.ProjectNum, groupInfo.ItemNum);
         command = prefix + sb.ToString() + sb2.ToString();
         return command;
     }
 
     //בניית קבוצת השלמה לקבוצה שקיימת ונמצאת באמצע המסלול
-    public int AccomplishGroup(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    public int AccomplishGroup(Group groupInfo, string[] partNumToAddArr)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1528,7 +1529,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = AccomplishGroupCommand(groupInfo, partNumToAddArr, partCountToAdd);      // helper method to build the insert string
+        String cStr = AccomplishGroupCommand(groupInfo, partNumToAddArr);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1564,7 +1565,7 @@ public class DBServices
 
     }
 
-    private string AccomplishGroupCommand(Group groupInfo, string[] partNumToAddArr, int partCountToAdd)
+    private string AccomplishGroupCommand(Group groupInfo, string[] partNumToAddArr)
     {
         String command;
         SqlConnection con;
@@ -1574,8 +1575,8 @@ public class DBServices
         StringBuilder sb2 = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}')", groupInfo.ProjectNum, groupInfo.ItemNum, "השלמה_" + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups");
-        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, groupStatus, relateTO) ";
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}','{7}')", groupInfo.ProjectNum, groupInfo.ItemNum, "השלמה_" + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups",0);
+        String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, groupStatus, relateTO,scannedPartsCount) ";
         String prefix2 = " Update Part SET groupName='השלמה_" + groupInfo.GroupName + "' WHERE projectNum ='" + groupInfo.ProjectNum + "' AND itemNum ='" + groupInfo.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < partNumToAddArr.Length; i++)
         {

@@ -1116,7 +1116,7 @@
                 EstCarpTime: $("#estCarpTimeID").val(),
                 EstColorTime: $("#estColorID").val(),
                 ArrPart: partArr,
-                GroupStatus: "קבוצה מוכנה לעבודה"
+                GroupStatus: "קבוצה מוכנה לעבודה",
             }
             ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
             return false;
@@ -1265,8 +1265,30 @@
 </div></form></div></div></div>";
 
             var strReadyGroups = "";
+            var groupListWithAccomplish = [];  //מערך רק של קבוצות השלמה
             for (var i = 0; i < groupList.length; i++) {
-                strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
+                if (groupList[i].startsWith("השלמה_")) {
+                    groupListWithAccomplish.push(groupList[i].substr(6)); //חותך את השלמה_ ומשאיר שם המסלול המקורי
+                }
+            }
+            
+            for (var i = 0; i < groupList.length; i++) { //ריצה על כל המסלולים הקיימים
+                var accomplishGroup = false;
+                for (var j = 0; j < groupListWithAccomplish.length; j++) { //מסלולים שיש להם כבר השלמה
+                    if (groupListWithAccomplish[j] == groupList[i]) { //במידה ושם המסלול שווה (שניהם בלי "השלמה_") כבר
+                        accomplishGroup = true;
+                        break; //צא מהלולאה
+                    }
+                }
+                if (accomplishGroup) { //תכניס לרשימת בחירה רק את אלו שעם השם המקורי
+                    strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";              
+                }
+                //if (accomplishGroup) {
+                //    strReadyGroups += "<option value='" + i + "'>השלמה_" + groupList[i] + "</option>";
+                //}
+                //else {
+                //    strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
+                //}
             }
             $('#containerID').append(str);
             $('#groupsID').append(strReadyGroups);
@@ -1292,8 +1314,8 @@
                 ArrPart: partArr,
                 ProjNum: urlParams.get('ProjectNum'),
                 ItemNum: urlParams.get('ItemNum'),
-                GroupName: $('#groupsID option:selected').text(),
-                PartCountAdding: data_rows.data().length
+                GroupName: $('#groupsID option:selected').text()
+                //PartCountAdding: data_rows.data().length
             }
             ajaxCall("POST", "../api/AddingPartToExistGroup", JSON.stringify(oData), SuccessAddPartToExistGroup, ErrorAddPartToExistGroup);
             return false;

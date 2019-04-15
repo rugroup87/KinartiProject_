@@ -68,6 +68,7 @@ namespace KinartiProject_ruppin.Models
             return dbs.GetGroups(projectNum, itemNum);
         }
 
+        //יצירת קבוצה חדשה
         public int InsertNewGroup()
         {
             DBServices dbs = new DBServices();
@@ -75,21 +76,23 @@ namespace KinartiProject_ruppin.Models
             return numAffected;
         }
 
-        public int AddingPartToExistGroup(string groupName, string[] partNumToAddArr, string projectNum, string itemNum, int partCountToAdd)
+        //הוספת חלקים לקבוצה קיימת
+        public int AddingPartToExistGroup(string groupName, string[] partNumToAddArr, string projectNum, string itemNum)
         {
             DBServices dbs = new DBServices();
             Group groupInfo = dbs.GetSpecificGroup(groupName, projectNum, itemNum);
             string groupPosition = dbs.CheckGroupPosition(groupInfo.GroupName);
             int numAffected;
+            //אם הקבוצה נמצאת בתחנה מתקדמת במסלול
             if (groupPosition == "inProgress")
             {
-                numAffected = dbs.AccomplishGroup(groupInfo, partNumToAddArr, partCountToAdd);
+                numAffected = dbs.AccomplishGroup(groupInfo, partNumToAddArr);
                 //במידה ויצרנו קבוצת השלמה נחזיר אמת
                 return 1;
             }
             else
             {
-                numAffected = dbs.AddingPartToExistGroup(groupInfo, partNumToAddArr, partCountToAdd);
+                numAffected = dbs.AddingPartToExistGroup(groupInfo, partNumToAddArr);
                 //במידה והוספנו לקבוצה קיימת נחזיר שקר
                 return 0;
             }

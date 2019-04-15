@@ -52,8 +52,8 @@ namespace KinartiProject_ruppin.Controllers
             string[] partNumToAddArr = partsToGroup.ArrPart.ToObject<string[]>();
             string projectNum = partsToGroup.ProjNum;
             string itemNum = partsToGroup.ItemNum;
-            int partCountToAdd = partsToGroup.PartCountAdding;
-            return G.AddingPartToExistGroup(groupName, partNumToAddArr, projectNum, itemNum, partCountToAdd);
+            //int partCountToAdd = partsToGroup.PartCountAdding;
+            return G.AddingPartToExistGroup(groupName, partNumToAddArr, projectNum, itemNum);
 
         }
 
