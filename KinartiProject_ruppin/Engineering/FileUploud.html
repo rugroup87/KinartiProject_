@@ -147,6 +147,8 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../Scripts/My_Scriptts.js"></script>
+
 
     <script>
         //$(document).ready(function () {
@@ -187,16 +189,6 @@
         function errorFillTheDB(err) {
             var er = eval("(" + err.responseText + ")");
             swal("Error: " + er.ExceptionMessage);
-        }
-        function GetCurrentDate() {
-            var currentdate = new Date();
-            var datetime = currentdate.getDate() + "/"
-                + (currentdate.getMonth() + 1) + "/"
-                + currentdate.getFullYear() + " "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
-            return datetime;
         }
     </script>
 
