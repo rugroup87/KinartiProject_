@@ -76,7 +76,7 @@ namespace KinartiProject_ruppin.Models
                 //}
 
             
-            return dbs.ScanPart(PartBarCode, StationName, CurrentDate);
+            return "Scanned Successfuly";
         }
     }
 }
