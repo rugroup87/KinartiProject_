@@ -1436,6 +1436,69 @@ public class DBServices
         return command;
     }
 
+
+    public string PartScannedInNewStation(string PartBarCode, string NextGroupStationNo, string StationName)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildPartScannedInNewStationCommand(PartBarCode, NextGroupStationNo, StationName);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+        return "scanned";
+    }
+    //סריקה של חלק ראשון בקבוצה חדשה
+    public string BuildPartScannedInNewStationCommand(string PartBarCode, string NextGroupStationNo, string StationName)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sbUpdateScannedPartStatus = new StringBuilder();
+        StringBuilder sbUpdateAllTheRestPartStatus = new StringBuilder();
+        StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
+
+        // משנה את הסטטוס של החלק שנסרק בסטטוס של התחנה החדשה
+        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
+        //צריך לראות האם הוא מצליח להכניס פה נכון את הערך איפה שרשום בעברית.
+        // שם את שאר החלקים בסטטוס ממתין לתחנה חוץ מהחלק ששינינו לו את הסטטוס פה למעלה
+        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE dbo.Part SET dbo.Part.partStatus = 'ממתין ל- {0} בעגלה' WHERE dbo.Part.partStatus NOT LIKE '{1}'", StationName, StationName);
+        // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}'", StationName, NextGroupStationNo, PartBarCode);
+
+        command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
+        return command;
+    }
+
+
     //מביא את מספר התחנה הנוכחי של הקבוצה שהחלק שייך אליו
     public string GetCurrentGroupStationNo(string barcode)
     {
@@ -1466,45 +1529,6 @@ public class DBServices
                 CurrentGroupStationNo = Convert.ToString(dr["currentGroupStation"]);
             }
             return CurrentGroupStationNo;
-        }
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-
-        }
-    }
-
-    //מביא את השם של התחנה הנוכחית של הקבוצה עליה החלק שייך
-    public string GetCurrentGroupStationName(string barcode)
-    {
-        SqlConnection con;
-        string CurrentGroupStationName = null;
-
-        try
-        {
-
-            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
-        }
-
-        catch (Exception ex)
-        {
-            // write to log
-            throw (ex);
-
-        }
-
-        try
-        {
-            String selectSTR = "SELECT G.currentGroupStation FROM dbo.Groups AS G INNER JOIN dbo.Part AS P ON G.groupName = P.groupName WHERE barcode = '" + barcode + "'";
-            SqlCommand cmd = new SqlCommand(selectSTR, con);
-            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-            while (dr.Read())
-            {
-                CurrentGroupStationName = Convert.ToString(dr["currentGroupStation"]);
-            }
-            return CurrentGroupStationName;
         }
         catch (Exception ex)
         {

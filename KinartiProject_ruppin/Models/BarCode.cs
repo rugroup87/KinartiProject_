@@ -24,7 +24,6 @@ namespace KinartiProject_ruppin.Models
 
             string ClickedStationNo = dbs.GetClickedStationNo(StationName);
             string CurrentGroupStationNo = dbs.GetCurrentGroupStationNo(PartBarCode);
-            //string CurrentGroupStationName = dbs.GetCurrentGroupStationName(PartBarCode);
             string CurrentGroupPositionNo = dbs.GetCurrentGroupPositionNo(PartBarCode, CurrentGroupStationNo);
 
             int temp = Int32.Parse(CurrentGroupPositionNo) + 1;           
@@ -35,7 +34,7 @@ namespace KinartiProject_ruppin.Models
             //הפונקציה הזאת לא יכולה להיות פה - רק במקרה שהכן יש מסלול הבא... צריך לבדוק
             string NextGroupStationNo = dbs.GetNextGroupStationNo(temp.ToString(), PartBarCode);
 
-            //הולידציה האם החלק באמת נסרק בתחנה הנכונה או שזה החלק הראשון שנסרק בתחנה הבאה אחריו
+            //ולידציה האם החלק באמת נסרק בתחנה הנכונה או שזה החלק הראשון שנסרק בתחנה הבאה אחריו
             if (ClickedStationNo == CurrentGroupStationNo && partCount > ScannedPartCount)
             {
                 if (CurrentGroupStationNo == null)
@@ -55,12 +54,12 @@ namespace KinartiProject_ruppin.Models
                 ////////////////////////////////////////////////////////אני פה!!!!!!//////////////////////////////////////////////////////////////
                 if (ClickedStationNo == NextGroupStationNo && partCount == ScannedPartCount)
                 {
-                    // כשנסרק חלק ראשון בתחנה חדשה לאחר ששאר החלקים כבר סיימו בתחנה הקודמת
-                    //צריך להעביר סטטוס קבוצה לתחנה החדשה, סטטוס חלק, שנסרק ושאר החלקים בנתיים בסטטוס ממתין לתחנה זו החדשה
+                    dbs.PartScannedInNewStation(PartBarCode, NextGroupStationNo, StationName);
+                    // שים לב בבניה של הפונקציה הזאת לוודא שהוא מכניס נכון איפה שהעברית שם כי המילה סי-אן-סי בדיבי ושם נראים קצת שונה
                 }
                 else
                 {
-
+                    throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה");
                 }
             }
 
