@@ -7,17 +7,17 @@ namespace KinartiProject_ruppin.Models
 {
     public class Machine
     {
-        public int MachineNum { get; set; }
+        public string MachineNum { get; set; }
         public string MachineName { get; set; }
 
         public Machine()
         {
 
         }
-        public Machine(int machineNum, string machineName)
+        public Machine(string _machineNum, string _machineName)
         {
-            MachineNum = machineNum;
-            MachineName = machineName;
+            MachineNum = _machineNum;
+            MachineName = _machineName;
         }
 
         public List<Machine> GetAllMachines()

@@ -15,9 +15,10 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        label {
+
+        /*label {
             float: right;
-        }
+        }*/
 
         .content {
             padding: 20px 30px;
@@ -254,47 +255,44 @@
             float: right;
             font-size: 34px;
             padding-top: 0;
-            direction: rtl;
+            /*direction: rtl;*/
             padding-right: 15px;
             overflow-y: auto;
+            width: 30%;
         }
 
         #body .containerRadioButtons {
             /*position: absolute;
             right: 0;
             width: 100px;
-
             border: 3px solid blue;*/
-            height: 120px;
+
             font-size: 20px;
-            padding-top: 100px;
+            /*padding-top: 100px;*/
             position: absolute;
-            padding-top: 3%;
-            margin-left: 90%;
-            direction: rtl;
+            width: inherit;
+            /*padding-top: 3%;*/
+            /*margin-left: 90%;*/
         }
 
         /*/this is the station vizualization/*/
 
-        #body .middleBody {
+        /*#body .middleBody {
             float: left;
             position: inherit;
             padding-top: 0;
             margin-left: 45%;
             font-size: 40px;
-            direction: rtl;
-        }
+        }*/
 
 
         .history-tl-container {
             font-family: "Roboto",sans-serif;
-            width: 43%;
-            margin: auto;
             display: block;
             position: fixed;
             float: right;
             /*/margin-top: 7%;*/
-            margin: 125px 575px;
+            margin: 10% 30%;
         }
 
             .history-tl-container ul.tl {
@@ -339,6 +337,37 @@
         ul.tl li .item-title {
             font-size: 18px;
         }
+
+        .form-group {
+            float: right;
+            width: 50%;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+        }
+
 
         .modal-header {
             background-color: #d7d7d7;
@@ -390,6 +419,16 @@
             padding: 0px 0px 0px 0px;
             max-width: 100%;
         }
+
+        button.close {
+            -webkit-appearance: none;
+            padding-left: 10px;
+            cursor: pointer;
+            background: 0 0;
+            border: 0;
+        }
+
+
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -426,13 +465,13 @@
 
 
         function SuccessGetRouteInfo(routedate) {
-            $('.middleBody').empty();
-            $('.history-tl-containere').empty();
+            //$('.middleBody').empty();
+            //$('.history-tl-container').empty();
             str1 = "";
 
             checkedRouteInfo = routedate;
-            routeNameTitle = "<div><h1><u><b>מסלול " + checkedRouteInfo.RouteName + "</b></u></h1></div>";
-            $('.middleBody').append(routeNameTitle);
+            routeNameTitle = "<h1><u><b>מסלול " + checkedRouteInfo[0].RouteName + "</b></u></h1>";
+            $('.history-tl-container').append(routeNameTitle);
             str1 += "<ul class='tl'>";
             for (var i = 1; i <= checkedRouteInfo.length; i++) {
                 str1 += "<li class='tl-item' ng-repeat='item in retailer_history'>";
@@ -455,7 +494,7 @@
             machineList = Machinedata;
             var emptyValue = "";
             var strAllRoutesList = "<div id='selectedShowRoute'>\
-                        <select id='chooseRoute' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
+                            <select id='chooseRoute' oninvalid=\"this.setCustomValidity('אנא בחר תחנה מהרשימה כדי להמשיך')\" oninput=\"setCustomValidity('')\" style='overflow:hidden' class='form-control form-control-sm' required>";
             strAllRoutesList += "<option value=" + emptyValue + ">בחר מסלול מהרשימה</option>";
 
             for (var i = 1; i <= allRoutesList.length; i++) {
@@ -501,7 +540,6 @@
         });
 
         function SuccessGetRouteInfoToForm(routedate) {
-            alert("good");
             //$("#selectedShowRoute .toRemove").remove();
             checkedRouteInfo = routedate;
             strStationInRoute = "";
@@ -696,14 +734,11 @@
     </div>
     <div id="body" style="background-color:white">
         <div class="titleRadioContainer">
-            <p>
-                <u><b>לחץ על מסלול מהרשימה</b></u>
-            </p>
+            <p><u><b>לחץ על מסלול מהרשימה</b></u></p>
+            <div class="containerRadioButtons"></div>
         </div>
-        <div class="containerRadioButtons"></div>
-        <div class="middleBody"></div>
+        <!--<div class="middleBody"></div>-->
         <div class="history-tl-container"></div>
-
     </div>
 </body>
 </html>

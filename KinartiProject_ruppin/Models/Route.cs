@@ -9,7 +9,7 @@ namespace KinartiProject_ruppin.Models
 {
     public class Route
     {       
-        public int MachineNum { get; set; }
+        public string MachineNum { get; set; }
         public string MachineName { get; set; }
         public int Position { get; set; }
         public int[] StationArr { get; set; }
@@ -20,7 +20,7 @@ namespace KinartiProject_ruppin.Models
 
         }
 
-        public Route(int machineNum, string machineName, int position, int[] stationArr, string routeName)
+        public Route(string machineNum, string machineName, int position, int[] stationArr, string routeName)
         {
             MachineNum = machineNum;
             MachineName = machineName;

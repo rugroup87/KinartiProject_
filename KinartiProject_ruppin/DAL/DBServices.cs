@@ -957,7 +957,7 @@ public class DBServices
             {   // Read till the end of the data into a row
                 Route ri = new Route();
                 ri.RouteName = Convert.ToString(dr["routeName"]);
-                ri.MachineNum = Convert.ToInt32(dr["machineNum"]);
+                ri.MachineNum = Convert.ToString(dr["machineNum"]);
                 ri.MachineName = Convert.ToString(dr["machineName"]);
                 ri.Position = Convert.ToInt32(dr["position"]);
                 //ri.RouteNum = Convert.ToInt16(dr["routeNum"]);
@@ -998,7 +998,7 @@ public class DBServices
             {   // Read till the end of the data into a row
                 Machine m = new Machine();
                 m.MachineName = Convert.ToString(dr["machineName"]);
-                m.MachineNum = Convert.ToInt32(dr["machineNum"]);
+                m.MachineNum = Convert.ToString(dr["machineNum"]);
                 lm.Add(m);
             }
             return lm;
@@ -1162,7 +1162,7 @@ public class DBServices
     }
 
     //עידכון הערכת זמנים של קבוצה
-    public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+    public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string projectNum, string itemNum, string groupName)
     {
 
         SqlConnection con;
@@ -1178,7 +1178,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildUpdateGroupEstTimeCommand(prepTime, carpTime, paintTime, groupName);      // helper method to build the insert string
+        String cStr = BuildUpdateGroupEstTimeCommand(prepTime, carpTime, paintTime,projectNum, itemNum, groupName);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1203,7 +1203,7 @@ public class DBServices
     }
 
     // בניית הפקודה של עידכון הערכת זמנים לקבוצה
-    public string BuildUpdateGroupEstTimeCommand(string prepTime, string carpTime, string paintTime, string groupName)
+    public string BuildUpdateGroupEstTimeCommand(string prepTime, string carpTime, string paintTime, string projectNum, string itemNum, string groupName)
     {
         String command;
         SqlConnection con;
@@ -1211,14 +1211,14 @@ public class DBServices
         StringBuilder sbUpdateGroupEstTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdateGroupEstTime.AppendFormat("UPDATE Groups SET estPrepTime = {0}, estCarpTime = {1}, estColorTime = {2} WHERE groupName = '{3}'", prepTime, carpTime, paintTime, groupName);
+        sbUpdateGroupEstTime.AppendFormat("UPDATE Groups SET estPrepTime = {0}, estCarpTime = {1}, estColorTime = {2} WHERE projectNum = '{3}' and itemNum = '{4}' and groupName = '{5}'", prepTime, carpTime, paintTime, projectNum, itemNum, groupName);
 
         command = sbUpdateGroupEstTime.ToString();
         return command;
     }
 
     //מוחק חלק מקבוצה
-    public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
+    public string DeletePartFromGroup(string partBarcode, int PartCount, string projectNum, string itemNum, string GroupName)
     {
 
         SqlConnection con;
@@ -1234,7 +1234,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildDeletePartFromGroupCommand(partBarcode, PartCount, GroupName);      // helper method to build the insert string
+        String cStr = BuildDeletePartFromGroupCommand(partBarcode, PartCount, projectNum, itemNum, GroupName);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1260,7 +1260,7 @@ public class DBServices
     }
 
     //בניית פקודה למחיקת חלק מקבוצה
-    public string BuildDeletePartFromGroupCommand(string partBarcode, int PartCount, string GroupName)
+    public string BuildDeletePartFromGroupCommand(string partBarcode, int PartCount, string projectNum, string itemNum, string GroupName)
     {
         String command;
         SqlConnection con;
@@ -1270,7 +1270,7 @@ public class DBServices
 
         // use a string builder to create the dynamic string
         sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode = '{0}'", partBarcode);
-        sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
+        sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE projectNum='{1}' AND itemNum='{2}' AND groupName = '{3}'", PartCount, projectNum, itemNum, GroupName);
         //sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE groupName = '{0}'", GroupName);
 
         command = sbDeletePartFromGroup.ToString() + sbDecreasePartCount.ToString();
@@ -1278,7 +1278,7 @@ public class DBServices
     }
 
     //מוחק את הקבוצה והחלקים שיש בקבוצה זו
-    public string DeleteGroup(string groupName, string[] barcodes)
+    public string DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes)
     {
 
         SqlConnection con;
@@ -1294,7 +1294,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildDeleteGroupCommand(groupName, barcodes);      // helper method to build the insert string
+        String cStr = BuildDeleteGroupCommand(projNum, itemNum, groupName, barcodes);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1320,7 +1320,7 @@ public class DBServices
     }
 
     //פקודת מסד נתונים למחיקת הקבוצה והחלקים שלה
-    public string BuildDeleteGroupCommand(string groupName, string[] barcodes)
+    public string BuildDeleteGroupCommand(string projNum, string itemNum, string groupName, string[] barcodes)
     {
         String command;
         SqlConnection con;
@@ -1329,7 +1329,7 @@ public class DBServices
         StringBuilder sbDeleteGroup = new StringBuilder();
         StringBuilder sbDecreasePartCount = new StringBuilder();
 
-        sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '' WHERE barcode in(");
+        sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '', partStatus='חלק טרם נסרק' WHERE barcode in(");
         for (int i = 0; i < (barcodes.Length - 1); i++)
         {
             sbDeletePartFromGroup.AppendFormat("'{0}',", barcodes[i]);
@@ -1337,7 +1337,7 @@ public class DBServices
         sbDeletePartFromGroup.AppendFormat("'{0}')", barcodes[barcodes.Length - 1]);
 
         //sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
-        sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE groupName = '{0}'", groupName);
+        sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE projectNum='{0}' AND itemNum='{1}' AND groupName = '{2}'",projNum,itemNum, groupName);
 
         command = sbDeletePartFromGroup.ToString() + sbDeleteGroup.ToString();
         return command;
@@ -1840,7 +1840,7 @@ public class DBServices
     }
 
     //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
-    public string CheckGroupPosition(string groupName)
+    public string CheckGroupPosition(string groupRouteName)
     {
         string returnedGroup = "inProgress";
         SqlConnection con;
@@ -1857,8 +1857,8 @@ public class DBServices
         }
         try
         {
-            String selectSTR = "SELECT currentGroupStation FROM Groups where currentGroupStation IS NULL OR currentGroupStation = (SELECT machineNum FROM StationInRoute WHERE routeName = '" + groupName + "' AND position = 1)";
-
+            //String selectSTR = "SELECT currentGroupStation FROM Groups where currentGroupStation IS NULL OR currentGroupStation = (SELECT machineNum FROM StationInRoute WHERE routeName = '" + groupRouteName + "' AND position = 1)";
+            String selectSTR = "SELECT currentGroupStation FROM Groups where currentGroupStation NOT IN (SELECT machineNum FROM StationInRoute WHERE routeName = '" + groupRouteName + "' AND position NOT IN(1))";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
