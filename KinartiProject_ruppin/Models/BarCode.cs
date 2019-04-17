@@ -21,18 +21,24 @@ namespace KinartiProject_ruppin.Models
             // במקום לעשות כל כך הרבה פונקציות.... 
             //  בהמשך אפשר אולי יהיה אפשר לרכז את זה בשאילתה 1 או 2 ולשים את זה לתוך משתנים של הקלאס הזה של סריקה
             DBServices dbs = new DBServices();
+            string CurrentGroupPositionNo = null;
+            int temp = 1;
 
             string ClickedStationNo = dbs.GetClickedStationNo(StationName);
 
-            if (dbs.GetGroupName(PartBarCode) == "")
+            if (String.IsNullOrEmpty(dbs.GetGroupName(PartBarCode))) 
             {
                 throw new UndifinedGroupForThisPart("שגיאה!!! בוצע נסיון סריקה לחלק שאינו משוייך לקבוצה קיימת. ");
             }
 
             string CurrentGroupStationNo = dbs.GetCurrentGroupStationNo(PartBarCode);
-            string CurrentGroupPositionNo = dbs.GetCurrentGroupPositionNo(PartBarCode, CurrentGroupStationNo);
+            if (!String.IsNullOrEmpty(CurrentGroupStationNo))
+            {
+                CurrentGroupPositionNo = dbs.GetCurrentGroupPositionNo(PartBarCode, CurrentGroupStationNo);
+                temp = Int32.Parse(CurrentGroupPositionNo) + 1;
+            }
 
-            int temp = Int32.Parse(CurrentGroupPositionNo) + 1;           
+                       
             int TotalStationCount = dbs.GetTotalStationCount(PartBarCode);
             int partCount = dbs.GetpartCount(PartBarCode);
             int ScannedPartCount = dbs.GetScannedPartCount(PartBarCode);
@@ -43,17 +49,8 @@ namespace KinartiProject_ruppin.Models
             //ולידציה האם החלק באמת נסרק בתחנה הנכונה או שזה החלק הראשון שנסרק בתחנה הבאה אחריו
             if (ClickedStationNo == CurrentGroupStationNo && partCount > ScannedPartCount)
             {
-                if (CurrentGroupStationNo == null)
-                {
-                    //סריקה של חלק ראשון בקבוצה מסויימת שעדיין לא התחילה ייצור
-                    dbs.FirstScanPartOfGroup(PartBarCode, StationName, CurrentDate, CurrentGroupStationNo, ++ScannedPartCount);
-                }
-                else
-                {
-                    //סריקה של חלק רגיל באמצע תהליך במכונה מסויימת
-                    dbs.ScanPart(PartBarCode, StationName, ++ScannedPartCount);
-                }
-
+                //סריקה של חלק רגיל באמצע תהליך במכונה מסויימת
+                dbs.ScanPart(PartBarCode, StationName, ++ScannedPartCount);
             }
             else
             {
@@ -65,7 +62,15 @@ namespace KinartiProject_ruppin.Models
                 }
                 else
                 {
-                    throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה.");
+                    if (ClickedStationNo == NextGroupStationNo && String.IsNullOrEmpty(CurrentGroupStationNo))
+                    {
+                        //סריקה של חלק ראשון בקבוצה מסויימת שעדיין לא התחילה ייצור
+                        dbs.FirstScanPartOfGroup(PartBarCode, StationName, CurrentDate, NextGroupStationNo, ++ScannedPartCount);
+                    }
+                    else
+                    {
+                        throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה.");
+                    }
                 }
             }
 

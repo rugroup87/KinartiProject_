@@ -1344,7 +1344,7 @@ public class DBServices
     }
 
 
-    public string FirstScanPartOfGroup(string PartBarCode, string StationName, string CurrentDate, string CurrentGroupStationNo, int ScannedPartCount)
+    public string FirstScanPartOfGroup(string PartBarCode, string StationName, string CurrentDate, string NextGroupStationNo, int ScannedPartCount)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1359,7 +1359,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildFirstScanPartOfGroupCommand(PartBarCode, StationName, CurrentDate, CurrentGroupStationNo, ScannedPartCount);      // helper method to build the insert string
+        String cStr = BuildFirstScanPartOfGroupCommand(PartBarCode, StationName, CurrentDate, NextGroupStationNo, ScannedPartCount);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1384,7 +1384,7 @@ public class DBServices
         return "scanned";
     }
     //סריקה של חלק ראשון בקבוצה שעדיין לא התחילה
-    public string BuildFirstScanPartOfGroupCommand(string PartBarCode, string StationName, string CurrentDate, string CurrentGroupStationNo, int ScannedPartCount)
+    public string BuildFirstScanPartOfGroupCommand(string PartBarCode, string StationName, string CurrentDate, string NextGroupStationNo, int ScannedPartCount)
     {
         String command;
         SqlConnection con;
@@ -1394,9 +1394,9 @@ public class DBServices
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
-        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0}, G.groupStatus = '{1}', G.currentGroupStation = '{2}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}'", ScannedPartCount, StationName, CurrentGroupStationNo, PartBarCode);
-        sbUpdateProjectStartTime.AppendFormat("UPDATE Pr SET Pr.prodStartDate = '{0}' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}'", CurrentDate, PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{1}'", StationName, PartBarCode);
+        sbUpdateGroupScannedParts.AppendFormat(" UPDATE G SET G.scannedPartsCount = {0}, G.groupStatus = '{1}', G.currentGroupStation = '{2}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", ScannedPartCount, StationName, NextGroupStationNo, PartBarCode);
+        sbUpdateProjectStartTime.AppendFormat(" UPDATE Pr SET Pr.prodStartDate = '{0}' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}'", CurrentDate, PartBarCode);
 
         command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString() + sbUpdateProjectStartTime.ToString();
         return command;
@@ -1453,7 +1453,7 @@ public class DBServices
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{1}'", StationName, PartBarCode);
         sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{1}'", ScannedPartCount, PartBarCode);
 
         command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
@@ -1511,12 +1511,12 @@ public class DBServices
         StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
 
         // משנה את הסטטוס של החלק שנסרק בסטטוס של התחנה החדשה
-        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
+        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{1}'", StationName, PartBarCode);
         //צריך לראות האם הוא מצליח להכניס פה נכון את הערך איפה שרשום בעברית.
         // שם את שאר החלקים בסטטוס ממתין לתחנה חוץ מהחלק ששינינו לו את הסטטוס פה למעלה
-        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE dbo.Part SET dbo.Part.partStatus = 'ממתין ל- {0} בעגלה' WHERE dbo.Part.partStatus NOT LIKE '{1}'", StationName, StationName);
+        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum  IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}') AND p.partStatus NOT LIKE '{4}'", StationName, PartBarCode, PartBarCode, PartBarCode, StationName);
         // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו
-        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}'", StationName, NextGroupStationNo, PartBarCode);
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", StationName, NextGroupStationNo, PartBarCode);
 
         command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
         return command;
@@ -1544,7 +1544,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT G.currentGroupStation FROM dbo.Groups AS G INNER JOIN dbo.Part AS P ON G.groupName = P.groupName WHERE barcode = '" + barcode + "'";
+            String selectSTR = "SELECT G.currentGroupStation FROM dbo.Groups AS G INNER JOIN dbo.Part AS P ON G.groupName = P.groupName WHERE barcode = '" + barcode + "' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -1622,7 +1622,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT M.machineNum FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName in (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "') AND SIR.position = " + CurrentGroupPositionNo;
+            String selectSTR = "SELECT M.machineNum FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName in (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "') AND SIR.position =" + CurrentGroupPositionNo + " AND G.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '" + barcode + "') AND G.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '" + barcode + "')";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -1662,7 +1662,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT count(*) AS TotalStations FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "')";
+            String selectSTR = "SELECT count(*) AS TotalStations FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "') AND G.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '" + barcode + "') AND G.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '" + barcode + "')";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -1741,7 +1741,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT g.partCount FROM dbo.Groups g INNER JOIN dbo.Part p ON g.groupName = p.groupName WHERE p.barcode = '" + barcode + "'";
+            String selectSTR = "SELECT g.partCount FROM dbo.Groups g INNER JOIN dbo.Part p ON g.groupName = p.groupName WHERE p.barcode = '" + barcode + "' AND g.itemNum = p.itemNum AND g.projectNum = p.projectNum";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -1781,7 +1781,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT g.scannedPartsCount FROM dbo.Groups g INNER JOIN dbo.Part p ON g.groupName = p.groupName WHERE p.barcode = '" + barcode + "'";
+            String selectSTR = "SELECT g.scannedPartsCount FROM dbo.Groups g INNER JOIN dbo.Part p ON g.groupName = p.groupName WHERE p.barcode = '" + barcode + "' AND g.itemNum = p.itemNum AND g.projectNum = p.projectNum";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 

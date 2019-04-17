@@ -25,30 +25,31 @@
     <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../Scripts/My_Scripts.js"></script>
 
     <script>
         $(document).ready(function () {
 
-            $(document).on("click", "button", function () {
-                var BarCodeNumber = $('#' + this.className).val();
-
-                uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.className + "&CurrentDate=" + GetCurrentDate();
-
-
-                ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
-            });
-
-
         });
 
+        $(document).on("click", "button", function () {
+            var BarCodeNumber = $('#' + this.className).val();
 
-        function ScanSuccessPart() {
+            uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.id + "&CurrentDate=" + GetCurrentDate();
+
+
+            ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
+        });
+
+        function ScanSuccessPart(data) {
+            swal(data, "success");
 
         }
 
-        function errorScanPart() {
-
+        function errorScanPart(data) {
+            var er = eval("(" + err.responseText + ")");
+            swal(er.ExceptionMessage, "Error");
         }
 
 
@@ -58,15 +59,31 @@
     <div id="barcode">
         <div>
             <input type="text" id="CNC" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-            <button type="button" class="CNC">CNC</button>
+            <button type="button" class="CNC" id="CNC">CNC</button>
         </div>
         <div>
-            <input type="text" id="חיתוך" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-            <button type="button" class="חיתוך">חיתוך</button>
+            <input type="text" id="Cut" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="Cut" id="חיתוך">חיתוך</button>
         </div>
         <div>
-            <input type="text" id="צבע" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-            <button type="button" class="צבע">צבע</button>
+            <input type="text" id="Color1" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="Color1" id="צבע 1">צבע 1</button>
+        </div>
+        <div>
+            <input type="text" id="Color2" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="Color2" id="צבע 2">צבע 2</button>
+        </div>
+        <div>
+            <input type="text" id="contagion" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="contagion" id="הדבקה">הדבקה</button>
+        </div>
+        <div>
+            <input type="text" id="Shave" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="Shave" id="שיוף">שיוף</button>
+        </div>
+        <div>
+            <input type="text" id="Saw" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+            <button type="button" class="Saw" id="ניסור">ניסור</button>
         </div>
     </div>
 </body>
