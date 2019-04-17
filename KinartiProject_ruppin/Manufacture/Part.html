@@ -695,7 +695,7 @@
 
             $(document).on("click", "#SaveGroupChanges", function () {
                 //מעדכן את הערכת זמנים של קבוצה מוכנה
-                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') + "&groupName=" + $("#mainH_form").text();
                 ajaxCall("PUT", uriUpdateTime, "", SuccessUpdateGroupEstTime, ErrorUpdateGroupEstTime);
             });
 
@@ -703,7 +703,7 @@
                 //מביא את האיידי של השורה עליה לחצו
                 console.log($(this).context.parentNode.parentNode.parentNode.id);
                 //מוחק חלק מתוך קבוצה - אבל עדיין חלק יהיה קיים בחלקים אחרים ויהיה אפשר לשייך אותו לאיפושהו
-                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id + "&PartCount=" + $('#PartNo').val() + "&GroupName=" + $('#mainH_form').html();
+                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id + "&PartCount=" + $('#PartNo').val() + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') + "&GroupName=" + $('#mainH_form').html();
                 ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
             });
 
@@ -716,6 +716,8 @@
                     PartsBarCode.push($(this).text());
                 });
                 var oData = {
+                    ProjNum: urlParams.get('ProjectNum'),
+                    ItemNum: urlParams.get('ItemNum'),
                     GroupName: $("#mainH_form").html(),
                     PartsBarCodeNo: PartsBarCode
                 }

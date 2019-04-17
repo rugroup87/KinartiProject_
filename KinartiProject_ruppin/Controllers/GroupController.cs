@@ -59,18 +59,18 @@ namespace KinartiProject_ruppin.Controllers
 
         [HttpPut]
         [Route("api/UpdateGroupEstTime")]
-        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string projectNum,string itemNum, string groupName)
         {
             Group G = new Group();
-            G.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+            G.UpdateGroupEstTime(prepTime, carpTime, paintTime, projectNum, itemNum, groupName);
         }
 
         [HttpPut]
         [Route("api/DeletePartFromGroup")]
-        public string DeletePartFromGroup(string partBarcode, string PartCount, string GroupName)
+        public string DeletePartFromGroup(string partBarcode, string PartCount, string projectNum, string itemNum, string GroupName)
         {
             Group G = new Group();
-            return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), GroupName);
+            return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), projectNum, itemNum,GroupName);
         }
 
         [HttpPut]
@@ -78,6 +78,8 @@ namespace KinartiProject_ruppin.Controllers
         public void DeleteGroup([FromBody] dynamic deletG)
         {
             Group G = new Group();
+            string projNum = deletG.ProjNum;
+            string itemNum = deletG.ItemNum;
             string groupName = deletG.GroupName;
             string[] barcodes = deletG.PartsBarCodeNo.ToObject<string[]>();
 
@@ -85,7 +87,7 @@ namespace KinartiProject_ruppin.Controllers
             //System.Reflection.PropertyInfo g = deletG.GetType().GetProperty("GroupName");
             //string n1 = (string)g.GetValue(deletG, null);
 
-            G.DeleteGroup(groupName, barcodes);
+            G.DeleteGroup(projNum, itemNum, groupName, barcodes);
         }
     }
 }

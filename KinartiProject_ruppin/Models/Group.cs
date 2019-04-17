@@ -55,10 +55,10 @@ namespace KinartiProject_ruppin.Models
             return dbs.GetSpecificGroup(GroupName, projectNum, itemNum);
         }
 
-        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string projectNum, string itemNum, string groupName)
         {
             DBServices dbs = new DBServices();
-            dbs.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+            dbs.UpdateGroupEstTime(prepTime, carpTime, paintTime,projectNum, itemNum, groupName);
         }
 
         //מחזיר את כל הקבוצות אשר שייכוח לפרויקט ופריט מסויים
@@ -81,7 +81,7 @@ namespace KinartiProject_ruppin.Models
         {
             DBServices dbs = new DBServices();
             Group groupInfo = dbs.GetSpecificGroup(groupName, projectNum, itemNum);
-            string groupPosition = dbs.CheckGroupPosition(groupInfo.GroupName);
+            string groupPosition = dbs.CheckGroupPosition(groupInfo.GroupRouteName);
             int numAffected;
             //אם הקבוצה נמצאת בתחנה מתקדמת במסלול
             if (groupPosition == "inProgress")
@@ -98,18 +98,18 @@ namespace KinartiProject_ruppin.Models
             }
         }
 
-        public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
+        public string DeletePartFromGroup(string partBarcode, int PartCount, string projectNum, string itemNum, string GroupName)
         {
             --PartCount;
             DBServices dbs = new DBServices();
-            return dbs.DeletePartFromGroup(partBarcode, PartCount, GroupName);
+            return dbs.DeletePartFromGroup(partBarcode, PartCount, projectNum, itemNum, GroupName);
         }
 
 
-        public void DeleteGroup(string groupName, string[] barcodes)
+        public void DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes)
         {
             DBServices dbs = new DBServices();
-            dbs.DeleteGroup(groupName, barcodes);
+            dbs.DeleteGroup(projNum, itemNum, groupName, barcodes);
         }
     }
 }
