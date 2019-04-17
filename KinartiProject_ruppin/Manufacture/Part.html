@@ -1269,14 +1269,15 @@
             for (var i = 0; i < groupList.length; i++) {
                 if (groupList[i].startsWith("השלמה_")) {
                     groupListWithAccomplish.push(groupList[i].substr(6)); //חותך את השלמה_ ומשאיר שם המסלול המקורי
+                    //groupListWithAccomplish.push(groupList[i]);
                 }
             }
             
             for (var i = 0; i < groupList.length; i++) { //ריצה על כל המסלולים הקיימים
-                var accomplishGroup = false;
+                var accomplishGroup = true;
                 for (var j = 0; j < groupListWithAccomplish.length; j++) { //מסלולים שיש להם כבר השלמה
-                    if (groupListWithAccomplish[j] == groupList[i]) { //במידה ושם המסלול שווה (שניהם בלי "השלמה_") כבר
-                        accomplishGroup = true;
+                    if (groupListWithAccomplish[j] == (groupList[i])) { //במידה ושם המסלול שווה (שניהם בלי "השלמה_") כבר
+                        accomplishGroup = false;
                         break; //צא מהלולאה
                     }
                 }
