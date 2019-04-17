@@ -830,7 +830,7 @@ public class DBServices
         StringBuilder sb2 = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}','{10}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus, "Groups",0);
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}','{10}')", group.ProjectNum, group.ItemNum, group.GroupName, group.GroupRouteName, group.GroupPartCount.ToString(), group.EstPrepTime.ToString(), group.EstCarpTime.ToString(), group.EstColorTime.ToString(), group.GroupStatus, "Groups", 0);
         String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, estPrepTime, estCarpTime, estColorTime, groupStatus, relateTO,scannedPartsCount) ";
         String prefix2 = " Update Part SET groupName='" + group.GroupName + "' WHERE projectNum ='" + group.ProjectNum + "' AND itemNum ='" + group.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < group.ArrPart.Length; i++)
@@ -1453,7 +1453,7 @@ public class DBServices
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'",StationName, PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
         sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{1}'", ScannedPartCount, PartBarCode);
 
         command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
@@ -1544,7 +1544,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT G.currentGroupStation FROM dbo.Groups AS G INNER JOIN dbo.Part AS P ON G.groupName = P.groupName WHERE barcode = '" + barcode +"'";
+            String selectSTR = "SELECT G.currentGroupStation FROM dbo.Groups AS G INNER JOIN dbo.Part AS P ON G.groupName = P.groupName WHERE barcode = '" + barcode + "'";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
@@ -1838,7 +1838,6 @@ public class DBServices
 
         }
     }
-}
 
     //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
     public string CheckGroupPosition(string groupName)
@@ -2020,7 +2019,7 @@ public class DBServices
         StringBuilder sb2 = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}','{7}')", groupInfo.ProjectNum, groupInfo.ItemNum, "השלמה_" + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups",0);
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}','{7}')", groupInfo.ProjectNum, groupInfo.ItemNum, "השלמה_" + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups", 0);
         String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, groupStatus, relateTO,scannedPartsCount) ";
         String prefix2 = " Update Part SET groupName='השלמה_" + groupInfo.GroupName + "' WHERE projectNum ='" + groupInfo.ProjectNum + "' AND itemNum ='" + groupInfo.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < partNumToAddArr.Length; i++)
