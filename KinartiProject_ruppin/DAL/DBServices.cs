@@ -643,6 +643,7 @@ public class DBServices
         return command;
     }
 
+    //הכנסת נתוני אקסל(פריט) למערכת 
     public void AddNewDataToDB(Project NewData)
     {
         SqlConnection con;
@@ -734,6 +735,7 @@ public class DBServices
         }
     }
 
+    //פקודת מסד נתונים להכנסת נתוני האקסל(פריט) למערכת
     public string BuildNewDataInsertCommand(Project NewData)
     {
         String command;
@@ -1341,7 +1343,8 @@ public class DBServices
         return command;
     }
 
-    public string ScanPart(string PartBarCode, string StationName)
+
+    public string FirstScanPartOfGroup(string PartBarCode, string StationName, string CurrentDate, string CurrentGroupStationNo, int ScannedPartCount)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1356,7 +1359,66 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildScanBarCodeCommand(PartBarCode, StationName);      // helper method to build the insert string
+        String cStr = BuildFirstScanPartOfGroupCommand(PartBarCode, StationName, CurrentDate, CurrentGroupStationNo, ScannedPartCount);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+        return "scanned";
+    }
+    //סריקה של חלק ראשון בקבוצה שעדיין לא התחילה
+    public string BuildFirstScanPartOfGroupCommand(string PartBarCode, string StationName, string CurrentDate, string CurrentGroupStationNo, int ScannedPartCount)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sbUpdatePartStatus = new StringBuilder();
+        StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
+        StringBuilder sbUpdateProjectStartTime = new StringBuilder();
+
+        // use a string builder to create the dynamic string
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0}, G.groupStatus = '{1}', G.currentGroupStation = '{2}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}'", ScannedPartCount, StationName, CurrentGroupStationNo, PartBarCode);
+        sbUpdateProjectStartTime.AppendFormat("UPDATE Pr SET Pr.prodStartDate = '{0}' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}'", CurrentDate, PartBarCode);
+
+        command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString() + sbUpdateProjectStartTime.ToString();
+        return command;
+    }
+
+
+    public string ScanPart(string PartBarCode, string StationName, int ScannedPartCount)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildScanBarCodeCommand(PartBarCode, StationName, ScannedPartCount);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1381,19 +1443,402 @@ public class DBServices
         return "scanned";
     }
     //סריקה
-    public string BuildScanBarCodeCommand(string PartBarCode, string StationName)
+    public string BuildScanBarCodeCommand(string PartBarCode, string StationName, int ScannedPartCount)
     {
         String command;
         SqlConnection con;
         con = connect("KinartiConnectionString");
         StringBuilder sbUpdatePartStatus = new StringBuilder();
+        StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
+        StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '' WHERE barcode = '{0}'", PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'",StationName, PartBarCode);
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{1}'", ScannedPartCount, PartBarCode);
 
-        command = sbUpdatePartStatus.ToString();
+        command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
         return command;
     }
+
+
+    public string PartScannedInNewStation(string PartBarCode, string NextGroupStationNo, string StationName)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildPartScannedInNewStationCommand(PartBarCode, NextGroupStationNo, StationName);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+        return "scanned";
+    }
+    //סריקה של חלק ראשון בקבוצה חדשה
+    public string BuildPartScannedInNewStationCommand(string PartBarCode, string NextGroupStationNo, string StationName)
+    {
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sbUpdateScannedPartStatus = new StringBuilder();
+        StringBuilder sbUpdateAllTheRestPartStatus = new StringBuilder();
+        StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
+
+        // משנה את הסטטוס של החלק שנסרק בסטטוס של התחנה החדשה
+        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{0}'", StationName, PartBarCode);
+        //צריך לראות האם הוא מצליח להכניס פה נכון את הערך איפה שרשום בעברית.
+        // שם את שאר החלקים בסטטוס ממתין לתחנה חוץ מהחלק ששינינו לו את הסטטוס פה למעלה
+        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE dbo.Part SET dbo.Part.partStatus = 'ממתין ל- {0} בעגלה' WHERE dbo.Part.partStatus NOT LIKE '{1}'", StationName, StationName);
+        // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}'", StationName, NextGroupStationNo, PartBarCode);
+
+        command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
+        return command;
+    }
+
+
+    //מביא את מספר התחנה הנוכחי של הקבוצה שהחלק שייך אליו
+    public string GetCurrentGroupStationNo(string barcode)
+    {
+        SqlConnection con;
+        string CurrentGroupStationNo = null;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT G.currentGroupStation FROM dbo.Groups AS G INNER JOIN dbo.Part AS P ON G.groupName = P.groupName WHERE barcode = '" + barcode +"'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                CurrentGroupStationNo = Convert.ToString(dr["currentGroupStation"]);
+            }
+            return CurrentGroupStationNo;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מביא את המיקום של התחנה במסלול שלו
+    public string GetCurrentGroupPositionNo(string barcode, string CurrentGroupStationNo)
+    {
+        SqlConnection con;
+        string CurrentGroupPositionNo = null;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT SIR.position FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName in (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "') AND M.machineNum = " + CurrentGroupStationNo;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                CurrentGroupPositionNo = Convert.ToString(dr["position"]);
+            }
+            return CurrentGroupPositionNo;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מביא את המיקום הבא של הקבוצה השייכת לחלק לפי המסלול של הקבוצה
+    public string GetNextGroupStationNo(string CurrentGroupPositionNo, string barcode)
+    {
+        SqlConnection con;
+        string NextGroupStationNo = null;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT M.machineNum FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName in (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "') AND SIR.position = " + CurrentGroupPositionNo;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                NextGroupStationNo = Convert.ToString(dr["machineNum"]);
+            }
+            return NextGroupStationNo;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מביא את כמות התחנות שיש במסלול
+    public int GetTotalStationCount(string barcode)
+    {
+        SqlConnection con;
+        //שים לבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבב אולי לא כדאי שזה יתחיל ב-0
+        int RouteStationCount = 0;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT count(*) AS TotalStations FROM dbo.Machine AS M INNER JOIN dbo.StationInRoute AS SIR ON M.machineNum = SIR.machineNum INNER JOIN dbo.Groups AS G ON G.routeName = SIR.routeName WHERE G.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '" + barcode + "')";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                RouteStationCount = Convert.ToInt32(dr["TotalStations"]);
+            }
+            return RouteStationCount;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מחזירה את המספר תחנה עליה לחצו
+    public string GetClickedStationNo(string StationName)
+    {
+        SqlConnection con;
+        string StationNo = null;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT m.machineNum FROM dbo.Machine m WHERE m.machineName = '" + StationName + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                StationNo = Convert.ToString(dr["machineNum"]);
+            }
+            return StationNo;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מחזיר כמות חלקים שיש בקבוצה
+    public int GetpartCount(string barcode)
+    {
+        SqlConnection con;
+        //שים לבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבב אולי לא כדאי שזה יתחיל ב-0
+        int partCount = 0;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT g.partCount FROM dbo.Groups g INNER JOIN dbo.Part p ON g.groupName = p.groupName WHERE p.barcode = '" + barcode + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                partCount = Convert.ToInt32(dr["partCount"]);
+            }
+            return partCount;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מחזיר כמות חלקים שנסרקו כבר בקבוצה
+    public int GetScannedPartCount(string barcode)
+    {
+        SqlConnection con;
+        //שים לבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבבב אולי לא כדאי שזה יתחיל ב-0
+        int scannedPartsCount = 0;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT g.scannedPartsCount FROM dbo.Groups g INNER JOIN dbo.Part p ON g.groupName = p.groupName WHERE p.barcode = '" + barcode + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                scannedPartsCount = Convert.ToInt32(dr["scannedPartsCount"]);
+            }
+            return scannedPartsCount;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //מחזיר את שם הקוצה של החלק שנסרק
+    public string GetGroupName(string barcode)
+    {
+        SqlConnection con;
+
+        string GroupName = "";
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT p.groupName FROM dbo.Part p WHERE p.barcode = '" + barcode + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                GroupName = Convert.ToString(dr["groupName"]);
+            }
+            return GroupName;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+}
 
     //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
     public string CheckGroupPosition(string groupName)
