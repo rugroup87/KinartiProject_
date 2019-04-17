@@ -1774,4 +1774,44 @@ public class DBServices
 
         }
     }
+
+    //מחזיר את שם הקוצה של החלק שנסרק
+    public string GetGroupName(string barcode)
+    {
+        SqlConnection con;
+
+        string GroupName = "";
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT p.groupName FROM dbo.Part p WHERE p.barcode = '" + barcode + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                GroupName = Convert.ToString(dr["groupName"]);
+            }
+            return GroupName;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
 }

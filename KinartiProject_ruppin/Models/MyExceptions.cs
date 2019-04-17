@@ -51,4 +51,19 @@ namespace KinartiProject_ruppin.Models
             : base(message, innerException)
         { }
     }
+    
+    [Serializable]
+    public class UndifinedGroupForThisPart : Exception
+    {
+        public UndifinedGroupForThisPart()
+        { }
+
+        public UndifinedGroupForThisPart(string message)
+            : base(message)
+        { }
+
+        public UndifinedGroupForThisPart(string message, Exception innerException)
+            : base(message, innerException)
+        { }
+    }
 }

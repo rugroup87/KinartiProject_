@@ -23,6 +23,12 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
 
             string ClickedStationNo = dbs.GetClickedStationNo(StationName);
+
+            if (dbs.GetGroupName(PartBarCode) == "")
+            {
+                throw new UndifinedGroupForThisPart("שגיאה!!! בוצע נסיון סריקה לחלק שאינו משוייך לקבוצה קיימת. ");
+            }
+
             string CurrentGroupStationNo = dbs.GetCurrentGroupStationNo(PartBarCode);
             string CurrentGroupPositionNo = dbs.GetCurrentGroupPositionNo(PartBarCode, CurrentGroupStationNo);
 
@@ -59,7 +65,7 @@ namespace KinartiProject_ruppin.Models
                 }
                 else
                 {
-                    throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה");
+                    throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה.");
                 }
             }
 
