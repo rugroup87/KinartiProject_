@@ -1839,6 +1839,46 @@ public class DBServices
         }
     }
 
+    //מחזיר את הסטטוס של החלק שנסרק
+    public string GetScannedPartStatus(string barcode)
+    {
+        SqlConnection con;
+
+        string ScannedPartStatus = "";
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT p.partStatus FROM dbo.Part p WHERE p.barcode = '" + barcode + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                ScannedPartStatus = Convert.ToString(dr["partStatus"]);
+            }
+            return ScannedPartStatus;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
     //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
     public string CheckGroupPosition(string groupRouteName)
     {

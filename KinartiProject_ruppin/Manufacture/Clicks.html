@@ -29,27 +29,29 @@
     <script src="../Scripts/My_Scripts.js"></script>
 
     <script>
+
         $(document).ready(function () {
 
+            $(document).on("click", "button", function () {
+                var BarCodeNumber = $('#' + this.className).val();
+
+                uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.id + "&CurrentDate=" + GetCurrentDate();
+                ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
+                //$("#" + this.id).unbind("click");
+            });
         });
 
-        $(document).on("click", "button", function () {
-            var BarCodeNumber = $('#' + this.className).val();
-
-            uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.id + "&CurrentDate=" + GetCurrentDate();
-
-
-            ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
-        });
 
         function ScanSuccessPart(data) {
-            swal(data, "success");
-
+            //swal(data, "success");
+            alert("ok");
+            return false;
         }
 
         function errorScanPart(data) {
-            var er = eval("(" + err.responseText + ")");
-            swal(er.ExceptionMessage, "Error");
+            //swal("Error: ", data.responseJSON.ExceptionMessage, "error");     
+            alert("No");
+            return false;
         }
 
 
@@ -57,34 +59,27 @@
 </head>
 <body>
     <div id="barcode">
-        <div>
+
             <input type="text" id="CNC" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="CNC" id="CNC">CNC</button>
-        </div>
-        <div>
+
             <input type="text" id="Cut" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="Cut" id="חיתוך">חיתוך</button>
-        </div>
-        <div>
+
             <input type="text" id="Color1" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="Color1" id="צבע 1">צבע 1</button>
-        </div>
-        <div>
+
             <input type="text" id="Color2" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="Color2" id="צבע 2">צבע 2</button>
-        </div>
-        <div>
+
             <input type="text" id="contagion" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="contagion" id="הדבקה">הדבקה</button>
-        </div>
-        <div>
+
             <input type="text" id="Shave" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="Shave" id="שיוף">שיוף</button>
-        </div>
-        <div>
+
             <input type="text" id="Saw" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
             <button type="button" class="Saw" id="ניסור">ניסור</button>
-        </div>
     </div>
 </body>
 </html>

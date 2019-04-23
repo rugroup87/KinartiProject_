@@ -14,7 +14,7 @@ namespace KinartiProject_ruppin.Models
 
         }
 
-        public string ScanPart(string PartBarCode, string StationName, string CurrentDate)
+        public String ScanPart(string PartBarCode, string StationName, string CurrentDate)
         {
             //השדה של הסטיישן ניים שאני מקבל הוא לצורך ולידציה שנעשה בהמשך שהוא סרק את החלק במקום הנכון
 
@@ -24,6 +24,7 @@ namespace KinartiProject_ruppin.Models
             string CurrentGroupPositionNo = null;
             int temp = 1;
 
+            string ScannedPartStatus = dbs.GetScannedPartStatus(PartBarCode);
             string ClickedStationNo = dbs.GetClickedStationNo(StationName);
 
             if (String.IsNullOrEmpty(dbs.GetGroupName(PartBarCode))) 
@@ -47,7 +48,7 @@ namespace KinartiProject_ruppin.Models
             string NextGroupStationNo = dbs.GetNextGroupStationNo(temp.ToString(), PartBarCode);
 
             //ולידציה האם החלק באמת נסרק בתחנה הנכונה או שזה החלק הראשון שנסרק בתחנה הבאה אחריו
-            if (ClickedStationNo == CurrentGroupStationNo && partCount > ScannedPartCount)
+            if (ClickedStationNo == CurrentGroupStationNo && partCount > ScannedPartCount && ScannedPartStatus != StationName)
             {
                 //סריקה של חלק רגיל באמצע תהליך במכונה מסויימת
                 dbs.ScanPart(PartBarCode, StationName, ++ScannedPartCount);
@@ -73,18 +74,6 @@ namespace KinartiProject_ruppin.Models
                     }
                 }
             }
-
-                ////בודק האם אני נמצא בתחנה הסופית של המסלול וגם כל החלקים סרוקים
-                //if (Int32.Parse(CurrentGroupPositionNo) == TotalStationCount && partCount == ScannedPartCount)
-                //{
-                //    // במקרה כזה זה אומר שחלק כלשהו נוסף מנסים לסרוק פעם נוספת צריך לזרוק שגיאה
-                //    //אם אני בתחנה הסופית גם פה צריך לבדוק כמה חלקים נסרקו כדי לדעת מה לעשות
-                //}
-                //else
-                //{
-
-                //}
-
             
             return "Scanned Successfuly";
         }

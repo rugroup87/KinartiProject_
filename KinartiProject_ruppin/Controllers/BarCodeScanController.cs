@@ -13,7 +13,7 @@ namespace KinartiProject_ruppin.Controllers
 
         [HttpPut]
         [Route("api/ScanPart")]
-        public string ScanPart(string PartBarCode, string StationName, string CurrentDate)
+        public String ScanPart(string PartBarCode, string StationName, string CurrentDate)
         {
             BarCode Bcode = new BarCode();
             return Bcode.ScanPart(PartBarCode, StationName, CurrentDate);
