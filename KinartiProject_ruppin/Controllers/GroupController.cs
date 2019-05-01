@@ -26,12 +26,12 @@ namespace KinartiProject_ruppin.Controllers
 
         [HttpGet]
         [Route("api/GetGroupParts")]
-        public object Get(string GroupName)
+        public object Get(string GroupName, string projectNum, string itemNum)
         {
             Group G = new Group();
             Route R = new Route();
-            Part[] parts = G.GetGroupParts(GroupName);
-            Group group = G.GetSpecificGroup(GroupName);
+            Part[] parts = G.GetGroupParts(GroupName, projectNum, itemNum);
+            Group group = G.GetSpecificGroup(GroupName, projectNum, itemNum);
             List<Route> routes = R.ReadRouteName(group.GroupRouteName);
             return new {parts, group, routes};  
         }
@@ -54,20 +54,34 @@ namespace KinartiProject_ruppin.Controllers
             return group.InsertNewGroup();
         }
 
-        [HttpPut]
-        [Route("api/UpdateGroupEstTime")]
-        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        [HttpPost]
+        [Route("api/AddingPartToExistGroup")]
+        public int AddingPartToExistGroup([FromBody] dynamic partsToGroup)
         {
             Group G = new Group();
-            G.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+            string groupName = partsToGroup.GroupName;
+            string[] partNumToAddArr = partsToGroup.ArrPart.ToObject<string[]>();
+            string projectNum = partsToGroup.ProjNum;
+            string itemNum = partsToGroup.ItemNum;
+            //int partCountToAdd = partsToGroup.PartCountAdding;
+            return G.AddingPartToExistGroup(groupName, partNumToAddArr, projectNum, itemNum);
+
+        }
+
+        [HttpPut]
+        [Route("api/UpdateGroupEstTime")]
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string projectNum,string itemNum, string groupName)
+        {
+            Group G = new Group();
+            G.UpdateGroupEstTime(prepTime, carpTime, paintTime, projectNum, itemNum, groupName);
         }
 
         [HttpPut]
         [Route("api/DeletePartFromGroup")]
-        public string DeletePartFromGroup(string partBarcode, string PartCount, string GroupName)
+        public string DeletePartFromGroup(string partBarcode, string PartCount, string projectNum, string itemNum, string GroupName)
         {
             Group G = new Group();
-            return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), GroupName);
+            return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), projectNum, itemNum,GroupName);
         }
 
         [HttpPut]
@@ -75,6 +89,8 @@ namespace KinartiProject_ruppin.Controllers
         public void DeleteGroup([FromBody] dynamic deletG)
         {
             Group G = new Group();
+            string projNum = deletG.ProjNum;
+            string itemNum = deletG.ItemNum;
             string groupName = deletG.GroupName;
             string[] barcodes = deletG.PartsBarCodeNo.ToObject<string[]>();
 
@@ -82,7 +98,7 @@ namespace KinartiProject_ruppin.Controllers
             //System.Reflection.PropertyInfo g = deletG.GetType().GetProperty("GroupName");
             //string n1 = (string)g.GetValue(deletG, null);
 
-            G.DeleteGroup(groupName, barcodes);
+            G.DeleteGroup(projNum, itemNum, groupName, barcodes);
         }
     }
 }

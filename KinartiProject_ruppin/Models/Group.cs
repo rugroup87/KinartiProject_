@@ -49,22 +49,22 @@ namespace KinartiProject_ruppin.Models
         }
 
         //מחזיר לנו את החלקים של הקבוצה שנבחרה כולל את המידע של הקבוצה 
-        public Part[] GetGroupParts(string GroupName)
+        public Part[] GetGroupParts(string GroupName, string projectNum, string itemNum)
         {
             DBServices dbs = new DBServices();
-            return dbs.GetGroupParts(GroupName);
+            return dbs.GetGroupParts(GroupName, projectNum, itemNum);
         }
         //מחזיר את הנתונים של הקבוצה הספציפית
-        public Group GetSpecificGroup(string GroupName)
+        public Group GetSpecificGroup(string GroupName, string projectNum, string itemNum)
         {
             DBServices dbs = new DBServices();
-            return dbs.GetSpecificGroup(GroupName);
+            return dbs.GetSpecificGroup(GroupName, projectNum, itemNum);
         }
 
-        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string groupName)
+        public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string projectNum, string itemNum, string groupName)
         {
             DBServices dbs = new DBServices();
-            dbs.UpdateGroupEstTime(prepTime, carpTime, paintTime, groupName);
+            dbs.UpdateGroupEstTime(prepTime, carpTime, paintTime,projectNum, itemNum, groupName);
         }
 
         //מחזיר את כל הקבוצות אשר שייכוח לפרויקט ופריט מסויים
@@ -74,6 +74,7 @@ namespace KinartiProject_ruppin.Models
             return dbs.GetGroups(projectNum, itemNum);
         }
 
+        //יצירת קבוצה חדשה
         public int InsertNewGroup()
         {
             DBServices dbs = new DBServices();
@@ -81,11 +82,33 @@ namespace KinartiProject_ruppin.Models
             return numAffected;
         }
 
-        public string DeletePartFromGroup(string partBarcode, int PartCount, string GroupName)
+        //הוספת חלקים לקבוצה קיימת
+        public int AddingPartToExistGroup(string groupName, string[] partNumToAddArr, string projectNum, string itemNum)
+        {
+            DBServices dbs = new DBServices();
+            Group groupInfo = dbs.GetSpecificGroup(groupName, projectNum, itemNum);
+            string groupPosition = dbs.CheckGroupPosition(groupInfo.GroupRouteName);
+            int numAffected;
+            //אם הקבוצה נמצאת בתחנה מתקדמת במסלול
+            if (groupPosition == "inProgress")
+            {
+                numAffected = dbs.AccomplishGroup(groupInfo, partNumToAddArr);
+                //במידה ויצרנו קבוצת השלמה נחזיר אמת
+                return 1;
+            }
+            else
+            {
+                numAffected = dbs.AddingPartToExistGroup(groupInfo, partNumToAddArr);
+                //במידה והוספנו לקבוצה קיימת נחזיר שקר
+                return 0;
+            }
+        }
+
+        public string DeletePartFromGroup(string partBarcode, int PartCount, string projectNum, string itemNum, string GroupName)
         {
             --PartCount;
             DBServices dbs = new DBServices();
-            return dbs.DeletePartFromGroup(partBarcode, PartCount, GroupName);
+            return dbs.DeletePartFromGroup(partBarcode, PartCount, projectNum, itemNum, GroupName);
         }
         //מחזירה את כל הקבוצות הקיימות בבסיס הנתונים
         public List<Group> GetAllGroupsFromAllProjects()
@@ -96,10 +119,10 @@ namespace KinartiProject_ruppin.Models
             return gl;
         }
 
-        public void DeleteGroup(string groupName, string[] barcodes)
+        public void DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes)
         {
             DBServices dbs = new DBServices();
-            dbs.DeleteGroup(groupName, barcodes);
+            dbs.DeleteGroup(projNum, itemNum, groupName, barcodes);
         }
     }
 

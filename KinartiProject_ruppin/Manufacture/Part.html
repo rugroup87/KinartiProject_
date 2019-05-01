@@ -263,7 +263,6 @@
                 border: 3px solid #ccc;
                 border-radius: 10px;
                 height: 100%;
-                
             }
 
             .modal-footer {
@@ -274,6 +273,8 @@
                 text-align: right;
                 border-top: 1px solid #e5e5e5;
             }
+
+        }
 
             .modal-title {
                 margin: 0;
@@ -687,14 +688,14 @@
             $(document).on("click", ".main-menu ul li span", function () {
                 //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה
                 console.log($(this).id);
-                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id"));
+                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id")) + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') ;
                 ajaxCall("GET", uriGroupParts, "", GetSuccessGroupParts, ErrorGetGroupParts);
                 console.log($(this).text());
             });
 
             $(document).on("click", "#SaveGroupChanges", function () {
                 //מעדכן את הערכת זמנים של קבוצה מוכנה
-                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
+                uriUpdateTime = "../api/UpdateGroupEstTime?prepTime=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') + "&groupName=" + $("#mainH_form").text();
                 ajaxCall("PUT", uriUpdateTime, "", SuccessUpdateGroupEstTime, ErrorUpdateGroupEstTime);
             });
 
@@ -702,7 +703,7 @@
                 //מביא את האיידי של השורה עליה לחצו
                 console.log($(this).context.parentNode.parentNode.parentNode.id);
                 //מוחק חלק מתוך קבוצה - אבל עדיין חלק יהיה קיים בחלקים אחרים ויהיה אפשר לשייך אותו לאיפושהו
-                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id + "&PartCount=" + $('#PartNo').val() + "&GroupName=" + $('#mainH_form').html();
+                uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $(this).context.parentNode.parentNode.parentNode.id + "&PartCount=" + $('#PartNo').val() + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') + "&GroupName=" + $('#mainH_form').html();
                 ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
             });
 
@@ -715,6 +716,8 @@
                     PartsBarCode.push($(this).text());
                 });
                 var oData = {
+                    ProjNum: urlParams.get('ProjectNum'),
+                    ItemNum: urlParams.get('ItemNum'),
                     GroupName: $("#mainH_form").html(),
                     PartsBarCodeNo: PartsBarCode
                 }
@@ -741,9 +744,14 @@
 
             //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
             $(document).on("click", "#createNewGroupButton", function () {
-                $("#formID").submit(inserNewGroupToDB);
+                $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
             });
 
+            //בלחיצת כפתור "הוסף לקבוצה קיימת" 
+            $(document).on("click", "#addToExistGroupButton", function () {
+                $("#formIDaddToExistGroup").submit(addPartToExistGroup);
+            });
+            
         });
 
         //רענון הטבלה כששומרים רשומה
@@ -1111,7 +1119,7 @@
                 EstCarpTime: $("#estCarpTimeID").val(),
                 EstColorTime: $("#estColorID").val(),
                 ArrPart: partArr,
-                GroupStatus: "קבוצה מוכנה לעבודה"
+                GroupStatus: "קבוצה מוכנה לעבודה",
             }
             ajaxCall("POST", "../api/group", JSON.stringify(Group), successInsertGroup, errorInsertGroup);
             return false;
@@ -1180,7 +1188,7 @@
         function successGetRoute(Routesdata) {
             var enmptyValue = "";
             var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
-<form id='formID' name='altEditor-form' role='form'>\
+<form id='formIDcreateNewGroup' name='altEditor-form' role='form'>\
 <div class='modal-header'>\
 <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
 <h3 class='modal-title'>יצירת קבוצה חדשה</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
@@ -1239,7 +1247,7 @@
             });
             var enmptyValue = "";
             var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'><div class='modal-content'>\
-<form id='formID' name='altEditor-form' role='form'>\
+<form id='formIDaddToExistGroup' name='altEditor-form' role='form'>\
 <div class='modal-header'>\
 <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
 <h3 class='modal-title'>הוספת חלקים לקבוצה קיימת</h3><h4 class='modal-title' id='mainH_form'>" + urlParams.get('ItemNum') + "</h4><h4 class='modal-title' id='secondH_form'> " + urlParams.get('ItemName') + "</h4>\
@@ -1260,8 +1268,31 @@
 </div></form></div></div></div>";
 
             var strReadyGroups = "";
+            var groupListWithAccomplish = [];  //מערך רק של קבוצות השלמה
             for (var i = 0; i < groupList.length; i++) {
-                strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
+                if (groupList[i].startsWith("השלמה_")) {
+                    groupListWithAccomplish.push(groupList[i].substr(6)); //חותך את השלמה_ ומשאיר שם המסלול המקורי
+                    //groupListWithAccomplish.push(groupList[i]);
+                }
+            }
+            
+            for (var i = 0; i < groupList.length; i++) { //ריצה על כל המסלולים הקיימים
+                var accomplishGroup = true;
+                for (var j = 0; j < groupListWithAccomplish.length; j++) { //מסלולים שיש להם כבר השלמה
+                    if (groupListWithAccomplish[j] == (groupList[i])) { //במידה ושם המסלול שווה (שניהם בלי "השלמה_") כבר
+                        accomplishGroup = false;
+                        break; //צא מהלולאה
+                    }
+                }
+                if (accomplishGroup) { //תכניס לרשימת בחירה רק את אלו שעם השם המקורי
+                    strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";              
+                }
+                //if (accomplishGroup) {
+                //    strReadyGroups += "<option value='" + i + "'>השלמה_" + groupList[i] + "</option>";
+                //}
+                //else {
+                //    strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
+                //}
             }
             $('#containerID').append(str);
             $('#groupsID').append(strReadyGroups);
@@ -1276,6 +1307,55 @@
             str += "</tbody></table>"
             $('#byGroupNameAddingInfo').append(str);
 
+        }
+
+        function addPartToExistGroup() {
+            var partArr = [];
+            for (var i = 0; i < data_rows.data().length; i++) {
+                partArr.push(data_rows.data()[i].PartNum)
+            }
+            var oData = {
+                ArrPart: partArr,
+                ProjNum: urlParams.get('ProjectNum'),
+                ItemNum: urlParams.get('ItemNum'),
+                GroupName: $('#groupsID option:selected').text()
+                //PartCountAdding: data_rows.data().length
+            }
+            ajaxCall("POST", "../api/AddingPartToExistGroup", JSON.stringify(oData), SuccessAddPartToExistGroup, ErrorAddPartToExistGroup);
+            return false;
+
+        }
+        
+        function SuccessAddPartToExistGroup(checkAccomplishGroup) {
+            //במידה ולא יצרנו קבוצה השלמה
+            if (!checkAccomplishGroup) {
+                swal({
+                    title: 'חלקים נוספו בהצלחה!',
+                    text: 'הקבוצה הקיימת עודכנה בחלקים שנוספו',
+                    type: 'success',
+                    icon: 'success',
+                    buttons: 'אישור'
+                }).then(function (result) {
+                    refreshParent();
+                })
+            }
+                else {
+                    swal({
+                        title: '!קבוצת השלמה נוצרה',
+                        text: 'החלקים שבחרת להוסיף נוספו לקבוצה: השלמה_' + $('#groupsID option:selected').text(),
+                        type: 'success',
+                        icon: 'info',
+                        buttons: 'אישור'
+                    }).then(function (result) {
+                        refreshParent();
+                    })
+                }
+
+            
+        }
+
+        function ErrorAddPartToExistGroup(err) {
+            alert(err);
         }
 
     </script>
