@@ -8,27 +8,33 @@ namespace KinartiProject_ruppin.Models
     public class Group
     {
         public float ProjectNum { get; set; }
+        public string ProjectName { get; set; }
         public string ItemNum { get; set; }
+        public string ItemName { get; set; }
         public string GroupName { get; set; }
         public string GroupStatus { get; set; }
         public string GroupRouteName { get; set; }
         public string CurrentGroupStation { get; set; } // ברקוד של מספר!! מכונה
         public int GroupPartCount { get; set; }
+        public int ScannedPartsCount { get; set; }
         public int EstPrepTime { get; set; }
         public int EstCarpTime { get; set; }
         public int EstColorTime { get; set; }
         public string[] ArrPart { get; set; }
 
         //הג'ייסון לא נכנס לי לבנאי הזה ולכן אין סטטוס כי הוא הולך לבנאי הריק - לבדוק למה
-        public Group(float _projectNum, string _itemNum, string _groupName, string _groupRouteName,
-           int _groupPartCount, int _estPrepTime, int _estCarpTime, int _estColorTime,
+        public Group(float _projectNum,string _projectName, string _itemNum, string _itemName, string _groupName, string _groupRouteName,
+           int _groupPartCount,int _scannedPartsCount, int _estPrepTime, int _estCarpTime, int _estColorTime,
            string[] _arrPart, string _CurrentGroupStation, string _groupStatus = "קבוצה מוכנה לעבודה")
         {
             ProjectNum = _projectNum;
+            ProjectName = _projectName;
             ItemNum = _itemNum;
+            ItemName = _itemName;
             GroupName = _groupName;
             GroupRouteName = _groupRouteName;
             GroupPartCount = _groupPartCount;
+            ScannedPartsCount = _scannedPartsCount;
             EstPrepTime = _estPrepTime;
             EstCarpTime = _estCarpTime;
             EstColorTime = _estColorTime;
@@ -81,7 +87,14 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             return dbs.DeletePartFromGroup(partBarcode, PartCount, GroupName);
         }
-
+        //מחזירה את כל הקבוצות הקיימות בבסיס הנתונים
+        public List<Group> GetAllGroupsFromAllProjects()
+        {
+            DBServices dbs = new DBServices();
+            List<Group> gl = new List<Group>();
+            gl = dbs.GetAllGroupsFromAllProjects();
+            return gl;
+        }
 
         public void DeleteGroup(string groupName, string[] barcodes)
         {
@@ -89,4 +102,6 @@ namespace KinartiProject_ruppin.Models
             dbs.DeleteGroup(groupName, barcodes);
         }
     }
+
+  
 }

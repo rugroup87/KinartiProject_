@@ -52,16 +52,10 @@ namespace KinartiProject_ruppin.Models
             return numAffected;
         }
 
-        //public int UpdateRoute()
-        //{
-        //    DBServices dbs = new DBServices();
-        //    return dbs.UpdateRoute(this);
-        //}
-
-        public int UpdateOldRoute(string route_name)
-        {         
+        public int UpdateRoute()
+        {
             DBServices dbs = new DBServices();
-            return dbs.UpdateOldRoute(route_name);
+            return dbs.UpdateRoute(this);
         }
 
         //--------------------------------add
@@ -70,6 +64,7 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             List<Route> rli = new List<Route>();
             rli = dbs.ReadRouteInfo("KinartiConnectionString", routeName);
+
             return rli;
         }
 

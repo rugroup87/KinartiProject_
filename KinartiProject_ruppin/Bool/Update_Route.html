@@ -114,15 +114,13 @@
         ctr = 1;
         machineList = [];
         RouteList = [];
-        //sendStationArr = [];
         machinId = 1;
-        routeName = "";
+        RouteName = "";
 
         $(document).ready(function () {
             ajaxCall("GET", "../api/Route", "", successGetRoute, errorGetRoute); 
             ajaxCall("GET", "../api/Machine", "", successGetMachine, errorGetMachine);
             $("#RoutesForm").submit(f1);
-       
             //$("#btn").submit(UpDateRoute1());
         });
         
@@ -149,9 +147,9 @@
 
         function f1() {
             $('.splitLeft').empty();
-            routeName = $("#type option:selected").text();
-            uri = "../api/Route?routeName=" + routeName;
-      
+            RouteName = $("#type option:selected").text();
+            uri = "../api/Route?routeName=" + RouteName;
+            //uri = "../api/RouteInfo?routeName=" + RouteName;
             ajaxCall("GET", uri, "", SuccessGetRouteInfo, errorGetRouteInfo);
             return false;
         }
@@ -159,10 +157,10 @@
         function SuccessGetRouteInfo(routedate) {
             RouteList = routedate;
             ctr = 1;
-            str1 = "<h1>מסלול " + routeName + "</h1>";
+            str1 = "<h1>מסלול " + RouteName + "</h1>";
             for (var i = 1; i <= RouteList.length; i++) {
                 str1 += "<div><label>תחנה" + ctr + "</label>"; 
-                str1 += "<select id=" + ctr + ">";
+                str1 += "<select id='" + ctr + "'>";
                 for (var j = 1; j <= machineList.length;j++) {
                     if (RouteList[i - 1].MachineName == machineList[j - 1].MachineName) {
                         str1 += "<option selected value ='" + j + "'>" + RouteList[i - 1].MachineName + "</option>";
@@ -175,26 +173,7 @@
                 ctr++;
             }     
             str1 += "<button onclick='UpDateRoute()' class='button'>עדכן מסלול</button>";
-            str1 += "<button onclick='AddStationToRoute()' class='button'>הוסף תחנה</button>";
-            str1 += "<button onclick='RemoveLastStation()' class='button'>הסר תחנה</button>";
             $('.splitLeft').append(str1);
-        }
-
-        function AddStationToRoute() {
-            
-            str = "<div id=" + ctr + "><label>תחנה" + ctr + "</label><select id=" + ctr + "><option value =''>" + "בחר תחנה" + "</option>";
-            for (var i = 1; i <= machineList.length; i++) {
-                str += "<option value ='" + i + "'> " + machineList[i - 1].MachineName + "</option>"
-            }
-            str += "</select></div>";
-            $('.title').append(str);
-            ctr++;
-        }
-
-        function RemoveLastStation() {
-            var x = document.getElementById(ctr);
-            x.remove();
-            ctr--;
         }
 
         function errorGetRouteInfo() {
@@ -205,44 +184,24 @@
             sendStationArr = [];
             for (var i = 1; i < ctr; i++) {
                 id = "#" + i + " option:selected";
-                machineNum = $(id).val();
-                sendStationArr.push(machineNum);
+                MachineNum = $(id).val();
+                sendStationArr.push(MachineNum);   
             }
-            timeNow = GetCurrentDate();
-            uriUpdateOldRoute = "../api/Route/Update_Old_Route?routeName=" + routeName;
-            ajaxCall("POST", uriUpdateOldRoute, "", successUpdate_old_Route, errorUpdate_old_Route);
-        }
-
-        function successUpdate_old_Route() { 
             Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
-                RouteName: routeName,
-                StationArr: sendStationArr
+                //RouteName: $("#routeName").val(),
+                StationArr: sendStationArr,
+                RouteName
             }
-            ajaxCall("POST", "../api/Route", JSON.stringify(Route), successInsertRouteName, errorInsertRouteName);
+            ajaxCall("POST", "../api/Route/UpdateRoute", JSON.stringify(Route), successUpdate, errorUpdate);
         }
 
-        function errorUpdate_old_Route() {
-            alert("מסלול לא עודכן בהצלחה");
-        }
-
-        function successInsertRouteName() {
+        function successUpdate() {
             alert("מסלול עודכן בהצלחה");
             $('.splitLeft').empty();
         }
 
-        function errorInsertRouteName() {
-            alert("מסלול חדש לא עודכן")
-        }
-
-        function GetCurrentDate() {
-            var currentdate = new Date();
-            var datetime = currentdate.getDate() + "/"
-                + (currentdate.getMonth() + 1) + "/"
-                + currentdate.getFullYear() + " "
-                + currentdate.getHours() + ":"
-                + currentdate.getMinutes() + ":"
-                + currentdate.getSeconds();
-            return datetime;
+        function errorUpdate() {
+            alert("מסלול לא עודכן בהצלחה");
         }
         
     </script>
@@ -273,15 +232,7 @@
         
         <div class="splitLeft">
 
-            <div id="station">
-
-            </div>
-
-            <!--<button onclick='UpDateRoute()' class='button'>עדכן מסלול</button>
-            <button onclick='addStation()' class='button'>הוסף תחנה</button>-->
             
-
-
         </div>
     </form>
 </body>

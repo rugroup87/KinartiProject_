@@ -212,10 +212,9 @@
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Bool\createNewRout.html" />
     <Content Include="Bool\Dashboard.html" />
+    <Content Include="Bool\Groups.html" />
     <Content Include="Bool\login.html" />
-    <Content Include="Bool\New_Route_Page.html" />
     <Content Include="Bool\Route.html" />
-    <Content Include="Bool\try.html" />
     <Content Include="Bool\Update_Route.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
