@@ -14,6 +14,17 @@ namespace KinartiProject_ruppin.Controllers
     public class GroupController : ApiController
     {
         [HttpGet]
+        [Route("api/Groups")]//מחזירה את כל הקבוצות של כל הפרוייקטים מבסיס הנתונים
+        public IEnumerable<Group> Get()
+        {
+            Group g = new Group();
+            List<Group> GroupsList = new List<Group>();
+            GroupsList = g.GetAllGroupsFromAllProjects();
+            return GroupsList;
+        }
+
+
+        [HttpGet]
         [Route("api/GetGroupParts")]
         public object Get(string GroupName, string projectNum, string itemNum)
         {

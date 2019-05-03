@@ -1,0 +1,585 @@
+﻿<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" /> <!--bootstrap-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/jquery.dataTables.min.css" /> <!--dataTables-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <!--This Is The Menu CSS-->
+
+    <style>
+
+
+        /*This Is The Menu CSS*/
+        body {
+            margin: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        header {
+            padding: 5px 0;
+            background: #404040;
+            box-shadow: 0 4px 6px rgba(0,0,0,.2);
+        }
+
+        .container {
+            padding: 0;
+            /*max-width: 960px;*/
+            margin: 0 auto;
+        }
+
+        .logo-box {
+            float: left;
+            margin-right: 20px;
+        }
+
+            .logo-box a {
+                outline: none;
+                display: block;
+            }
+
+            .logo-box img {
+                display: block;
+            }
+
+        nav {
+            overflow: hidden;
+            margin-right: 20%;
+            margin-left: 20%;
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav li {
+            display: inline-block;
+            margin-left: 25px;
+            height: 70px;
+            line-height: 70px;
+            transition: .5s linear;
+        }
+
+        nav a {
+            text-decoration: none;
+            display: block;
+            position: relative;
+            color: #f9f9f9;
+            text-transform: uppercase;
+        }
+
+            nav a:after {
+                content: "";
+                width: 0;
+                height: 2px;
+                position: absolute;
+                left: 0;
+                bottom: 15px;
+                background: #ffffff;
+                transition: width .5s linear;
+            }
+            /*/The color of the menu when hover/*/
+            nav a:hover {
+                color: #43a4f7;
+            }
+
+                nav a:hover:after {
+                    width: 100%;
+                }
+
+        @media screen and (max-width: 660px) {
+            header {
+                text-align: center;
+            }
+
+            .logo-box {
+                float: none;
+                display: inline-block;
+                margin: 0 0 16px 0;
+            }
+
+            ul {
+                float: none;
+            }
+
+            nav li:first-of-type {
+                margin-left: 0;
+            }
+        }
+
+        @media screen and (max-width: 550px) {
+            nav {
+                overflow: visible;
+            }
+
+                nav li {
+                    display: block;
+                    margin: 0;
+                    height: 40px;
+                    line-height: 40px;
+                }
+
+                    nav li:hover {
+                        background: rgba(0,0,0,.1);
+                    }
+
+                nav a:after {
+                    content: none;
+                }
+        }
+
+        /*This Is The DT CSS*/
+        table.dataTable tbody > tr.selected,
+        table.dataTable tbody > tr > .selected {
+            background-color: #A2D3F6;
+        }
+
+        tr {
+            text-align: center;
+        }
+
+        .form-control {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 3px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+            -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+            -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+
+        .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+        }
+
+
+        /*@media (min-width: 768px) {
+            .col-sm-3 {
+                width: 100%;
+            }
+        }*/
+        /*@media (min-width: 768px) {
+            .modal-content {
+                -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+                box-shadow: 0 5px 150px rgba(0,0,0,.5);
+            }
+        }*/
+
+        @media (min-width: 768px) {
+            .modal-dialog {
+                width: 600px;
+                margin: 20px auto;
+            }
+
+            .col-sm-3 {
+                width: 100%;
+            }
+
+            .modal-content {
+                -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+                box-shadow: 0 5px 150px rgba(0,0,0,.5);
+            }
+        }
+
+        button.close {
+            -webkit-appearance: none;
+            padding-left: 10px;
+            cursor: pointer;
+            background: 0 0;
+            border: 0;
+        }
+
+        @media (min-width: 992px) {
+            .col-md-3 {
+                width: 50%;
+            }
+
+            .container {
+                width: 100%;
+            }
+        }
+
+        /*@media (min-width: 992px) {
+            .container {
+                width: 100%;
+        }*/
+
+        .modal-header {
+            background-color: #d7d7d7;
+            height: 80px;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .modal-body {
+            background-color: #f0f0f0;
+            height: 450px;
+            position: relative;
+            padding: 15px;
+        }
+
+        pre {
+            display: block;
+            padding: 0px;
+            margin: 0 0 10px;
+            font-size: 13px;
+            line-height: 1.42857143;
+            color: #333;
+            word-break: break-all;
+            word-wrap: break-word;
+            background-color: #f5f5f5;
+            border: 3px solid #ccc;
+            border-radius: 10px;
+            height: 100%;
+        }
+
+        .modal-footer {
+            background-color: #d7d7d7;
+            height: 50px;
+            padding: 15px;
+            padding-top: 1%;
+            text-align: right;
+            border-top: 1px solid #e5e5e5;
+        }
+
+        .modal-title {
+            margin: 0;
+            line-height: 1.42857143;
+            text-align: center;
+        }
+
+        #hProjNum, #hProjName {
+            display: inline-block;
+            padding-right: 2%;
+        }
+
+        /*This Is The Project Name CSS*/
+        #ProjName {
+            text-align: center;
+            color: #000000;
+            text-shadow: 0 0px 2px #000000;
+            font-size: 20px;
+            font-family: monospace;
+        }
+
+        #containerID {
+            margin: 0px auto;
+            padding: 0px 0px 0px 0px;
+            max-width: 100%;
+        }
+
+        #example {
+            width: 100%;
+        }
+
+        /*This is For the Edit button location*/
+        a.dt-button.buttons-selected {
+            margin-left: 80px;
+        }
+
+        /*make unclickable label with this id*/
+        .unclickable {
+            pointer-events: none;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> <!--dataTables-->
+    <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
+    <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
+    <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
+    <script src="../Scripts/ajaxCalls.js"></script>
+
+    <script>
+    $(document).ready(function () {
+            StatusArr = [];
+            //$.fn.dataTable.moment('D/M/YYYY');
+            //$.fn.dataTable.moment('D/M/YYYY HH:mm');
+            var statusRelateTo = "Groups";
+            uri = "../api/status?relateTo=" + statusRelateTo;
+            ajaxCall("GET", uri, "", getSuccessStatus, errorGroups);
+            //todayDate = new Date().toISOString().split('T')[0];
+        });
+
+        function getSuccessStatus(statusArr) {
+            ajaxCall("GET", "../api/Groups", "", getSuccessGroups, errorGroups);
+            StatusArr = statusArr;
+        }
+
+        function errorGroups(err) {
+            
+            swal("Error: " + err);
+        }
+
+        //אתחול תאריך מהדאטהבייס אל הטבלה המוצגת
+        //function initDates(fullData) {
+        //    if (fullData !== null) {
+        //        var jsDate = new Date(fullData);
+        //        jsDate = jsDate.getDate() + "/" + (jsDate.getMonth() + 1) + "/" + jsDate.getFullYear();
+        //        if (jsDate == "1/1/1900") {
+        //            return ("");
+        //        }
+        //        return jsDate;
+        //    } else {
+        //        return "";
+        //    }
+        //}
+
+        function getSuccessGroups(GroupstList) {
+            var columnDefs = [{
+                title: "מס' פרוייקט",
+                data: 'ProjectNum',
+                width: '10%',
+                render: function (data, type, row, meta) {
+                    return data;
+                },
+                "className": "dt-center",
+                "targets": "_all"
+            }, {
+                title: "שם פרוייקט",
+                data: 'ProjectName',
+                width: '10%',
+                 render: function (data, type, row, meta) {
+                    return data;
+                },
+                "className": "dt-center",
+                "targets": "_all"
+            }, {
+                title: "מספר פריט",
+                data: 'ItemNum',
+                width: '10%',
+                    render: function (data, type, row, meta) {
+                        return data;
+                    },
+                "className": "dt-center",
+                "targets": "_all"
+                    }, {
+                    title: "שם פריט",
+                    data: 'ItemName',
+                    width: '10%',
+                    //defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return data;
+                    }
+            }, {
+                title: "שם קבוצה",
+                data: 'GroupName',
+                width: '20%',
+                defaultContent: "",
+                "className": "dt-center",
+                id: "ProjectStatus",
+                "targets": "_all",
+                    render: function (data, type, row, meta) {
+                        return data;
+                    }
+            
+            },
+            {
+                title: "סטטוס קבוצה",
+                data: 'groupStatus',
+                width: '20%',
+                defaultContent: "",
+                "className": "dt-center",
+                "targets": "_all",
+                render: function (data) {
+                    return data;
+                    //return initDates(data);
+                }
+                },
+                {
+                    title: "שם מסלול",
+                    data: 'routeName',
+                    width: '10%',
+                    defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
+                    render: function (data) {
+                        return data;
+                        //return initDates(data);
+                    }
+                },
+                {
+                    title: "אחוז התקדמות בתחנה",
+                    data: ('partCount'),
+                    width: '10%',
+                    defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
+                    render: function (data) {
+                        return data;
+                        //return initDates(data);
+                    }
+                }
+            ];
+
+            myTable = $('#example').DataTable({
+                "sPaginationType": "simple_numbers",
+                //"scrollX": "true",
+                "language": {
+                    "search": "חיפוש:",
+                    "loadingRecords": "Loading...",
+                    "processing": "Processing...",
+                    "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
+                    "infoPostFix": "עמודות",
+                    "paginate":
+                    {
+                        "previous": "הקודם",
+                        "next": "הבא",
+                    }
+                },
+                data: GroupstList,
+                columns: columnDefs,
+                //"fixedColumns": true,
+                //scrollX: true,
+                dom: 'Bfrtip',        // Needs button container
+                select: 'single',
+                //responsive: true,
+                altEditor: true,     // Enable altEditor
+                buttons: [
+                    //    {
+                    //    text: 'Add',
+                    //    name: 'add'        // do not change name
+                    //},
+                    {
+                        extend: 'selected', // Bind to Selected row
+                        text: 'עריכת רשומה',
+                        name: 'editForm',  // do not change name
+                        action: function (nButton, oConfig, oFlash) {
+                            editForm(oConfig);
+                        }
+                    }
+                    //{
+                    //    extend: 'selected', // Bind to Selected row
+                    //    text: 'Delete',
+                    //    name: 'delete'      // do not change name
+                    //}
+                ]
+            });
+        }
+
+        $(document).on("click", "#checkbox", function (e) {
+            $.fn.dataTableExt.afnFiltering.push(function (oSettings, aData, iDataIndex) {
+                var checked = $('#checkbox').is(':checked');
+                var s = myTable.column(5).data()[iDataIndex]
+                if (checked) {
+                    return true;
+                }
+                if (!checked && s != "קבוצה סיום") {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+            myTable.draw();
+        });
+
+        function errorProject(err) {
+            swal("Error: " + err);
+        }
+
+  
+
+        //$(document).on("click", "#saveEditForm", function () {
+        //    Project = {
+        //        ProjectNum: $("#hProjNum").text(),
+        //        //המשתנים הבאים נעביר כמחרוזות ולא כתאריכים ולכן לכל אחד מהם יש בנאי משלהם
+        //        ProdStartDateString: $("#prodStartDateID").val(),
+        //        SupplyDateString: $("#supplyDateID").val(),
+        //        //ProdStartDate: $("#prodStartDateID").val(),
+        //        //SupplyDate: $("#supplyDateID").val(),
+        //        Comment: $("#commentID").val()
+        //    }
+        //    ajaxCall("PUT", "../api/project/UpdateProject", JSON.stringify(Project), successUpdatesProject, errorUpdatesProject);
+
+        //});
+
+        //בהצלחת שמירת טופס עריכה
+        //function successUpdatesProject() {
+        //    //swal("השינוי נשמר", "בעוד כשנייה תועבר לדף הראשי", "success");
+        //    swal({
+        //        title: 'השינוי נשמר',
+        //        text: 'בעוד כשנייה תועבר לדף הראשי',
+        //        type: 'success',
+        //        timer: 2000,
+        //        buttons: false
+        //    })
+        //    setTimeout(function () {
+        //        refreshParent();
+        //    }, 2000);
+
+        //}
+
+        //function errorUpdatesProject() {
+        //}
+
+        //תפיסת לחיצת כפתור העריכה ופתיחת חלון חדש לטופס העריכה
+        //function editForm(dt) {
+        //    //תפיסת השורה שאותה רוצים לערוך
+        //    var data_row = dt.row({ selected: true }).data();
+
+        //    //תפיסת התאריכים וכתיבתם לחלון עריכה
+        //    var prodStartDateForm = dateToForm(new Date(data_row.ProdStartDate));
+        //    var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
+        //    var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
+
+        //    var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' name='setTodaysDate' id='prodStartDateID' placeholder='ת. תחילת ייצור' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='setTodaysDate' placeholder='ת. אספקה' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class=' unclickable form-control  form-control-sm' value='" + data_row.ProjectStatus + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='unclickable form-control  form-control-sm' value= '" + prodEntranceDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
+        //    $('#containerID').append(str);
+        //}
+
+        //פונקציה שמסדרת את התאריכים בצורה נוחה לטפסים
+</script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-box">
+                <a href="/">
+                    <img src="https://html5book.ru/wp-content/uploads/2015/01/logo-header.png">
+                </a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="Project.html">פרוייקטים</a></li>
+                    <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
+                    <li><a href="RouteMainPage.html">מסלולים</a></li>
+                    <li><a href="">קבוצות מוכנות</a></li>
+                    <li><a href="">contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <br />
+    <div class="container" id="containerID">
+        <input id="checkbox" type="checkbox" style="margin-right:30px;" checked>
+        <label>הראה בנוסף קבוצות שהסתיימו</label>
+        <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example"></table>
+    </div>
+</body>
+</html>

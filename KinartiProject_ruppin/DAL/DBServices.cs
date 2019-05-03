@@ -2077,4 +2077,67 @@ public class DBServices
         command = prefix + sb.ToString() + prefix2 + sb2.ToString();
         return command;
     }
+
+    public List<Group> GetAllGroupsFromAllProjects()
+    {
+        SqlConnection con;
+        List<Group> gl = new List<Group>();
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "select p.projectName,i.itemName,(g.scannedPartsCount/g.partCount)*100 as 'אחוזים שנסרקו התקדמות בתחנה',g.* from Groups as g inner join Item as i on g.itemNum = i.itemNum inner join Project p on i.projectNum = p.projectNum ";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+                Group g = new Group();
+                g.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                g.ProjectName= Convert.ToString(dr["projectName"]);
+                g.ItemNum = Convert.ToString(dr["itemNum"]);
+                g.ItemName = Convert.ToString(dr["itemName"]);
+                g.GroupName = Convert.ToString(dr["groupName"]);
+                g.GroupStatus = Convert.ToString(dr["groupStatus"]);
+                g.GroupRouteName = Convert.ToString(dr["routeName"]);
+                g.GroupPartCount = Convert.ToInt32(dr["partCount"]);
+                g.ScannedPartsCount = Convert.ToInt32(dr["scannedPartsCount"]);
+
+                if (!DBNull.Value.Equals(dr["currentGroupStation"]))
+                {
+                    g.CurrentGroupStation = Convert.ToString(dr["currentGroupStation"]);
+                }
+                if (!DBNull.Value.Equals(dr["estCarpTime"]))
+                {
+                    g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estPrepTime"]))
+                {
+                    g.EstCarpTime = Convert.ToInt32(dr["estPrepTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estColorTime"]))
+                {
+                    g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                }
+
+                gl.Add(g);
+            }
+            return gl;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+    }
 }
