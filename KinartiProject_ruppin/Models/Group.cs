@@ -20,6 +20,9 @@ namespace KinartiProject_ruppin.Models
         public int EstPrepTime { get; set; }
         public int EstCarpTime { get; set; }
         public int EstColorTime { get; set; }
+        public int CurrentPrepTime { get; set; }
+        public int CurrentCarpTime { get; set; }
+        public int CurrentColorTime { get; set; }
         public string[] ArrPart { get; set; }
 
         //הג'ייסון לא נכנס לי לבנאי הזה ולכן אין סטטוס כי הוא הולך לבנאי הריק - לבדוק למה

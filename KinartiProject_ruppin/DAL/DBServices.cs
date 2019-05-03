@@ -1394,16 +1394,16 @@ public class DBServices
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{1}'", StationName, PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = {1} WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
         sbUpdateGroupScannedParts.AppendFormat(" UPDATE G SET G.scannedPartsCount = {0}, G.groupStatus = '{1}', G.currentGroupStation = '{2}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", ScannedPartCount, StationName, NextGroupStationNo, PartBarCode);
-        sbUpdateProjectStartTime.AppendFormat(" UPDATE Pr SET Pr.prodStartDate = '{0}' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}'", CurrentDate, PartBarCode);
+        sbUpdateProjectStartTime.AppendFormat(" UPDATE Pr SET Pr.prodStartDate = '{0}' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", CurrentDate, PartBarCode);
 
         command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString() + sbUpdateProjectStartTime.ToString();
         return command;
     }
 
 
-    public string ScanPart(string PartBarCode, string StationName, int ScannedPartCount)
+    public string ScanPart(string PartBarCode, string StationName, int ScannedPartCount, string CurrentDate, int CategoryTime, string CategoryType)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1418,7 +1418,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildScanBarCodeCommand(PartBarCode, StationName, ScannedPartCount);      // helper method to build the insert string
+        String cStr = BuildScanBarCodeCommand(PartBarCode, StationName, ScannedPartCount, CurrentDate, CategoryTime, CategoryType);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1443,7 +1443,7 @@ public class DBServices
         return "scanned";
     }
     //סריקה
-    public string BuildScanBarCodeCommand(string PartBarCode, string StationName, int ScannedPartCount)
+    public string BuildScanBarCodeCommand(string PartBarCode, string StationName, int ScannedPartCount, string CurrentDate, int CategoryTime, string CategoryType)
     {
         String command;
         SqlConnection con;
@@ -1453,15 +1453,15 @@ public class DBServices
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{1}'", StationName, PartBarCode);
-        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{1}'", ScannedPartCount, PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = {1} WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0}, G." + CategoryType + " = {1} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", ScannedPartCount, CategoryType, PartBarCode);
 
         command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
         return command;
     }
 
 
-    public string PartScannedInNewStation(string PartBarCode, string NextGroupStationNo, string StationName)
+    public string PartScannedInNewStation(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1476,7 +1476,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildPartScannedInNewStationCommand(PartBarCode, NextGroupStationNo, StationName);      // helper method to build the insert string
+        String cStr = BuildPartScannedInNewStationCommand(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1501,7 +1501,7 @@ public class DBServices
         return "scanned";
     }
     //סריקה של חלק ראשון בקבוצה חדשה
-    public string BuildPartScannedInNewStationCommand(string PartBarCode, string NextGroupStationNo, string StationName)
+    public string BuildPartScannedInNewStationCommand(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
     {
         String command;
         SqlConnection con;
@@ -1511,12 +1511,12 @@ public class DBServices
         StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
 
         // משנה את הסטטוס של החלק שנסרק בסטטוס של התחנה החדשה
-        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}' WHERE barcode = '{1}'", StationName, PartBarCode);
+        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = {1} WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
         //צריך לראות האם הוא מצליח להכניס פה נכון את הערך איפה שרשום בעברית.
         // שם את שאר החלקים בסטטוס ממתין לתחנה חוץ מהחלק ששינינו לו את הסטטוס פה למעלה
         sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum  IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}') AND p.partStatus NOT LIKE '{4}'", StationName, PartBarCode, PartBarCode, PartBarCode, StationName);
         // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו
-        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", StationName, NextGroupStationNo, PartBarCode);
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}', G." + CategoryType + " = {2} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", StationName, NextGroupStationNo, CategoryTime, PartBarCode);
 
         command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
         return command;
@@ -1879,6 +1879,126 @@ public class DBServices
         }
     }
 
+
+    public string GetLatScanPartDate(string PartBarCode, string StationName, string CurrentDate, string GroupName)
+    {
+        SqlConnection con;
+
+        string lastScanDate = "";
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT top 1 p.lastScanDate FROM dbo.part p WHERE p.groupName = '" + GroupName + "' and p.lastScanDate is not null and p.itemNum in(select itemNum from part where p.barcode = '" + PartBarCode + "') and p.projectNum in(select projectNum from part where p.barcode = '" + PartBarCode + "')";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                lastScanDate = Convert.ToString(dr["lastScanDate"]);
+            }
+            return lastScanDate;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+
+    public string GetCategoryType(string StationName)
+    {
+        SqlConnection con;
+
+        string CategoryType = "";
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "select machineCategoryv from Machine where machineName = '" + StationName + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                CategoryType = Convert.ToString(dr["machineCategory"]);
+            }
+            return CategoryType;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    public int GetLatScanCategoryDate(string PartBarCode, string StationName, string CurrentDate, string CategoryType)
+    {
+        SqlConnection con;
+
+        int CurrentCategoryTime = 0;
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT G." + CategoryType + " FROM dbo.Groups G WHERE G.barcode = '" + PartBarCode + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                CurrentCategoryTime = Convert.ToInt32(dr[CategoryType]);
+            }
+            return CurrentCategoryTime;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+
     //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
     public string CheckGroupPosition(string groupRouteName)
     {
@@ -2128,6 +2248,19 @@ public class DBServices
                 if (!DBNull.Value.Equals(dr["estColorTime"]))
                 {
                     g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                }
+
+                if (!DBNull.Value.Equals(dr["currentCarpTime"]))
+                {
+                    g.CurrentCarpTime = Convert.ToInt32(dr["currentCarpTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["currentPrepTime"]))
+                {
+                    g.CurrentPrepTime = Convert.ToInt32(dr["currentPrepTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["currentColorTime"]))
+                {
+                    g.CurrentColorTime = Convert.ToInt32(dr["currentColorTime"]);
                 }
 
                 gl.Add(g);
