@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
 
         <script src="../Scripts/ajaxCalls.js"></script>
+        <script src="../Scripts/My_Scripts.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>  <!--jQuery-->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>  <!--bootstrap-->
@@ -15,6 +16,7 @@
         <script src="https://cdn.datatables.net/buttons/1.1.2/js/dataTables.buttons.min.js"></script>  <!--dataTables.buttons-->
         <script src="https://cdn.datatables.net/select/1.1.2/js/dataTables.select.min.js"></script> <!--dataTables.select-->
         <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
         <style>
@@ -167,80 +169,56 @@
                 margin-right: 20%;
             }
         </style>
+
         <script>
 
             $(document).ready(function () {
 
-                $(document).on("click", "#one", function () {
-                    //console.log("work")
-                    alert("Ok");
-                    //uriDeletePartFromGroup = "../api/DeletePartFromGroup?partBarcode=" + $("#PrepTime").val() + "&carpTime=" + $("#CarpTime").val() + "&paintTime=" + $("#PaintTime").val() + "&groupName=" + $("#mainH_form").text();
-                    //ajaxCall("PUT", uriDeletePartFromGroup, "", SuccessDeletePartFromGroup, ErrorDeletePartFromGroup);
-                });
+                $(document).on("click", "button", function () {
+                    var BarCodeNumber = $('#' + this.className).val();
 
+                    uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.id + "&CurrentDate=" + GetCurrentDate();
+                    ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
+                    //$("#" + this.id).unbind("click");
+                    return false;
+                });
             });
+
+            function ScanSuccessPart(data) {
+                //swal(data, "success");
+                alert("ok")
+                return false;
+            }
+
+            function errorScanPart(data) {
+                swal("Error: ", data.responseJSON.ExceptionMessage, "error");
+                //alert("No")
+                return false;
+            }
         </script>
     </head>
     <body>
 
-        <!--<link href='//fonts.googleapis.com/css?family=Roboto:200,400,600' rel='stylesheet' type='text/css'>-->
-        <div class="history-tl-container">
-            <ul class="tl">
-                <li class="tl-item" ng-repeat="item in retailer_history">
-                    <div class="item-title">Start from Shire</div>
-                </li>
-                <li class="tl-item" ng-repeat="item in retailer_history">
-                    <div class="item-title">Kill some Orcs</div>
-                </li>
-                <li class="tl-item" ng-repeat="item in retailer_history">
-                    <div class="item-title">Throw that goddamn ring in the lava</div>
-                </li>
-            </ul>
-        </div>
+        <input type="text" id="CNC" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="CNC" id="CNC">CNC</button>
 
-        <table>
-            <thead>
-                <tr>
-                    <th colspan="4">חלקים בקבוצה: </th>
-                </tr>
-                <tr>
-                    <th>ברקוד</th>
-                    <th>שם חלק</th>
-                    <th colspan="3">סטטוס</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Atualizar página da equipe</td>
-                    <td>xyyux</td>
-                    <td>
-                        <i class="material-icons button edit">edit</i>
-                        <i class="material-icons button delete">delete</i>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Design da nova marca</td>
-                    <td>xyyux</td>
-                    <td>
-                        <i class="material-icons button edit">edit</i>
-                        <i class="material-icons button delete">delete</i>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Encontrar desenvolvedor front-end</td>
-                    <td>xyyux</td>
-                    <td>
-                        <i id="one" class="fas fa-trash"></i>
-                        <i class="fas fa-pencil-alt"></i>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        https://codepen.io/leoespsanto/pen/pEftw
-        https://codepen.io/geoffyuen/pen/FCBEg
+        <input type="text" id="Cut" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="Cut" id="חיתוך">חיתוך</button>
+
+        <input type="text" id="Color1" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="Color1" id="צבע 1">צבע 1</button>
+
+        <input type="text" id="Color2" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="Color2" id="צבע 2">צבע 2</button>
+
+        <input type="text" id="contagion" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="contagion" id="הדבקה">הדבקה</button>
+
+        <input type="text" id="Shave" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="Shave" id="שיוף">שיוף</button>
+
+        <input type="text" id="Saw" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
+        <button type="button" class="Saw" id="ניסור">ניסור</button>
 
     </body>
     </html>

@@ -31,6 +31,26 @@ namespace KinartiProject_ruppin.Models
         public string PartCropType { get; set; }
         public string PartCategory { get; set; }
         public string PartComment { get; set; }
+        private Nullable<DateTime> lastscandate;
+        public Nullable<DateTime> LastScanDate
+        {
+            get
+            {
+                if (lastscandate == null)
+                {
+                    DateTime? prodstartdate = null;
+                    return prodstartdate;
+                }
+                else
+                {
+                    return lastscandate;
+                }
+            }
+            set
+            {
+                lastscandate = value;
+            }
+        }
 
 
         //בנאי מלא
