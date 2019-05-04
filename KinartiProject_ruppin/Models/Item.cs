@@ -10,19 +10,20 @@ namespace KinartiProject_ruppin.Models
         public string ItemNum { get; set; }
         public string ItemName { get; set; }
         public string ItemStatus { get; set; }
-        public double ItemCompletedPercentage { get; set; }
+        //public double ItemCompletedPercentage { get; set; }
         public int ItemGroupCount { get; set; }
         public float ProjectNum { get; set; }
         public string ProjectName { get; set; }
         public List<Part> ItemParts = new List<Part>();
 
-        public Item(string itemnum, string itemname, string itemstatus, float projectnum, string projectname)
+        public Item(string itemnum, string itemname, string itemstatus, float projectnum, string projectname, int itemGroupCount)
         {
             ItemNum = itemnum;
             ItemName = itemname;
             ItemStatus = itemstatus;
             ProjectNum = projectnum;
             ProjectName = projectname;
+            ItemGroupCount = itemGroupCount;
         }
         public Item(string itemnum, List<Part> itemparts, string itemstatus = "עוד לא התחיל")
         {
@@ -52,6 +53,13 @@ namespace KinartiProject_ruppin.Models
             //List<Item> Pi = new List<Item>();
             //Pi = dbs.GetAllProjectItems();
             return dbs.GetAllProjectItems();
+        }
+
+        public int GetNumGroupsInItem(string projNum, string itemNum)
+        {
+            DBServices dbs = new DBServices();
+            int NumGroupsInItem =  dbs.GetNumGroupsInItem(projNum,itemNum);
+            return NumGroupsInItem;
         }
 
         //public void AddNewItemToDB()
