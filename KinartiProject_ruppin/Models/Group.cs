@@ -78,10 +78,10 @@ namespace KinartiProject_ruppin.Models
         }
 
         //יצירת קבוצה חדשה
-        public int InsertNewGroup()
+        public int InsertNewGroup(Group group, int itemGroupCount)
         {
             DBServices dbs = new DBServices();
-            int numAffected = dbs.InsertNewGroup(this);
+            int numAffected = dbs.InsertNewGroup(group, itemGroupCount);
             return numAffected;
         }
 
@@ -122,10 +122,10 @@ namespace KinartiProject_ruppin.Models
             return gl;
         }
 
-        public void DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes)
+        public void DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes, int itemGroupCount)
         {
             DBServices dbs = new DBServices();
-            dbs.DeleteGroup(projNum, itemNum, groupName, barcodes);
+            dbs.DeleteGroup(projNum, itemNum, groupName, barcodes, itemGroupCount);
         }
     }
 

@@ -51,7 +51,9 @@ namespace KinartiProject_ruppin.Controllers
 
         public int Post([FromBody]Group group)
         {
-            return group.InsertNewGroup();
+            Item I = new Item();
+            int itemGroupCount = I.GetNumGroupsInItem(Convert.ToString(group.ProjectNum), group.ItemNum);
+            return group.InsertNewGroup(group, itemGroupCount);
         }
 
         [HttpPost]
@@ -88,17 +90,17 @@ namespace KinartiProject_ruppin.Controllers
         [Route("api/DeleteGroup")]
         public void DeleteGroup([FromBody] dynamic deletG)
         {
+            Item I = new Item();
             Group G = new Group();
             string projNum = deletG.ProjNum;
             string itemNum = deletG.ItemNum;
+            int itemGroupCount = I.GetNumGroupsInItem(projNum, itemNum);
             string groupName = deletG.GroupName;
             string[] barcodes = deletG.PartsBarCodeNo.ToObject<string[]>();
-
-
             //System.Reflection.PropertyInfo g = deletG.GetType().GetProperty("GroupName");
             //string n1 = (string)g.GetValue(deletG, null);
 
-            G.DeleteGroup(projNum, itemNum, groupName, barcodes);
+            G.DeleteGroup(projNum, itemNum, groupName, barcodes, itemGroupCount);
         }
     }
 }

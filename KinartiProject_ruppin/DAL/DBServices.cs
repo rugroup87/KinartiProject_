@@ -217,7 +217,7 @@ public class DBServices
                 I.ItemName = Convert.ToString(dr["itemName"]);
                 I.ItemStatus = Convert.ToString(dr["itemStatus"]);
                 //I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
-                //I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
                 //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
                 //I.ProjectStatus = Convert.ToString(dr["projectStatus "]);
                 //I.Comment = Convert.ToString(dr["comment "]);
@@ -268,7 +268,7 @@ public class DBServices
                 I.ItemName = Convert.ToString(dr["itemName"]);
                 I.ItemStatus = Convert.ToString(dr["itemStatus"]);
                 //I.ItemCompletedPercentage = Convert.ToDouble(dr["completedPercent"]);
-                //I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
                 I.ProjectNum = Convert.ToSingle(dr["projectNum"]);
                 I.ProjectName = Convert.ToString(dr["projectName"]);
                 //I.SupplyDate = Convert.ToDateTime(dr["supplyDate"]);
@@ -769,7 +769,7 @@ public class DBServices
         return command;
     }
 
-    public int InsertNewGroup(Group group)
+    public int InsertNewGroup(Group group, int itemGroupCount)
     {
 
         SqlConnection con;
@@ -785,7 +785,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildNewGroupCommand(group);      // helper method to build the insert string
+        String cStr = BuildNewGroupCommand(group, itemGroupCount);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -820,7 +820,7 @@ public class DBServices
 
     }
 
-    private string BuildNewGroupCommand(Group group)
+    private string BuildNewGroupCommand(Group group, int itemGroupCount)
     {
         String command;
         SqlConnection con;
@@ -845,7 +845,8 @@ public class DBServices
                 sb2.AppendFormat(", ");
             }
         }
-        command = prefix + sb.ToString() + prefix2 + sb2.ToString();
+        String IncreaseNumGroupInItem = "Update Item SET groupCount = " + (itemGroupCount + 1)  + " WHERE projectNum = " + group.ProjectNum + " and itemNum ='" + group.ItemNum + "'"; ;
+        command = prefix + sb.ToString() + prefix2 + sb2.ToString() + IncreaseNumGroupInItem;
         return command;
     }
 
@@ -1278,7 +1279,7 @@ public class DBServices
     }
 
     //מוחק את הקבוצה והחלקים שיש בקבוצה זו
-    public string DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes)
+    public string DeleteGroup(string projNum, string itemNum, string groupName, string[] barcodes, int itemGroupCount)
     {
 
         SqlConnection con;
@@ -1294,7 +1295,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildDeleteGroupCommand(projNum, itemNum, groupName, barcodes);      // helper method to build the insert string
+        String cStr = BuildDeleteGroupCommand(projNum, itemNum, groupName, barcodes, itemGroupCount);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1320,7 +1321,7 @@ public class DBServices
     }
 
     //פקודת מסד נתונים למחיקת הקבוצה והחלקים שלה
-    public string BuildDeleteGroupCommand(string projNum, string itemNum, string groupName, string[] barcodes)
+    public string BuildDeleteGroupCommand(string projNum, string itemNum, string groupName, string[] barcodes, int itemGroupCount)
     {
         String command;
         SqlConnection con;
@@ -1328,6 +1329,8 @@ public class DBServices
         StringBuilder sbDeletePartFromGroup = new StringBuilder();
         StringBuilder sbDeleteGroup = new StringBuilder();
         StringBuilder sbDecreasePartCount = new StringBuilder();
+        StringBuilder sbDecreaseGroupCountFromItem = new StringBuilder();
+
 
         sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '', partStatus='חלק טרם נסרק' WHERE barcode in(");
         for (int i = 0; i < (barcodes.Length - 1); i++)
@@ -1339,7 +1342,8 @@ public class DBServices
         //sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
         sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE projectNum='{0}' AND itemNum='{1}' AND groupName = '{2}'",projNum,itemNum, groupName);
 
-        command = sbDeletePartFromGroup.ToString() + sbDeleteGroup.ToString();
+        sbDecreaseGroupCountFromItem.AppendFormat("UPDATE Item SET groupCount = {0} WHERE projectNum = '{1}' and itemNum = '{2}'", itemGroupCount - 1, projNum, itemNum);
+        command = sbDeletePartFromGroup.ToString() + sbDeleteGroup.ToString() + sbDecreaseGroupCountFromItem.ToString();
         return command;
     }
 
@@ -2501,4 +2505,43 @@ public class DBServices
             throw (ex);
         }
     }
+
+    //מחזיר את מספר הקבוצות שקיימות בפריט מסויים
+    public int GetNumGroupsInItem(string projNum, string itemNum)
+    {
+        Item I = new Item();
+        SqlConnection con;
+        try
+        {
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+        try
+        {
+            String selectSTR = "SELECT groupCount FROM Item where projectNum= '" + projNum + "'and itemNum ='" + itemNum + "'";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+                I.ItemGroupCount = Convert.ToInt32(dr["groupCount"]);
+            }
+            return I.ItemGroupCount;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+    }
+
 }
