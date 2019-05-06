@@ -211,8 +211,10 @@
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
     <Content Include="Bool\createNewRout.html" />
-    <Content Include="Bool\Dashboard.html" />
-    <Content Include="Bool\Groups.html" />
+    <Content Include="Bool\hcj.html" />
+    <Content Include="Bool\temp.html" />
+    <Content Include="Manufacture\Dashboard.html" />
+    <Content Include="Manufacture\Groups.html" />
     <Content Include="Bool\login.html" />
     <Content Include="Bool\Route.html" />
     <Content Include="Bool\Update_Route.html" />
