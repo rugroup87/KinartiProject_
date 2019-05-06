@@ -254,7 +254,7 @@ public class DBServices
 
         try
         {
-            String selectSTR = "SELECT i.projectNum, i.itemNum, i.itemName, i.itemStatus, p.projectName FROM item i INNER JOIN dbo.Project p ON i.projectNum = p.projectNum";
+            String selectSTR = "SELECT i.projectNum, i.itemNum, i.itemName, i.itemStatus, i.groupCount, p.projectName FROM item i INNER JOIN dbo.Project p ON i.projectNum = p.projectNum";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             //int PID = Convert.ToInt32(cmd.ExecuteScalar());
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
