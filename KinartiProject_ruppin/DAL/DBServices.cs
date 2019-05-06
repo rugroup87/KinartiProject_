@@ -2447,7 +2447,7 @@ public class DBServices
         }
         try
         {
-            String selectSTR = "select p.projectName,i.itemName,(g.scannedPartsCount/g.partCount)*100 as 'אחוזים שנסרקו התקדמות בתחנה',g.* from Groups as g inner join Item as i on g.itemNum = i.itemNum inner join Project p on i.projectNum = p.projectNum ";
+            String selectSTR = "select p.projectName,i.itemName,cast(scannedPartsCount as float)/cast(partCount as float) AS 'ScannedPrecent',g.* from Groups as g inner join Item as i on g.itemNum = i.itemNum inner join Project p on i.projectNum = p.projectNum";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 

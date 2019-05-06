@@ -318,16 +318,17 @@
             StatusArr = [];
             //$.fn.dataTable.moment('D/M/YYYY');
             //$.fn.dataTable.moment('D/M/YYYY HH:mm');
-            var statusRelateTo = "Groups";
-            uri = "../api/status?relateTo=" + statusRelateTo;
-            ajaxCall("GET", uri, "", getSuccessStatus, errorGroups);
+            ajaxCall("GET", "../api/Groups", "", getSuccessGroups, errorGroups);
+            //var statusRelateTo = "Groups";
+            //uri = "../api/status?relateTo=" + statusRelateTo;
+            //ajaxCall("GET", uri, "", getSuccessStatus, errorGroups);
             //todayDate = new Date().toISOString().split('T')[0];
         });
 
-        function getSuccessStatus(statusArr) {
-            ajaxCall("GET", "../api/Groups", "", getSuccessGroups, errorGroups);
-            StatusArr = statusArr;
-        }
+        //function getSuccessStatus(statusArr) {
+           
+        //    StatusArr = statusArr;
+        //}
 
         function errorGroups(err) {
             
@@ -349,12 +350,15 @@
         //}
 
         function getSuccessGroups(GroupstList) {
+            s = GroupstList;
+            
             var columnDefs = [{
                 title: "מס' פרוייקט",
                 data: 'ProjectNum',
                 width: '10%',
                 render: function (data, type, row, meta) {
-                    return data;
+                    return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
+                    //return data;
                 },
                 "className": "dt-center",
                 "targets": "_all"
@@ -363,7 +367,8 @@
                 data: 'ProjectName',
                 width: '10%',
                  render: function (data, type, row, meta) {
-                    return data;
+                     return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + data + ">" + data + '</a>'
+
                 },
                 "className": "dt-center",
                 "targets": "_all"
@@ -389,7 +394,7 @@
             }, {
                 title: "שם קבוצה",
                 data: 'GroupName',
-                width: '20%',
+                width: '10%',
                 defaultContent: "",
                 "className": "dt-center",
                 id: "ProjectStatus",
@@ -400,9 +405,9 @@
             
             },
             {
-                title: "סטטוס קבוצה",
-                data: 'groupStatus',
-                width: '20%',
+                title: " סטטוס קבוצה",
+                data: 'GroupStatus',
+                width: '15%',
                 defaultContent: "",
                 "className": "dt-center",
                 "targets": "_all",
@@ -413,7 +418,7 @@
                 },
                 {
                     title: "שם מסלול",
-                    data: 'routeName',
+                    data: 'GroupRouteName',
                     width: '10%',
                     defaultContent: "",
                     "className": "dt-center",
@@ -424,22 +429,21 @@
                     }
                 },
                 {
-                    title: "אחוז התקדמות בתחנה",
-                    data: ('partCount'),
+                    title: "אחוז שנסרק",
+                    data: 'ScannedPartsCount',
                     width: '10%',
                     defaultContent: "",
                     "className": "dt-center",
                     "targets": "_all",
-                    render: function (data) {
-                        return data;
-                        //return initDates(data);
+                    render: function (data, type, row) {
+                        return (data/row.GroupPartCount)*100 + '%';            
                     }
-                }
+                },
             ];
 
             myTable = $('#example').DataTable({
                 "sPaginationType": "simple_numbers",
-                //"scrollX": "true",
+                /*"scrollX": "true"*/
                 "language": {
                     "search": "חיפוש:",
                     "loadingRecords": "Loading...",
@@ -489,7 +493,7 @@
                 if (checked) {
                     return true;
                 }
-                if (!checked && s != "קבוצה סיום") {
+                if (!checked && s != "ניסור") {
                     return true;
                 }
                 else {
