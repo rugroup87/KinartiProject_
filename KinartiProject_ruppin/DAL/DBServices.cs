@@ -1460,7 +1460,7 @@ public class DBServices
         return command;
     }
 
-
+    //סריקה של חלק ראשון בקבוצה חדשה
     public string PartScannedInNewStation(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
     {
         SqlConnection con;
@@ -1500,7 +1500,7 @@ public class DBServices
         }
         return "scanned";
     }
-    //סריקה של חלק ראשון בקבוצה חדשה
+
     public string BuildPartScannedInNewStationCommand(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
     {
         String command;
@@ -1514,16 +1514,18 @@ public class DBServices
         sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = {1} WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
         //צריך לראות האם הוא מצליח להכניס פה נכון את הערך איפה שרשום בעברית.
         // שם את שאר החלקים בסטטוס ממתין לתחנה חוץ מהחלק ששינינו לו את הסטטוס פה למעלה
-        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum  IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}') AND p.partStatus NOT LIKE '{4}'", StationName, PartBarCode, PartBarCode, PartBarCode, StationName);
-        // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו
+        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה', p.lastScanDate = NULL FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum  IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}') AND p.partStatus NOT LIKE '{4}'", StationName, PartBarCode, PartBarCode, PartBarCode, StationName);
+        // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו כמו כן מעדכן את הזמן של הקטגוריה
         sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}', G." + CategoryType + " = {2} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", StationName, NextGroupStationNo, CategoryTime, PartBarCode);
 
         command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
         return command;
     }
 
-    //כאשר החלק האחרון בקבוצה נסרק ועבר הזמן החציוני שלו - מגיע לפה כדי לשנות לו את הסטטוסים לממתינים
-    public string UpdateStatusWaitingForMachine(string PartBarCode, string NextGroupStationName)
+
+    
+    //סריקה של חלק ראשון בקבוצה חדשה אחרי שהטרד סיים
+    public string PartScannedInNewStationAfterThread(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
     {
         SqlConnection con;
         SqlCommand cmd;
@@ -1538,7 +1540,70 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildUpdateStatusWaitingForMachineCommand(PartBarCode, NextGroupStationName);      // helper method to build the insert string
+        String cStr = BuildPartScannedInNewStationAfterThreadCommand(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);      // helper method to build the insert string
+
+        cmd = CreateCommand(cStr, con);             // create the command
+
+        try
+        {
+            cmd.ExecuteNonQuery(); // execute the command
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        finally
+        {
+            if (con != null)
+            {
+                // close the db connection
+                con.Close();
+            }
+        }
+        return "scanned";
+    }
+
+    public string BuildPartScannedInNewStationAfterThreadCommand(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
+    {// צריך לעשות רק פקודה שמשנה את הסטטוס של החלק שנסרק והקבוצה שלו, לעדכן את הזמן סריקה של החלק שנסרק ושאר החלקים
+        String command;
+        SqlConnection con;
+        con = connect("KinartiConnectionString");
+        StringBuilder sbUpdateScannedPartStatus = new StringBuilder();
+        StringBuilder sbUpdateAllTheRestPartStatus = new StringBuilder();
+        StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
+
+        // משנה את הסטטוס של החלק שנסרק בסטטוס של התחנה החדשה
+        sbUpdateScannedPartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = {1} WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
+        //צריך לראות האם הוא מצליח להכניס פה נכון את הערך איפה שרשום בעברית.
+        // שם את שאר החלקים בסטטוס ממתין לתחנה חוץ מהחלק ששינינו לו את הסטטוס פה למעלה
+        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE p SET p.lastScanDate = NULL FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum  IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}') AND p.partStatus NOT LIKE '{4}'", StationName, PartBarCode, PartBarCode, PartBarCode, StationName);
+        // מחזיר את כמות החלקים שנסרקו להיות -1 ושם סטטוס קבוצה לסטטוס של המכונה שעכשיו כמו כן מעדכן את הזמן של הקטגוריה
+        sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = 1, G.groupStatus = '{0}', G.currentGroupStation = '{1}', G." + CategoryType + " = {2} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", StationName, NextGroupStationNo, CategoryTime, PartBarCode);
+
+        command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
+        return command;
+    }
+
+
+    //כאשר החלק האחרון בקבוצה נסרק ועבר הזמן החציוני שלו - מגיע לפה כדי לשנות לו את הסטטוסים לממתינים
+    public string UpdateStatusWaitingForMachine(string PartBarCode, string NextGroupStationName, string GroupName, string CategoryType, int CategoryTime)
+    {
+        SqlConnection con;
+        SqlCommand cmd;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create the connection
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        String cStr = BuildUpdateStatusWaitingForMachineCommand(PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1564,19 +1629,24 @@ public class DBServices
     }
     
 
-    public string BuildUpdateStatusWaitingForMachineCommand(string PartBarCode, string NextGroupStationName)
+    public string BuildUpdateStatusWaitingForMachineCommand(string PartBarCode, string NextGroupStationName, string GroupName, string CategoryType, int CategoryTime)
     {
         String command;
         SqlConnection con;
         con = connect("KinartiConnectionString");
-        StringBuilder sbUpdateScannedPartStatus = new StringBuilder();
-        StringBuilder sbUpdateAllTheRestPartStatus = new StringBuilder();
-
+        StringBuilder sbUpdateGroupStatus = new StringBuilder();
+        StringBuilder sbUpdateAllPartStatus = new StringBuilder();
+        StringBuilder sbUpdateCurrentCategoryTime = new StringBuilder();
 
         // שם את כל החלקים בסטטוס ממתין לתחנה הבאה  
-        sbUpdateAllTheRestPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum  IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}')", NextGroupStationName, PartBarCode, PartBarCode, PartBarCode);
+        sbUpdateAllPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}')", NextGroupStationName, PartBarCode, PartBarCode, PartBarCode);
+        // שם את הסטטוס של הקבוצה לממתין לתחנה הבאה
+        sbUpdateGroupStatus.AppendFormat("UPDATE g SET groupStatus = 'ממתין ל- {0} בעגלה' FROM dbo.groups g WHERE g.groupName = {1} AND g.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND g.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}')", NextGroupStationName, GroupName, PartBarCode, PartBarCode);
+        // מעדכן את הקטגוריה בזמן העדכני ביותר
+        sbUpdateCurrentCategoryTime.AppendFormat("UPDATE g SET g." + CategoryType + " = {0} FROM dbo.groups g WHERE g.groupName = {1} AND g.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND g.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}')", CategoryTime, GroupName, PartBarCode, PartBarCode);
 
-        command = sbUpdateScannedPartStatus.ToString() + sbUpdateAllTheRestPartStatus.ToString();
+        command = sbUpdateGroupStatus.ToString() + sbUpdateAllPartStatus.ToString() + sbUpdateCurrentCategoryTime.ToString();
+
         return command;
     }
 

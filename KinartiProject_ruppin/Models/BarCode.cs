@@ -25,7 +25,7 @@ namespace KinartiProject_ruppin.Models
             TempObj data = (TempObj)o;
             Thread.Sleep(data.PartTimeAvg * 60000);
             DBServices dbs = new DBServices();
-            dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName);
+            dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName, data.GroupName, data.CategoryType, data.CategoryTime);
         }
 
 
@@ -91,14 +91,14 @@ namespace KinartiProject_ruppin.Models
                 //סריקה של חלק רגיל באמצע תהליך במכונה מסויימת
                 dbs.ScanPart(PartBarCode, StationName, ++ScannedPartCount, CurrentDate, CategoryTime, CategoryType);
 
-                if (partCount == (ScannedPartCount + 1))
+                if (partCount == ScannedPartCount)
                 {
                     // השאילתה מביאה לנו את החציון של חלקים במכונה
                     PartTimeAvg = dbs.GetMedianTimeForPart(PartBarCode, GroupName, CurrentDate);
 
                     // פותחים פרוסס חדש ומחכים את הזמן החציוני שלוקח לחלק לעבוד במכונה,
                     // ושם בסוף הזמן נעדכן את הסטטוסים והזמנים וכל מה שצריך
-                    TempObj tempObj = new TempObj(PartTimeAvg, PartBarCode, NextGroupStationName);
+                    TempObj tempObj = new TempObj(PartTimeAvg, PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime);
                     switch (StationName)
                     {
                         case "CNC":
@@ -132,16 +132,8 @@ namespace KinartiProject_ruppin.Models
                 ////////////////////////////////////////////////////////אני פה!!!!!!//////////////////////////////////////////////////////////////
                 if (ClickedStationNo == NextGroupStationNo && partCount == ScannedPartCount)
                 {
-                    //צריך לבדוק שהחלק הנסרק עכשיו במכונה חדשה שייך לאותו קטגוריה אם כן ממשיכים לקדם את הזמן העכשוי...
-                    // אחרת אנחנו צריכים להכניס 0 לקטגוריה החדשה כי בדיוק עכשיו התחילה עבודה, וכשיסרק החלק הבא זה יתעדכן
-                    // לפה נכנס גם החישוב של הממוצע ומכניס אותולחלק ה-10 שנכנס כי אין סריה בסוף ה-10.
-
-                    // כאשר החלק האחרון נסרק בקבוצה יש זמן ממוצע של כל החלקים ומבקלים זמן עבודה ממוצע לחלק
-                    // אז כאשר החלק האחרון נסרק, נפעיל שעון שיחכה את הזמן הדרוש לחלק ובתום הזמן הזה - נצטרך לעדכן את
-                    // את הסטטוס של כל החלקים והקבוצה לממינים למכונה הבאה
-                    //חוץ מיזה נעדכן את הזמן של הקטגוריה לזמן הזה
+                    bool FinishThread = false;
                     CategoryTime = GetNewCategoryTime(PartBarCode, StationName, CurrentDate, GroupName, CategoryType);
-
 
                     switch (StationName)
                     {
@@ -150,11 +142,19 @@ namespace KinartiProject_ruppin.Models
                             {
                                 cnc.Abort();
                             }
+                            else
+                            {
+                                FinishThread = true;
+                            }
                             break;
                         case "צבע 1":
                             if (color1.IsAlive)
                             {
                                 color1.Abort();
+                            }
+                            else
+                            {
+                                FinishThread = true;
                             }
                             break;
                         case "צבע 2":
@@ -162,11 +162,19 @@ namespace KinartiProject_ruppin.Models
                             {
                                 color2.Abort();
                             }
+                            else
+                            {
+                                FinishThread = true;
+                            }
                             break;
                         case "הדבקה":
                             if (Adbaka.IsAlive)
                             {
                                 Adbaka.Abort();
+                            }
+                            else
+                            {
+                                FinishThread = true;
                             }
                             break;
                         case "חיתוך":
@@ -174,11 +182,19 @@ namespace KinartiProject_ruppin.Models
                             {
                                 Hituh.Abort();
                             }
+                            else
+                            {
+                                FinishThread = true;
+                            }
                             break;
                         case "שיוף":
                             if (shiuf.IsAlive)
                             {
                                 shiuf.Abort();
+                            }
+                            else
+                            {
+                                FinishThread = true;
                             }
                             break;
                         case "ניסור":
@@ -186,12 +202,25 @@ namespace KinartiProject_ruppin.Models
                             {
                                 Nisur.Abort();
                             }
+                            else
+                            {
+                                FinishThread = true;
+                            }
                             break;
                         default:
                             break;
                     }
-                    dbs.PartScannedInNewStation(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);
-                    // שים לב בבניה של הפונקציה הזאת לוודא שהוא מכניס נכון איפה שהעברית שם כי המילה סי-אן-סי בדיבי ושם נראים קצת שונה
+
+                    if (!FinishThread)
+                    {
+                        dbs.PartScannedInNewStation(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);
+                        // שים לב בבניה של הפונקציה הזאת לוודא שהוא מכניס נכון איפה שהעברית שם כי המילה סי-אן-סי בדיבי ושם נראים קצת שונה
+                    }
+                    else
+                    {
+                        dbs.PartScannedInNewStationAfterThread(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);
+                        //לאפס את הזמני סריקות של כל החלקים
+                    }
                 }
                 else
                 {
@@ -214,6 +243,7 @@ namespace KinartiProject_ruppin.Models
         {
             DBServices dbs = new DBServices();
             int PartScannedGap;
+            int CategoryTotalTime = 0;
             // מביא את הזמן של החלק שנסרק אחרון בקבוצה הזאת שהוא נמצא בא
             string LastScanPartDate_str = dbs.GetLatScanPartDate(PartBarCode, StationName, CurrentDate, GroupName);
             
@@ -228,8 +258,9 @@ namespace KinartiProject_ruppin.Models
                 PartScannedGap = 0;
             }
             // שים לב יש מצב שהסריקה האחרונה של הקטגוריה פה מקבלת גם 0 או NULL
-            PartScannedGap += dbs.GetLatScanCategoryDate(PartBarCode, StationName, CurrentDate, CategoryType);
-            return PartScannedGap;
+            //מחזיר את הזמן העדכני של הקטגוריה
+            CategoryTotalTime = PartScannedGap + dbs.GetLatScanCategoryDate(PartBarCode, StationName, CurrentDate, CategoryType);
+            return CategoryTotalTime;
         }
     }
 
@@ -238,12 +269,18 @@ namespace KinartiProject_ruppin.Models
         public int PartTimeAvg { get; set; }
         public string PartBarCode { get; set; }
         public string NextGroupStationName { get; set; }
+        public string GroupName { get; set; }
+        public string CategoryType { get; set; }
+        public int CategoryTime { get; set; }
 
-        public TempObj(int PartTimeAvg, string PartBarCode, string NextGroupStationName)
+        public TempObj(int PartTimeAvg, string PartBarCode, string NextGroupStationName, string GroupName, string CategoryType, int CategoryTime)
         {
             this.PartTimeAvg = PartTimeAvg;
             this.PartBarCode = PartBarCode;
             this.NextGroupStationName = NextGroupStationName;
+            this.GroupName = GroupName;
+            this.CategoryType = CategoryType;
+            this.CategoryTime = CategoryTime;
         }
     }
 }
