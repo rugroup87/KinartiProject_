@@ -25,7 +25,7 @@ namespace KinartiProject_ruppin.Models
             TempObj data = (TempObj)o;
             Thread.Sleep(data.PartTimeAvg * 60000);
             DBServices dbs = new DBServices();
-            dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName, data.GroupName, data.CategoryType, data.CategoryTime);
+            dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName, data.GroupName, data.CategoryType, data.CategoryTime, data.PartTimeAvg);
         }
 
 
@@ -39,7 +39,9 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             string CurrentGroupPositionNo = null;
             string NextGroupStationName = null;
-            int temp = 1;
+            string PrevGroupStationName = null;
+            int Nexttemp = 1;
+            int Prevtemp = 0;
             int CategoryTime = 0;
             int PartTimeAvg = 0;
             
@@ -69,17 +71,23 @@ namespace KinartiProject_ruppin.Models
             if (!String.IsNullOrEmpty(CurrentGroupStationNo))
             {
                 CurrentGroupPositionNo = dbs.GetCurrentGroupPositionNo(PartBarCode, CurrentGroupStationNo);
-                temp = Int32.Parse(CurrentGroupPositionNo) + 1;
-            }
+                Nexttemp = Int32.Parse(CurrentGroupPositionNo) + 1;
 
-                       
+                if (Convert.ToInt32(CurrentGroupPositionNo) > 1)
+                {
+                    Prevtemp = Int32.Parse(CurrentGroupPositionNo) - 1;
+                    PrevGroupStationName = dbs.GetNextGroupStationName(Prevtemp.ToString(), PartBarCode);
+                }
+            }
+                     
             int TotalStationCount = dbs.GetTotalStationCount(PartBarCode);
             int partCount = dbs.GetpartCount(PartBarCode);
             int ScannedPartCount = dbs.GetScannedPartCount(PartBarCode);
 
             //הפונקציה הזאת לא יכולה להיות פה - רק במקרה שהכן יש מסלול הבא... צריך לבדוק
-            string NextGroupStationNo = dbs.GetNextGroupStationNo(temp.ToString(), PartBarCode);
-            NextGroupStationName = dbs.GetNextGroupStationName(temp.ToString(), PartBarCode);
+            string NextGroupStationNo = dbs.GetNextGroupStationNo(Nexttemp.ToString(), PartBarCode);
+            NextGroupStationName = dbs.GetNextGroupStationName(Nexttemp.ToString(), PartBarCode);
+             
 
             string CategoryType = dbs.GetCategoryType(StationName);
 
@@ -135,7 +143,7 @@ namespace KinartiProject_ruppin.Models
                     bool FinishThread = false;
                     CategoryTime = GetNewCategoryTime(PartBarCode, StationName, CurrentDate, GroupName, CategoryType);
 
-                    switch (StationName)
+                    switch (PrevGroupStationName)
                     {
                         case "CNC":
                             if (cnc.IsAlive)
@@ -259,7 +267,7 @@ namespace KinartiProject_ruppin.Models
             }
             // שים לב יש מצב שהסריקה האחרונה של הקטגוריה פה מקבלת גם 0 או NULL
             //מחזיר את הזמן העדכני של הקטגוריה
-            CategoryTotalTime = PartScannedGap + dbs.GetLatScanCategoryDate(PartBarCode, StationName, CurrentDate, CategoryType);
+            CategoryTotalTime = PartScannedGap + dbs.GetLatScanCategoryDate(PartBarCode, StationName, CurrentDate, CategoryType, GroupName);
             return CategoryTotalTime;
         }
     }
