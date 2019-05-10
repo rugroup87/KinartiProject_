@@ -5,12 +5,28 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Globalization;
 
 namespace KinartiProject_ruppin.Models
 {
     public class BarCode
     {
         //public string BarCodeNumber { get; set; }
+        //bool threadIsSleeping = false;
+        Thread cnc = new Thread(ExecuteInForeground);
+        Thread color1 = new Thread(ExecuteInForeground);
+        Thread color2 = new Thread(ExecuteInForeground);
+        Thread Adbaka = new Thread(ExecuteInForeground);
+        Thread Hituh = new Thread(ExecuteInForeground);
+        Thread shiuf = new Thread(ExecuteInForeground);
+        Thread Nisur = new Thread(ExecuteInForeground);
+        private static bool cnc_ThreadIsSleeping = false;
+        private static bool color1_ThreadIsSleeping = false;
+        private static bool color2_ThreadIsSleeping = false;
+        private static bool Adbaka_ThreadIsSleeping = false;
+        private static bool Hituh_ThreadIsSleeping = false;
+        private static bool shiuf_ThreadIsSleeping = false;
+        private static bool Nisur_ThreadIsSleeping = false;
 
         public BarCode()
         {
@@ -20,12 +36,38 @@ namespace KinartiProject_ruppin.Models
 
 
         //int PartTimeAvg, string PartBarCode, string NextGroupStationName
-        private void ExecuteInForeground(object o)
+        private static void ExecuteInForeground(object o)
         {
             TempObj data = (TempObj)o;
             Thread.Sleep(data.PartTimeAvg * 60000);
             DBServices dbs = new DBServices();
             dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName, data.GroupName, data.CategoryType, data.CategoryTime, data.PartTimeAvg);
+            switch (data.StationName)
+            {
+                case "CNC":
+                    cnc_ThreadIsSleeping = false;
+                    break;
+                case "צבע 1":
+                    color1_ThreadIsSleeping = false;
+                    break;
+                case "צבע 2":
+                    color2_ThreadIsSleeping = false;
+                    break;
+                case "הדבקה":
+                    Adbaka_ThreadIsSleeping = false;
+                    break;
+                case "חיתוך":
+                    Hituh_ThreadIsSleeping = false;
+                    break;
+                case "שיוף":
+                    shiuf_ThreadIsSleeping = false;
+                    break;
+                case "ניסור":
+                    Nisur_ThreadIsSleeping = false;
+                    break;
+                default:
+                    break;
+            }
         }
 
 
@@ -45,14 +87,6 @@ namespace KinartiProject_ruppin.Models
             int CategoryTime = 0;
             int PartTimeAvg = 0;
             
-
-            Thread cnc = new Thread(ExecuteInForeground);
-            Thread color1 = new Thread(ExecuteInForeground);
-            Thread color2 = new Thread(ExecuteInForeground);
-            Thread Adbaka = new Thread(ExecuteInForeground);
-            Thread Hituh = new Thread(ExecuteInForeground);
-            Thread shiuf = new Thread(ExecuteInForeground);
-            Thread Nisur = new Thread(ExecuteInForeground);
 
             string ScannedPartStatus = dbs.GetScannedPartStatus(PartBarCode);
             string ClickedStationNo = dbs.GetClickedStationNo(StationName);
@@ -76,7 +110,7 @@ namespace KinartiProject_ruppin.Models
                 if (Convert.ToInt32(CurrentGroupPositionNo) > 1)
                 {
                     Prevtemp = Int32.Parse(CurrentGroupPositionNo) - 1;
-                    PrevGroupStationName = dbs.GetNextGroupStationName(Prevtemp.ToString(), PartBarCode);
+                    PrevGroupStationName = dbs.GetNextGroupStationName(CurrentGroupPositionNo, PartBarCode);
                 }
             }
                      
@@ -106,28 +140,35 @@ namespace KinartiProject_ruppin.Models
 
                     // פותחים פרוסס חדש ומחכים את הזמן החציוני שלוקח לחלק לעבוד במכונה,
                     // ושם בסוף הזמן נעדכן את הסטטוסים והזמנים וכל מה שצריך
-                    TempObj tempObj = new TempObj(PartTimeAvg, PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime);
+                    TempObj tempObj = new TempObj(PartTimeAvg, PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime, StationName);
                     switch (StationName)
                     {
                         case "CNC":
+                            cnc_ThreadIsSleeping = true;
                             cnc.Start(tempObj);
                             break;
                         case "צבע 1":
+                            color1_ThreadIsSleeping = true;
                             color1.Start(tempObj);
                             break;
                         case "צבע 2":
+                            color2_ThreadIsSleeping = true;
                             color2.Start(tempObj);
                             break;
                         case "הדבקה":
+                            Adbaka_ThreadIsSleeping = true;
                             Adbaka.Start(tempObj);
                             break;
                         case "חיתוך":
+                            Hituh_ThreadIsSleeping = true;
                             Hituh.Start(tempObj);
                             break;
                         case "שיוף":
+                            shiuf_ThreadIsSleeping = true;
                             shiuf.Start(tempObj);
                             break;
                         case "ניסור":
+                            Nisur_ThreadIsSleeping = true;
                             Nisur.Start(tempObj);
                             break;
                         default:
@@ -146,7 +187,7 @@ namespace KinartiProject_ruppin.Models
                     switch (PrevGroupStationName)
                     {
                         case "CNC":
-                            if (cnc.IsAlive)
+                            if (cnc_ThreadIsSleeping)
                             {
                                 cnc.Abort();
                             }
@@ -156,7 +197,7 @@ namespace KinartiProject_ruppin.Models
                             }
                             break;
                         case "צבע 1":
-                            if (color1.IsAlive)
+                            if (color1_ThreadIsSleeping)
                             {
                                 color1.Abort();
                             }
@@ -166,7 +207,7 @@ namespace KinartiProject_ruppin.Models
                             }
                             break;
                         case "צבע 2":
-                            if (color2.IsAlive)
+                            if (color2_ThreadIsSleeping)
                             {
                                 color2.Abort();
                             }
@@ -176,7 +217,7 @@ namespace KinartiProject_ruppin.Models
                             }
                             break;
                         case "הדבקה":
-                            if (Adbaka.IsAlive)
+                            if (Adbaka_ThreadIsSleeping)
                             {
                                 Adbaka.Abort();
                             }
@@ -186,7 +227,7 @@ namespace KinartiProject_ruppin.Models
                             }
                             break;
                         case "חיתוך":
-                            if (Hituh.IsAlive)
+                            if (Hituh_ThreadIsSleeping)
                             {
                                 Hituh.Abort();
                             }
@@ -196,7 +237,7 @@ namespace KinartiProject_ruppin.Models
                             }
                             break;
                         case "שיוף":
-                            if (shiuf.IsAlive)
+                            if (shiuf_ThreadIsSleeping)
                             {
                                 shiuf.Abort();
                             }
@@ -206,7 +247,7 @@ namespace KinartiProject_ruppin.Models
                             }
                             break;
                         case "ניסור":
-                            if (Nisur.IsAlive)
+                            if (Nisur_ThreadIsSleeping)
                             {
                                 Nisur.Abort();
                             }
@@ -258,8 +299,10 @@ namespace KinartiProject_ruppin.Models
 
             if (!String.IsNullOrEmpty(LastScanPartDate_str))
             {
-                DateTime LatScanPartDate = DateTime.Parse(LastScanPartDate_str);
-                PartScannedGap = (int)Math.Round(DateTime.Parse(CurrentDate).Subtract(LatScanPartDate).TotalMinutes);
+                DateTime LatScanPartDate = DateTime.Parse(LastScanPartDate_str, new CultureInfo("en-US", true));
+                DateTime curent = DateTime.Parse(CurrentDate, new CultureInfo("en-US", true));
+                //DateTime LatScanPartDate = LastScanPartDate_str
+                PartScannedGap = (int)Math.Round(DateTime.Parse(CurrentDate, new CultureInfo("en-US", true)).Subtract(LatScanPartDate).TotalMinutes);
             }
             else
             {
@@ -280,8 +323,9 @@ namespace KinartiProject_ruppin.Models
         public string GroupName { get; set; }
         public string CategoryType { get; set; }
         public int CategoryTime { get; set; }
+        public string StationName { get; set; }
 
-        public TempObj(int PartTimeAvg, string PartBarCode, string NextGroupStationName, string GroupName, string CategoryType, int CategoryTime)
+        public TempObj(int PartTimeAvg, string PartBarCode, string NextGroupStationName, string GroupName, string CategoryType, int CategoryTime, string StationName)
         {
             this.PartTimeAvg = PartTimeAvg;
             this.PartBarCode = PartBarCode;
@@ -289,6 +333,7 @@ namespace KinartiProject_ruppin.Models
             this.GroupName = GroupName;
             this.CategoryType = CategoryType;
             this.CategoryTime = CategoryTime;
+            this.StationName = StationName;
         }
     }
 }

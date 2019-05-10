@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Web.Configuration;
 using System.Data;
 using System.Text;
@@ -1457,7 +1458,7 @@ public class DBServices
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
 
         // use a string builder to create the dynamic string
-        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = '{1}' WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
+        sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = '{1}' WHERE barcode = '{2}'", StationName, DateTime.Parse(CurrentDate, new CultureInfo("en-US", true)), PartBarCode);
         sbUpdateGroupScannedParts.AppendFormat("UPDATE G SET G.scannedPartsCount = {0}, G.current" + CategoryType + "Time = {1} FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{2}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", ScannedPartCount, CategoryTime, PartBarCode);
 
         command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString();
@@ -2167,7 +2168,8 @@ public class DBServices
                 {
                     if (dr["lastScanDate"] is DBNull)
                     {
-                        CurrentScannedTime = Convert.ToDateTime(CurrentDate);
+                        //CurrentScannedTime = Convert.ToDateTime(CurrentDate);
+                        CurrentScannedTime = DateTime.Parse(CurrentDate, new CultureInfo("en-US", true));
                     }
                     else
                     {

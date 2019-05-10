@@ -1,7 +1,7 @@
 ﻿function GetCurrentDate() {
     var currentdate = new Date();
-    var datetime = (currentdate.getMonth() + 1) + "/"
-        + currentdate.getDate() + "/"
+    var datetime = currentdate.getDate() + "/"
+        + (currentdate.getMonth() + 1) + "/"
         + currentdate.getFullYear() + " "
         + currentdate.getHours() + ":"
         + currentdate.getMinutes() + ":"
