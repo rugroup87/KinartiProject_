@@ -484,6 +484,67 @@ public class DBServices
 
     }
 
+    //לדשבורד
+    public Group[] GetGroupsFromAllProject(string projectNum)
+    {
+
+        SqlConnection con;
+        List<Group> Glist = new List<Group>();
+
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            String selectSTR = "SELECT * FROM Groups where projectNum = " + projectNum;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                Group g = new Group();
+                g.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                g.ItemNum = Convert.ToString(dr["itemNum"]);
+                g.GroupName = Convert.ToString(dr["groupName"]);
+                g.GroupStatus = Convert.ToString(dr["groupStatus"]);
+                g.GroupRouteName = Convert.ToString(dr["routeName"]);
+                g.CurrentGroupStation = Convert.ToString(dr["currentGroupStation"]);
+                g.ScannedPartsCount = Convert.ToInt32(dr["scannedPartsCount"]);
+                if (!DBNull.Value.Equals(dr["estCarpTime"]))
+                {
+                    g.EstCarpTime = Convert.ToInt32(dr["estCarpTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estPrepTime"]))
+                {
+                    g.EstPrepTime = Convert.ToInt32(dr["estPrepTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["estColorTime"]))
+                {
+                    g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                }
+                Glist.Add(g);
+            }
+            return Glist.ToArray();
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+    }
+
     public Group GetSpecificGroup(string GroupName, string projectNum, string itemNum)
     {
 

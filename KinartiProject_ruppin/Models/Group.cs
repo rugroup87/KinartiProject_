@@ -77,6 +77,13 @@ namespace KinartiProject_ruppin.Models
             return dbs.GetGroups(projectNum, itemNum);
         }
 
+        // לדשבורד - מחזיר את כל הקבוצות אשר שייכות לפרויקט 
+        public Group[] GetGroupsFromAllProject(string projectNum)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.GetGroupsFromAllProject(projectNum);
+        }
+
         //יצירת קבוצה חדשה
         public int InsertNewGroup(Group group, int itemGroupCount)
         {
