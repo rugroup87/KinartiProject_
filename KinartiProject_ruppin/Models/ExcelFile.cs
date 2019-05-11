@@ -33,7 +33,7 @@ namespace KinartiProject_ruppin.Models
 
         public void WorkOnExcelFile(string filename, string fileuploaddate)
         {
-            string path = @"C:\Users\alex.tochilovsky\source\repos\KinartiProject_ruppin\KinartiProject_ruppin\" + filename;
+            string path = @"C:\Users\user\source\repos\KinartiProject_\KinartiProject_ruppin\" + filename;
             List<Part> PartList = new List<Part>();
             string temp1 = "";
             List<string> temp = new List<string>();

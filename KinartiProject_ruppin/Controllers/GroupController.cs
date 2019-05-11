@@ -49,6 +49,23 @@ namespace KinartiProject_ruppin.Controllers
             return new {Glist, mlist };
         }
 
+        //אובייקט לדשבורד 
+        [HttpGet]
+        [Route("api/GetGroupsFromAllProject")]
+        public object Get(string projectNum)
+        {
+            Machine M = new Machine();
+            List<Machine> mlist;
+            mlist = M.GetAllMachines();
+            Item I = new Item();
+            Item[] ItemList;
+            ItemList = I.GetProjectItems(float.Parse(projectNum));
+            Group G = new Group();
+            Group[] Glist;
+            Glist = G.GetGroupsFromAllProject(projectNum);
+            return new { ItemList, Glist, mlist };
+        }
+
         public int Post([FromBody]Group group)
         {
             Item I = new Item();
