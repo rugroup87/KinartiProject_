@@ -1,10 +1,6 @@
-﻿using System;
+﻿using KinartiProject_ruppin.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
-using KinartiProject_ruppin.Models;
 
 namespace KinartiProject_ruppin.Controllers
 {
@@ -45,6 +41,19 @@ namespace KinartiProject_ruppin.Controllers
             Route r = new Route();
             return r.RouterValidation(routeName);
         }
+
+        // לדשבורד - מחזיר מיקום וכמה תחנות במסלול
+        [HttpGet]
+        [Route("api/GetGroupInRouteInformaion")]
+        public object GetGroupInRouteInformaion(string projectNum, string itemNum, string routeName, string groupName)
+        {
+            Route R = new Route();
+            object o = new object();
+            o = R.GroupInRouteInformaion(projectNum, itemNum, routeName, groupName);
+            return o;
+        }
+
+
 
         [HttpPost]
         [Route("api/Route")]

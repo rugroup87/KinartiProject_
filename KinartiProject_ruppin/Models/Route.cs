@@ -8,7 +8,7 @@ using System.Web.Http;
 namespace KinartiProject_ruppin.Models
 {
     public class Route
-    {       
+    {
         public string MachineNum { get; set; }
         public string MachineName { get; set; }
         public int Position { get; set; }
@@ -34,7 +34,7 @@ namespace KinartiProject_ruppin.Models
             DBServices dbs = new DBServices();
             List<Route> rl = new List<Route>();
             rl = dbs.GetAllRoutes();
-            return rl;      
+            return rl;
         }
 
         public List<Route> GetRouteWithoutOld_()
@@ -68,11 +68,23 @@ namespace KinartiProject_ruppin.Models
             return rli;
         }
 
-            public string RouterValidation(string routeName)
-            {
-                DBServices dbs = new DBServices();
-                return dbs.RouteValidation(routeName);
-            }
+        public string RouterValidation(string routeName)
+        {
+            DBServices dbs = new DBServices();
+            return dbs.RouteValidation(routeName);
         }
 
+
+        //לדשבורד - מצב הקבוצות בתחנות
+        public object GroupInRouteInformaion(string projectNum, string itemNum, string routeName, string groupName) {
+            DBServices dbs = new DBServices();
+            int pos = dbs.GroupInRoutePosition(projectNum, itemNum, routeName,groupName);
+            List<Route> rli = new List<Route>();
+            rli = dbs.ReadRouteInfo("KinartiConnectionString", routeName);
+            int numStation = rli.Count;
+            return new { pos, numStation };
+        }
     }
+}
+
+
