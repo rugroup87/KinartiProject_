@@ -2656,7 +2656,7 @@ public class DBServices
         try
         {
             //top 1זה בגלל שיש כפל שמכונה יכולה להית פעמיים באותו מסלול, כנשפטל צריך לעדכן את 
-            String selectSTR = "SELECT	sir.position FROM StationInRoute sir INNER JOIN Groups g ON	sir.routeName = g.routeName WHERE g.projectNum=" + projectNum + " AND g.itemNum='" + itemNum + "' AND g.groupName='" + groupName +"' AND sir.machineNum = g.currentGroupStation";
+            String selectSTR = "SELECT top 1 sir.position FROM StationInRoute sir INNER JOIN Groups g ON	sir.routeName = g.routeName WHERE g.projectNum=" + projectNum + " AND g.itemNum='" + itemNum + "' AND g.groupName='" + groupName +"' AND sir.machineNum = g.currentGroupStation";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
