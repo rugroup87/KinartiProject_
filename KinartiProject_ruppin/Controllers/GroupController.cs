@@ -37,7 +37,7 @@ namespace KinartiProject_ruppin.Controllers
         }
 
         [HttpGet]
-        [Route("api/GetGroups")]
+        [Route("api/GetGroups")]// מחזיר את הקבוצות השייכות לפרוייקט ופריט מסויים
         public object Get(string projectNum, string itemNum)
         {
             Machine M = new Machine();

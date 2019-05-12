@@ -214,6 +214,7 @@ public class DBServices
              // read first field from the row into the list collection
 
                 Item I = new Item();
+                I.ProjectNum = Convert.ToSingle(dr["projectNum"]);
                 I.ItemNum = Convert.ToString(dr["itemNum"]);
                 I.ItemName = Convert.ToString(dr["itemName"]);
                 I.ItemStatus = Convert.ToString(dr["itemStatus"]);
@@ -455,6 +456,8 @@ public class DBServices
             while (dr.Read())
             {
                 Group g = new Group();
+                g.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                g.ItemNum = Convert.ToString(dr["itemNum"]);
                 g.GroupName = Convert.ToString(dr["groupName"]);
                 g.GroupStatus = Convert.ToString(dr["groupStatus"]);
                 g.GroupRouteName = Convert.ToString(dr["routeName"]);
@@ -470,6 +473,18 @@ public class DBServices
                 if (!DBNull.Value.Equals(dr["estColorTime"]))
                 {
                     g.EstColorTime = Convert.ToInt32(dr["estColorTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["currentCarpTime"]))
+                {
+                    g.CurrentCarpTime = Convert.ToInt32(dr["currentCarpTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["currentPrepTime"]))
+                {
+                    g.CurrentPrepTime = Convert.ToInt32(dr["currentPrepTime"]);
+                }
+                if (!DBNull.Value.Equals(dr["currentColorTime"]))
+                {
+                    g.CurrentColorTime = Convert.ToInt32(dr["currentColorTime"]);
                 }
                 Glist.Add(g);
             }
