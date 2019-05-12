@@ -2635,4 +2635,80 @@ public class DBServices
 
     }
 
+
+    public int GroupInRoutePosition(string projectNum, string itemNum, string routeName, string groupName)
+    {
+        SqlConnection con;
+        int pos=0;
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+
+        try
+        {
+            //top 1זה בגלל שיש כפל שמכונה יכולה להית פעמיים באותו מסלול, כנשפטל צריך לעדכן את 
+            String selectSTR = "SELECT	sir.position FROM StationInRoute sir INNER JOIN Groups g ON	sir.routeName = g.routeName WHERE g.projectNum=" + projectNum + " AND g.itemNum='" + itemNum + "' AND g.groupName='" + groupName +"' AND sir.machineNum = g.currentGroupStation";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+               pos = Convert.ToInt32(dr["position"]);
+            }
+            return pos;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
+        }
+    }
+
+    //public int NumOfStationInRoute(string projectNum, string itemNum, string groupName, string currentGroupStation, string routeName)
+    //{
+    //    SqlConnection con;
+    //    int numStation = 0;
+    //    try
+    //    {
+
+    //        con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+    //    }
+
+    //    catch (Exception ex)
+    //    {
+    //        // write to log
+    //        throw (ex);
+
+    //    }
+
+    //    try
+    //    {
+    //        //top 1זה בגלל שיש כפל שמכונה יכולה להית פעמיים באותו מסלול, כנשפטל צריך לעדכן את 
+    //        String selectSTR = "SELECT	sir.position FROM StationInRoute sir INNER JOIN Groups g ON	sir.routeName = g.routeName WHERE g.projectNum=" + projectNum + " AND g.itemNum='" + itemNum + "' AND g.groupName='" + groupName + "' AND sir.machineNum = g.currentGroupStation";
+    //        SqlCommand cmd = new SqlCommand(selectSTR, con);
+    //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+    //        while (dr.Read())
+    //        {
+    //            numStation = Convert.ToInt32(dr["position"]);
+    //        }
+    //        return numStation;
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        // write to log
+    //        throw (ex);
+
+    //    }
+    //}
 }
