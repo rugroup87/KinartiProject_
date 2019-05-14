@@ -17,5 +17,13 @@ namespace KinartiProject_ruppin.Controllers
             Machine m = new Machine();
             return m.GetAllMachines();
         }
+
+        [HttpGet]
+        [Route("api/GetMachinesCurrentdetails")]
+        public List<TempObjForDashboard> GetMachinesCurrentdetails()
+        {
+            Machine m = new Machine();
+            return m.GetMachinesCurrentdetails();
+        }
     }
 }

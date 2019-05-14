@@ -922,7 +922,7 @@ public class DBServices
                 sb2.AppendFormat(", ");
             }
         }
-        String IncreaseNumGroupInItem = "Update Item SET groupCount = " + (itemGroupCount + 1)  + " WHERE projectNum = " + group.ProjectNum + " and itemNum ='" + group.ItemNum + "'"; ;
+        String IncreaseNumGroupInItem = "Update Item SET groupCount = " + (itemGroupCount + 1) + " WHERE projectNum = " + group.ProjectNum + " and itemNum ='" + group.ItemNum + "'"; ;
         command = prefix + sb.ToString() + prefix2 + sb2.ToString() + IncreaseNumGroupInItem;
         return command;
     }
@@ -1256,7 +1256,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildUpdateGroupEstTimeCommand(prepTime, carpTime, paintTime,projectNum, itemNum, groupName);      // helper method to build the insert string
+        String cStr = BuildUpdateGroupEstTimeCommand(prepTime, carpTime, paintTime, projectNum, itemNum, groupName);      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -1417,7 +1417,7 @@ public class DBServices
         sbDeletePartFromGroup.AppendFormat("'{0}')", barcodes[barcodes.Length - 1]);
 
         //sbDecreasePartCount.AppendFormat("UPDATE Groups SET partCount = {0} WHERE groupName = '{1}'", PartCount, GroupName);
-        sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE projectNum='{0}' AND itemNum='{1}' AND groupName = '{2}'",projNum,itemNum, groupName);
+        sbDeleteGroup.AppendFormat("DELETE FROM Groups WHERE projectNum='{0}' AND itemNum='{1}' AND groupName = '{2}'", projNum, itemNum, groupName);
 
         sbDecreaseGroupCountFromItem.AppendFormat("UPDATE Item SET groupCount = {0} WHERE projectNum = '{1}' and itemNum = '{2}'", itemGroupCount - 1, projNum, itemNum);
         command = sbDeletePartFromGroup.ToString() + sbDeleteGroup.ToString() + sbDecreaseGroupCountFromItem.ToString();
@@ -1604,7 +1604,7 @@ public class DBServices
     }
 
 
-    
+
     //סריקה של חלק ראשון בקבוצה חדשה אחרי שהטרד סיים
     public string PartScannedInNewStationAfterThread(string PartBarCode, string NextGroupStationNo, string StationName, string CurrentDate, int CategoryTime, string CategoryType)
     {
@@ -1708,7 +1708,7 @@ public class DBServices
         }
         return "scanned";
     }
-    
+
 
     public string BuildUpdateStatusWaitingForMachineCommand(string PartBarCode, string NextGroupStationName, string GroupName, string CategoryType, int CategoryTime, int PartTimeAvg)
     {
@@ -1723,7 +1723,7 @@ public class DBServices
         sbUpdateAllPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}')", NextGroupStationName, PartBarCode, PartBarCode, PartBarCode);
         //  מעדכן את הקטגוריה בזמן העדכני ביותר ושם את הסטטוס של הקבוצה לממתין לתחנה הבאה
         sbUpdateGroupStatus.AppendFormat("UPDATE g SET groupStatus = 'ממתין ל- {0} בעגלה', g.Current" + CategoryType + "Time = {1} FROM dbo.groups g WHERE g.groupName = '{2}' AND g.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{3}') AND g.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{4}')", NextGroupStationName, (CategoryTime + PartTimeAvg), GroupName, PartBarCode, PartBarCode);
-        
+
         command = sbUpdateGroupStatus.ToString() + sbUpdateAllPartStatus.ToString() + sbUpdateCurrentCategoryTime.ToString();
 
         return command;
@@ -1847,7 +1847,7 @@ public class DBServices
         }
     }
 
-    
+
     //מביא את שם המיקום הבא של הקבוצה השייכת לחלק לפי המסלול של הקבוצה
     public string GetNextGroupStationName(string CurrentGroupPositionNo, string barcode)
     {
@@ -2251,7 +2251,7 @@ public class DBServices
                     {
                         CurrentScannedTime = Convert.ToDateTime(dr["lastScanDate"]);
                     }
-                    Gap.Add((int)Math.Round(BeforeScannedTime.Subtract(CurrentScannedTime).TotalMinutes)); 
+                    Gap.Add((int)Math.Round(BeforeScannedTime.Subtract(CurrentScannedTime).TotalMinutes));
                 }
                 else
                 {
@@ -2547,7 +2547,7 @@ public class DBServices
              // read first field from the row into the list collection
                 Group g = new Group();
                 g.ProjectNum = Convert.ToSingle(dr["projectNum"]);
-                g.ProjectName= Convert.ToString(dr["projectName"]);
+                g.ProjectName = Convert.ToString(dr["projectName"]);
                 g.ItemNum = Convert.ToString(dr["itemNum"]);
                 g.ItemName = Convert.ToString(dr["itemName"]);
                 g.GroupName = Convert.ToString(dr["groupName"]);
@@ -2639,7 +2639,7 @@ public class DBServices
     public int GroupInRoutePosition(string projectNum, string itemNum, string routeName, string groupName)
     {
         SqlConnection con;
-        int pos=0;
+        int pos = 0;
         try
         {
 
@@ -2656,13 +2656,13 @@ public class DBServices
         try
         {
             //top 1זה בגלל שיש כפל שמכונה יכולה להית פעמיים באותו מסלול, כנשפטל צריך לעדכן את 
-            String selectSTR = "SELECT	sir.position FROM StationInRoute sir INNER JOIN Groups g ON	sir.routeName = g.routeName WHERE g.projectNum=" + projectNum + " AND g.itemNum='" + itemNum + "' AND g.groupName='" + groupName +"' AND sir.machineNum = g.currentGroupStation";
+            String selectSTR = "SELECT	sir.position FROM StationInRoute sir INNER JOIN Groups g ON	sir.routeName = g.routeName WHERE g.projectNum=" + projectNum + " AND g.itemNum='" + itemNum + "' AND g.groupName='" + groupName + "' AND sir.machineNum = g.currentGroupStation";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
             while (dr.Read())
             {
-               pos = Convert.ToInt32(dr["position"]);
+                pos = Convert.ToInt32(dr["position"]);
             }
             return pos;
         }
@@ -2671,6 +2671,58 @@ public class DBServices
             // write to log
             throw (ex);
 
+        }
+    }
+
+    // מביאה לי אובייקט עם נתונים להצגה של התחנות בדשבורד
+    public List<TempObjForDashboard> GetMachinesCurrentdetails()
+    { 
+        SqlConnection con;
+        
+        List<TempObjForDashboard> Lobj = new List<TempObjForDashboard>();
+        try
+        {
+
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+        try
+        {
+            String selectSTR = "SELECT p.projectName,g.projectNum,i.itemName,g.itemNum, g.groupName, g.groupStatus, g.scannedPartsCount, g.partCount FROM dbo.Groups g INNER JOIN dbo.Item i ON g.projectNum = i.projectNum AND g.itemNum = i.itemNum INNER JOIN dbo.Project p ON i.projectNum = p.projectNum WHERE g.groupStatus in(SELECT m.machineName FROM dbo.Machine m)";
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {// Read till the end of the data into a row
+             // read first field from the row into the list collection
+                TempObjForDashboard obj = new TempObjForDashboard();
+                obj.ProjectNum = Convert.ToSingle(dr["projectNum"]);
+                obj.ProjectName = Convert.ToString(dr["projectName"]);
+                obj.ItemNum = Convert.ToString(dr["itemNum"]);
+                obj.ItemName = Convert.ToString(dr["itemName"]);
+                obj.GroupName = Convert.ToString(dr["groupName"]);
+                obj.MachineName = Convert.ToString(dr["groupStatus"]);
+                obj.PartCount = Convert.ToInt32(dr["partCount"]);
+                obj.ScannedPartCount = Convert.ToInt32(dr["scannedPartsCount"]);
+                //obj.GroupStatus = Convert.ToString(dr["groupStatus"]);
+                //obj.GroupRouteName = Convert.ToString(dr["routeName"]);
+                //obj.GroupPartCount = Convert.ToInt32(dr["partCount"]);
+                //obj.ScannedPartsCount = Convert.ToInt32(dr["scannedPartsCount"]);
+
+
+                Lobj.Add(obj);
+            }
+            return Lobj;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
         }
     }
 
