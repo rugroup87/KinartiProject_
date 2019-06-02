@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html>
 
-<html dir="ltr">
+<html dir="rtl">
 <head>
     <meta charset="utf-8" />
     <title></title>
@@ -14,6 +14,7 @@
             margin: 0;
             font-family: 'Montserrat', sans-serif;
             /*overflow-y:scroll;*/
+            overflow: hidden;
         }
 
 
@@ -34,7 +35,8 @@
             background: #241e20;
             overflow: hidden;
             /*box-shadow: 0 4px 6px rgba(0,0,0,.2);*/
-            position: fixed;
+            /*position: fixed;*/
+            height: 20%;            
         }
 
         /*#header {
@@ -53,12 +55,12 @@
         #secoundHeader {
             height: 100%;
             width: 100%;
-            position: fixed;
-            z-index: 0;
+            /*position: fixed;*/
+            /*z-index: 0;*/
             top: 7.4%;
             padding-top: 0%;
             float: left;
-            right: 0;
+            /*right: 0;*/
             background-color: #212121;
             text-align: center;
             /*this is the station vizualization*/
@@ -68,7 +70,7 @@
        
 
 
-        #body {
+        /*#body {
             direction:rtl;
             min-height: 1000px;
             width: 100%;
@@ -79,9 +81,11 @@
             float: left;
             float: right;
             overflow-y:scroll;
+        }*/
+
+        #bodyRoute {
+            top: 20%;
         }
-
-
         .logo-box {
             float: left;
             margin-right: 20px;
@@ -192,8 +196,8 @@
         .snip1217 {
             font-family: 'Raleway', Arial, sans-serif;
             text-align: center;
-            /text-transform: uppercase;
-            / font-weight: 500;
+            text-transform: uppercase;
+            font-weight: 500;
             letter-spacing: 1px;
         }
 
@@ -257,96 +261,107 @@
 
         /*/this is the radio button css/*/
 
+        /*.rightPage{
+            border: solid;
+        }*/
 
-        #body .titleRadioContainer {
-            float: right;
-            font-size: 34px;
-            padding-top: 0;
-            direction: rtl;
-            padding-right: 25px;
-     
-            width: 40%;
-            position:fixed;
-            height:100%;
-            
+/*כותרת בחר מסלול מהרשימה*/
+        #bodyRoute .titleRadioContainer {
+            /* float: right; */
+            text-align: center;
+            font-size: 30px;
+            /* padding-top: 0; */
+            /* direction: rtl; */
+            /* padding-right: inherit; */
+            width: 30%;
+            /* position: fixed; */
+            /* height: 100%; */
+            /*background-color: yellow;*/
         }
 
-        #body .containerRadioButtons {
-            position: absolute;
-            right: 10px;
-            width: 100px;
-            border: 3px solid blue;
-
+/*כפתורי בחירת מסלול*/
+        #bodyRoute .containerRadioButtons {
+            /*position: absolute;*/
+            /*right: 10px;*/
+            width: 30%;
+            border: 3px solid black;
             font-size: 20px;
             /*padding-top: 100px;*/
             position: absolute;
-            width: inherit;
+            /*width: inherit;*/
             /*padding-top: 3%;*/
             /*margin-left: 90%;*/
+            /*background-color: #0e9315;*/
+            overflow-y: scroll;
+            height: 70%;
         }
 
         /*/this is the station vizualization/*/
 
-        #body .middleBody {
+        /*#bodyRoute .middleBody {
             float: left;
-            position: inherit;
             padding-top: 0;
             margin-left: 90%;
             font-size: 40px;
-        }
+            background-color: rgba(0,0,0,.075);
+        }*/
 
-
-        .history-tl-container {
+/*הצגת המסלול הנבחר*/
+        #bodyRoute .history-tl-container {
             font-family: "Roboto",sans-serif;
             display: block;
-            position: fixed;
-            float: right;
+            position: absolute;
+            right: 30%;
+            /*float: right;*/
             /*/margin-top: 7%;*/
-            margin: -1.3% 42%;
+            padding-right: 10%;
+            /*padding-left: 8%;*/
+            /*background-color: #258CC7;*/
+            overflow-y: scroll;
+            height: 70%;
+            border: 3px solid black;
         }
 
-            .history-tl-container ul.tl {
-                margin: 20px 0;
-                /*padding: 0px 300px;*/
-                display: inline-block;
-                position:fixed;
+        #bodyRoute .history-tl-container h1 {
+            text-align: center;
             }
-
-                .history-tl-container ul.tl li {
-                    list-style: none;
-                    margin: auto;
-                    margin-left: 200px;
-                    min-height: 50px;
-                    /*/background: rgba(255,255,0,0.1);*/
-                    border-left: 1px dashed black;
-                    padding: 0 0 50px 30px;
-                    position: relative;
-                }
-
-                    .history-tl-container ul.tl li:last-child {
-                        border-left: 0;
-                    }
-
-                    .history-tl-container ul.tl li::before {
-                        position: absolute;
-                        left: -15px;
-                        top: -5px;
-                        content: " ";
-                        border: 12px solid yellow;
-                        border-radius: 500%;
-                        background: black;
-                        height: 30px;
-                        width: 30px;
-                        transition: all 500ms ease-in-out;
-                    }
-
-                    .history-tl-container ul.tl li:hover::before {
-                        border-color: #258CC7;
-                        transition: all 1000ms ease-in-out;
-                    }
+        
+        #bodyRoute .history-tl-container ul.tl li {
+                list-style: none;
+                margin: auto;
+                margin-left: 200px;
+                min-height: 50px;
+                /*/background: rgba(255,255,0,0.1);*/
+                border-left: 1px dashed black;
+                padding: 0 0 50px 30px;
+                position: relative;
+            }
+        
+        #bodyRoute .history-tl-container ul.tl li:last-child {
+                border-left: 0;
+            }
+        
+        #bodyRoute .history-tl-container ul.tl li::before {
+                position: absolute;
+                left: -15px;
+                top: -5px;
+                content: " ";
+                border: 12px solid yellow;
+                border-radius: 500%;
+                background: black;
+                height: 30px;
+                width: 30px;
+                transition: all 500ms ease-in-out;
+            }
+        
+        #bodyRoute .history-tl-container ul.tl li:hover::before {
+                border-color: #258CC7;
+                transition: all 1000ms ease-in-out;
+            }
 
         ul.tl li .item-title {
             font-size: 18px;
+            padding-left: 30px;
         }
 
         .form-group {
@@ -391,7 +406,7 @@
         .modal-body {
             background-color: #f0f0f0;
             height: 500px;
-            position: relative;
+            /*position: relative;*/
             padding: 15px;
         }
 
@@ -457,7 +472,7 @@
             str = "";
             for (var i = 1; i <= Routesdata.length; i++) {
                 str += "<input id='" + i + "' value='" + allRoutesList[i - 1].RouteName + "' name='radio' type='radio'>";
-                str += "<label for='" + i + "'><b>&nbsp&nbsp" + allRoutesList[i - 1].RouteName + "</b></label><br/>";
+                str += "<label style='display: inline' for='" + i + "'><b>&nbsp&nbsp" + allRoutesList[i - 1].RouteName + "</b></label><br/>";
             }
             $('.containerRadioButtons').append(str);
         } //the function bring all the route from the data base and display them as radio buttons.
@@ -733,25 +748,35 @@
                 </ul>
             </nav>
         </div>
+        <div id="secoundHeader">
+            <ul class="snip1217">
+                <li>
+                    <a id="updateRouteButton" href="#">עדכן מסלול קיים</a>
+                </li>
+                <li><a id="createRoute" href="#">צור מסלול חדש</a></li>
+            </ul>
+        </div>
     </div>
-    <div id="secoundHeader">
+    <!--<div id="secoundHeader">
         <ul class="snip1217">
-            <!--<li class="current"><a href="#">Home</a></li>-->
             <li>
                 <a id="updateRouteButton" href="#">עדכן מסלול קיים</a>
             </li>
             <li><a id="createRoute" href="#">צור מסלול חדש</a></li>
         </ul>
-    </div>
-    <div id="body" style="background-color:white">
+    </div>-->
+    <div id="bodyRoute">
+        <!--<div class="rightPage">-->
         <div class="titleRadioContainer">
-            <p><u><b>לחץ על מסלול מהרשימה</b></u></p>
-            <div class="containerRadioButtons"></div>
+            <p><u><b>בחר מסלול מהרשימה</b></u></p>
+            <!--<div class="containerRadioButtons"></div>-->
         </div>
         <!--<div class="middleBody"></div>-->
-        <div class="history-tl-container">
+        <div class="containerRadioButtons"></div>
+        <div class="history-tl-container"></div>
 
-        </div>
+
     </div>
+    <!--</div>-->
 </body>
 </html>
