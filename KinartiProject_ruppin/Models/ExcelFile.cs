@@ -33,7 +33,7 @@ namespace KinartiProject_ruppin.Models
 
         public void WorkOnExcelFile(string filename, string fileuploaddate)
         {
-            string path = @"C:\Users\user\source\repos\KinartiProject_\KinartiProject_ruppin\" + filename;
+            string path = @"C:\Users\alex.tochilovsky\source\repos\KinartiProject_ruppin\KinartiProject_ruppin\" + filename;
             List<Part> PartList = new List<Part>();
             string temp1 = "";
             List<string> temp = new List<string>();
@@ -60,7 +60,7 @@ namespace KinartiProject_ruppin.Models
                 {
                     Part part = new Part();
 
-                    for (int j = 4; j <= colCount; j++)
+                    for (int j = 5; j <= colCount; j++)
                     {
                         //רץ על גודל הקובץ אקסל שיש נתונים
                         if (excelRange.Cells[i, j] != null)
@@ -151,7 +151,7 @@ namespace KinartiProject_ruppin.Models
                     PartList.Add(part);
                 }
 
-                Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), PartList);
+                Item Item = new Item(excelRange.Cells[2, 3].Value2.ToString(), excelRange.Cells[2, 4].Value2.ToString(), PartList);
                 Project NewData = new Project(Convert.ToSingle(excelRange.Cells[2, 1].Value2), excelRange.Cells[2, 2].Value2, fileuploaddate, Item);
             }
             catch (MissingHeaderException)
@@ -177,7 +177,6 @@ namespace KinartiProject_ruppin.Models
             //שגיאת מפתחות - הכנסה של נתונים קיימים
             catch (DuplicatePrimaryKeyException e)
             {
-
                 throw new DuplicatePrimaryKeyException("פרוייקט או פריט זה כבר קיימים במערכת אנא בדוק שוב את הקובץ", e.InnerException);
             }
 

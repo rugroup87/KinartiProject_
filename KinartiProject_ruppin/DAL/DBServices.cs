@@ -736,7 +736,7 @@ public class DBServices
             throw (ex);
         }
 
-        String cStr = BuildNewDataInsertCommand(NewData);      // helper method to build the insert string
+        String cStr = BuildNewDataInsertCommand(NewData, IsProjectExist(Convert.ToString(NewData.ProjectNum)));      // helper method to build the insert string
 
         cmd = CreateCommand(cStr, con);             // create the command
 
@@ -768,6 +768,50 @@ public class DBServices
                 // close the db connection
                 con.Close();
             }
+        }
+    }
+
+    //בודק האם פרוייקט כבר קיים במערכת
+    public bool IsProjectExist(string projectnum)
+    {
+        SqlConnection con;
+        bool Exist = false;
+
+        try
+        {
+            con = connect("KinartiConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        }
+
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+        }
+
+        try
+        {
+            String selectSTR = "SELECT projectNum FROM dbo.project WHERE projectNum = " + projectnum;
+            SqlCommand cmd = new SqlCommand(selectSTR, con);
+            SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+            while (dr.Read())
+            {
+                if(string.IsNullOrEmpty(Convert.ToString(dr["projectNum"])))
+                {
+                    Exist = false;
+                }
+                else
+                {
+                    Exist = true;
+                }
+            }
+            return Exist;
+        }
+        catch (Exception ex)
+        {
+            // write to log
+            throw (ex);
+
         }
     }
 
@@ -813,7 +857,7 @@ public class DBServices
     }
 
     //פקודת מסד נתונים להכנסת נתוני האקסל(פריט) למערכת
-    public string BuildNewDataInsertCommand(Project NewData)
+    public string BuildNewDataInsertCommand(Project NewData, bool isprojectexist)
     {
         String command;
         SqlConnection con;
@@ -825,18 +869,25 @@ public class DBServices
 
 
         // use a string builder to create the dynamic string
-        sbProj.AppendFormat("INSERT INTO Project (projectNum, projectName, prodEntranceDate, projectStatus) VALUES({0}, '{1}', '{2}', '{3}')", NewData.ProjectNum, NewData.ProjectName, NewData.ProdEntranceDate, NewData.ProjectStatus);
-        sbItem.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName, itemStatus) VALUES({0}, {1}, '{2}', '{3}')", NewData.ProjectNum, NewData.Item.ItemNum, NewData.Item.ItemName, NewData.Item.ItemStatus);
+        if (isprojectexist)
+        {
+            sbProj.AppendFormat("");
+        }
+        else
+        {
+            sbProj.AppendFormat("INSERT INTO Project (projectNum, projectName, prodEntranceDate, projectStatus, relateTO) VALUES({0}, '{1}', '{2}', '{3}', '{4}')", NewData.ProjectNum, NewData.ProjectName, NewData.ProdEntranceDate, NewData.ProjectStatus, "Project");
+        }
+        sbItem.AppendFormat("INSERT INTO Item (projectNum, itemNum, itemName, itemStatus, relateTO) VALUES({0}, {1}, '{2}', '{3}', '{4}')", NewData.ProjectNum, NewData.Item.ItemNum, NewData.Item.ItemName, NewData.Item.ItemStatus, "Item");
         sbPartAtt.AppendFormat(@"INSERT INTO Part (partNum, partName, partStatus, setNum, barcode, partKantim, PartFirstMachine,
     PartSecondMachine, PartQuantity, PartMaterial, PartColor, PartCropType, PartCategory, PartComment, PartLength,
-    PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness, projectNum, itemNum)");
+    PartWidth, PartThickness, AdditionToLength, AdditionToWidth, AdditionToThickness, projectNum, itemNum, relateTO)");
 
         command = sbProj.ToString() + sbItem.ToString() + sbPartAtt.ToString() + " VALUES";
 
         //פה צריכה להיות לולה שרצה ומכניסה את השורות של החלקים
         for (int i = 0; i < NewData.Item.ItemParts.Count; i++)
         {
-            sbPartVal.AppendFormat("('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', '{7}', {8}, '{9}', '{10}', '{11}', '{12}', '{13}', {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21})", NewData.Item.ItemParts[i].PartNum, NewData.Item.ItemParts[i].PartName, NewData.Item.ItemParts[i].PartStatus, NewData.Item.ItemParts[i].PartSetNumber, NewData.Item.ItemParts[i].PartBarCode, NewData.Item.ItemParts[i].PartKantim, NewData.Item.ItemParts[i].PartFirstMachine, NewData.Item.ItemParts[i].PartSecondMachine, NewData.Item.ItemParts[i].PartQuantity, NewData.Item.ItemParts[i].PartMaterial, NewData.Item.ItemParts[i].PartColor, NewData.Item.ItemParts[i].PartCropType, NewData.Item.ItemParts[i].PartCategory, NewData.Item.ItemParts[i].PartComment, NewData.Item.ItemParts[i].PartLength, NewData.Item.ItemParts[i].PartWidth, NewData.Item.ItemParts[i].PartThickness, NewData.Item.ItemParts[i].AdditionToLength, NewData.Item.ItemParts[i].AdditionToWidth, NewData.Item.ItemParts[i].AdditionToThickness, NewData.ProjectNum, NewData.Item.ItemNum);
+            sbPartVal.AppendFormat("('{0}', '{1}', '{2}', {3}, '{4}', '{5}', '{6}', '{7}', {8}, '{9}', '{10}', '{11}', '{12}', '{13}', {14}, {15}, {16}, {17}, {18}, {19}, {20}, {21}, '{22}')", NewData.Item.ItemParts[i].PartNum, NewData.Item.ItemParts[i].PartName, NewData.Item.ItemParts[i].PartStatus, NewData.Item.ItemParts[i].PartSetNumber, NewData.Item.ItemParts[i].PartBarCode, NewData.Item.ItemParts[i].PartKantim, NewData.Item.ItemParts[i].PartFirstMachine, NewData.Item.ItemParts[i].PartSecondMachine, NewData.Item.ItemParts[i].PartQuantity, NewData.Item.ItemParts[i].PartMaterial, NewData.Item.ItemParts[i].PartColor, NewData.Item.ItemParts[i].PartCropType, NewData.Item.ItemParts[i].PartCategory, NewData.Item.ItemParts[i].PartComment, NewData.Item.ItemParts[i].PartLength, NewData.Item.ItemParts[i].PartWidth, NewData.Item.ItemParts[i].PartThickness, NewData.Item.ItemParts[i].AdditionToLength, NewData.Item.ItemParts[i].AdditionToWidth, NewData.Item.ItemParts[i].AdditionToThickness, NewData.ProjectNum, NewData.Item.ItemNum, "Part");
             if (i < (NewData.Item.ItemParts.Count - 1))
             {
                 sbPartVal.Append(",");

@@ -98,7 +98,6 @@ namespace KinartiProject_ruppin.Models
 
         public Project(float _projectNum, string _projectName, string _ProdEntranceDate, Item item, string _projectStatus = "טרם התחיל")
         {
-            //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
             ProjectNum = _projectNum;
             ProjectName = _projectName;
             ProdEntranceDate = DateTime.Parse(_ProdEntranceDate);

@@ -25,12 +25,12 @@ namespace KinartiProject_ruppin.Models
             ProjectName = projectname;
             ItemGroupCount = itemGroupCount;
         }
-        public Item(string itemnum, List<Part> itemparts, string itemstatus = "עוד לא התחיל")
+        public Item(string itemnum, string itemname, List<Part> itemparts, string itemstatus = "עוד לא התחיל")
         {
             //In this constractor we will have to add ==string itemname== that we dont have now in the excel file
             ItemNum = itemnum;
             ItemStatus = itemstatus;
-            //ItemName = itemname;
+            ItemName = itemname;
             ItemParts = itemparts;
             //AddNewItemToDB();
         }
