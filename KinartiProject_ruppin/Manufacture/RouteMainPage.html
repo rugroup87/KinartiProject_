@@ -85,6 +85,9 @@
 
         #bodyRoute {
             top: 20%;
+            /*height: 70%;
+            border: 5px solid red;*/          
+            /*overflow-y: scroll;*/
         }
         .logo-box {
             float: left;
@@ -299,6 +302,9 @@
         /*/this is the station vizualization/*/
 
         /*#bodyRoute .middleBody {
+            overflow-y: scroll;
+            border: 3px solid blue;
+            height: 70%;
             float: left;
             padding-top: 0;
             margin-left: 90%;
@@ -325,8 +331,12 @@
         #bodyRoute .history-tl-container h1 {
             text-align: center;
             }
-        
-        #bodyRoute .history-tl-container ul.tl li {
+
+            #bodyRoute .history-tl-container ul.tl{
+                display: inline;
+            }
+
+            #bodyRoute .history-tl-container ul.tl li {
                 list-style: none;
                 margin: auto;
                 margin-left: 200px;
@@ -548,7 +558,7 @@
 </div>\
 <div class='modal-footer'>\
 <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
-<input type='submit' data-content='remove' class='btn btn-primary' id='createNewRouteButton' value='צור מסלול'/>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='createNewRouteButton' value='עדכן מסלול'/>\
 </div>\
 </form></div></div></div>";
             $('#containerID').append(str);
@@ -771,10 +781,10 @@
             <p><u><b>בחר מסלול מהרשימה</b></u></p>
             <!--<div class="containerRadioButtons"></div>-->
         </div>
-        <!--<div class="middleBody"></div>-->
-        <div class="containerRadioButtons"></div>
-        <div class="history-tl-container"></div>
-
+        <!--<div class="middleBody">-->            
+            <div class="containerRadioButtons"></div>
+            <div class="history-tl-container"></div>
+        <!--  --></div>
 
     </div>
     <!--</div>-->
