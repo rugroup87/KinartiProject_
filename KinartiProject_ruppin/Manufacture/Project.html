@@ -318,7 +318,7 @@
             var statusRelateTo = "Project";
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
-            //todayDate = new Date().toISOString().split('T')[0];
+            todayDate = new Date().toISOString().split('T')[0];
         });
 
         function getSuccessStatus(statusArr) {
