@@ -316,9 +316,7 @@
             }*/
             /*-----------------------------Side Menu Style--------------------------------*/
             @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
-        }
-
-        @import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
+            @import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
 
         .fa-2x {
             font-size: 2em;
@@ -1039,8 +1037,8 @@
                     "search": "חיפוש:",
                     "loadingRecords": "Loading...",
                     "processing": "Processing...",
-                    "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
-                    "infoPostFix": "עמודות",
+                    "info": "מציג  _END_ מתוך _TOTAL_ שורות",
+                    //"infoPostFix": "עמודות",
                     "paginate":
                     {
                         "previous": "הקודם",
@@ -1078,6 +1076,7 @@
                     }
                 ]
             });
+            myTable.select.info(false)
 
         }
 

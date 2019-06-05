@@ -256,6 +256,7 @@
                 line-height: 1.42857143;
                 text-align: center;
             }
+        }
 
             #hProjNum, #hProjName {
                 display: inline-block;
@@ -369,30 +370,38 @@
                 //<button onclick='ResetFilters()'>Reset Filters</button>
                 $('#Filters').append(str);
 
-                //$("#ProjName p").text()
-                var columnDefs = [{
+                var columnDefs = [
+                    {
                     title: "שם פרוייקט",
-                    data: "ProjectName",
-                    "className": "dt-center",
-                    "targets": "_all",
-                    render: function (data, type, row, meta) {
-                        return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
-                    }
-                }, {
-                    title: "מ'ס פריט",
-                    data: 'ItemNum',
-                    "className": "dt-center",
-                    "targets": "_all"
-                }, {
-                    title: "שם פריט",
-                    data: 'ItemName',
-                    "className": "dt-center",
-                    "targets": "_all",
+                        data: "ProjectName",
+                        "className": "dt-center",
+                        "targets": "_all",
                         render: function (data, type, row, meta) {
-                            //str.replace
-                            return '<a href=Part.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ","%20") + ">" + data + '</a>'
+                            return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
+                        }
+                    },
+                    {
+                        title: "מס' פריט",
+                        data: 'ItemNum',
+                        "className": "dt-center",
+                        "targets": "_all"
+                    },
+                    {
+                        title: "שם פריט",
+                        data: 'ItemName',
+                        "className": "dt-center",
+                        "targets": "_all",
+                        render: function (data, type, row, meta) {
+                            return '<a href=Part.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + row.ProjectName + "&ItemNum=" + row.ItemNum + "&ItemName=" + row.ItemName.replace(" ", "%20") + ">" + data + '</a>'
+                        }
+                    },
+                    {
+                        title: "סטטוס פריט",
+                        data: 'ItemStatus',
+                        "className": "dt-center",
+                        "targets": "_all"
                     }
-                }, 
+
                 //   {
                 //    title: "מ'ס קבוצות",
                 //    data: 'ItemGroupCount',
@@ -404,19 +413,13 @@
                     //data: 'ItemCompletedPercentage',
                     //"className": "dt-center",
                     //"targets": "_all"
-                    //},
-                   {
-                    title: "סטטוס פריט",
-                    data: 'ItemStatus',
-                    "className": "dt-center",
-                    "targets": "_all"
-                   }
+                    //}
                 ];
             }
             else {
                 $("#ProjName").text(urlParams.get('ProjectName') + " - " + urlParams.get('ProjectNum'));
                 var columnDefs = [{
-                    title: "מ'ס פריט",
+                    title: "מס' פריט",
                     data: 'ItemNum',
                     "className": "dt-center",
                     "targets": "_all",
@@ -459,8 +462,8 @@
                     "search": "חיפוש:",
                     "loadingRecords": "Loading...",
                     "processing": "Processing...",
-                    "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
-                    "infoPostFix": "עמודות",
+                    "info": "מציג _END_ מתוך _TOTAL_ שורות",
+                    //"infoPostFix": "עמודות",
                     "paginate":
                     {
                         "previous": "הקודם",
@@ -469,26 +472,29 @@
                 },
                 data: itemslist,
                 columns: columnDefs,
-                dom: 'Bfrtip',        // Needs button container
+                //dom: 'Bfrtip',        // Needs button container
                 select: 'single',
                 //bFilter: false,////////////////////////////////////////////////////////////////////////////what is it?/////////////////////////////////////////////////////////////
                 responsive: true,
+                lengthChange: false,
                 altEditor: true,     // Enable altEditor
-                buttons: [{
-                    text: 'Add',
-                    name: 'add'        // do not change name
-                },
-                {
-                    extend: 'selected', // Bind to Selected row
-                    text: 'Edit',
-                    name: 'edit'        // do not change name
-                },
-                {
-                    extend: 'selected', // Bind to Selected row
-                    text: 'Delete',
-                    name: 'delete'      // do not change name
-                }]
+                //buttons: [{
+                //    text: 'Add',
+                //    name: 'add'        // do not change name
+                //},
+                //{
+                //    extend: 'selected', // Bind to Selected row
+                //    text: 'Edit',
+                //    name: 'edit'        // do not change name
+                //},
+                //{
+                //    extend: 'selected', // Bind to Selected row
+                //    text: 'Delete',
+                //    name: 'delete'      // do not change name
+                //}]
             });
+
+            myTable.select.info(false)
         }
         function errorGetProjectItems(itemslist) {
 

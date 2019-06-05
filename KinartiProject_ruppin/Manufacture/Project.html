@@ -345,16 +345,17 @@
         }
 
         function getSuccessProject(projectList) {
-            var columnDefs = [{
-                title: "מס' פרוייקט",
-                data: 'ProjectNum',
-                width: '10%',
-                render: function (data, type, row, meta) {
-                    return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
-                },
-                "className": "dt-center",
-                "targets": "_all"
-            }, {
+            var columnDefs = [
+                {
+                    title: "מס' פרוייקט",
+                    data: 'ProjectNum',
+                    width: '10%',
+                    render: function (data, type, row, meta) {
+                        return '<a href=Item.html?ProjectNum=' + data + "&ProjectName=" + row.ProjectName + ">" + data + '</a>'
+                    },
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
                 title: "שם",
                 data: 'ProjectName',
                 width: '15%',
@@ -372,7 +373,7 @@
                 "targets": "_all",
                     render: function (data) {
                         //initDates(data);
-                        if (data !== null) {
+                        if (data !== null && data !=='1900-01-01T00:00:00') {
                         var javascriptProdStartDate = new Date(data);
                         //אם שעה מלאה עם ארבע ספרות למשל 10:27
                         if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes() != 0) {
@@ -441,11 +442,11 @@
                 width: '25%',
                 defaultContent: "",
                 "className": "dt-center",
-                    "targets": "_all",
+                "targets": "_all",
                 //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
                     render: function (data, type, row) {
-                        if (data == null) {
-                            return data;
+                        if (data==null || data == 'null') {
+                            return '';
                         }
                         else {
                             if (type === 'display' && data.length > 20) {
@@ -476,8 +477,8 @@
                     "search": "חיפוש:",
                     "loadingRecords": "Loading...",
                     "processing": "Processing...",
-                    "info": "מציג _START_ מ _END_ מתוך _TOTAL_ שורות",
-                    "infoPostFix": "עמודות",
+                    "info": "מציג _END_ מתוך _TOTAL_ שורות",
+                    //"infoPostFix": "עמודות",
                     "paginate":
                     {
                         "previous": "הקודם",
@@ -512,6 +513,7 @@
                     //}
                 ]
             });
+            myTable.select.info(false)
         }
 
         $(document).on("click", "#checkbox", function (e) {
