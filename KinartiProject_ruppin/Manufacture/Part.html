@@ -240,7 +240,7 @@
 
             .modal-body {
                 background-color: #f0f0f0;
-                height: 500px;
+                height: 400px;
                 position: relative;
                 padding: 15px;
             }
@@ -335,7 +335,8 @@
 
 
         .main-menu:hover, nav.main-menu.expanded {
-            width: 250px;
+            width: 300px;
+            /*width: 30%;*/
             overflow: visible;
         }
 
@@ -364,7 +365,8 @@
             .main-menu li {
                 position: relative;
                 display: block;
-                width: 250px;
+                /*width: 250px;*/
+                width: 300px;
             }
 
                 .main-menu li > a {
@@ -395,7 +397,8 @@
                 position: relative;
                 display: table-cell;
                 vertical-align: middle;
-                width: 190px;
+                /*width: 190px;*/
+                width: 300px;
                 font-family: 'Titillium Web', sans-serif;
             }
 
@@ -759,7 +762,15 @@
         }
 
         function SuccessDeleteGroup() {
-            refreshParent()
+            swal({
+                title: 'קבוצה הוסרה!',
+                text: 'החלקים לא משתייכים לאף קבוצה כעת',
+                type: 'info',
+                icon: 'info',
+                buttons: 'אישור'
+            }).then(function (result) {
+                refreshParent();
+            })
         }
         function ErrorDeleteGroup() { }
 
@@ -1256,7 +1267,7 @@
             var groupList = [];
             //מביא את כל שמות הקבוצה מתוך תפריט הצד של קבוצות מוכנות
             $('.main-menu ul li span').each(function () {
-                //הוספת מתוך התפריט רק למי שיש תכונה אידי ובה שם שרשרנו את שם הקבוצה
+                //הוספת מתוך התפריט רק למי שיש תכונה אידי ובה שם שרשמרנו את שם הקבוצה
                 if ($(this).attr('id')) {
                     groupList.push($(this).attr('id'));
                 }
@@ -1286,8 +1297,12 @@
             var strReadyGroups = "";
             var groupListWithAccomplish = [];  //מערך רק של קבוצות השלמה
             for (var i = 0; i < groupList.length; i++) {
-                if (groupList[i].startsWith("השלמה_")) {
-                    groupListWithAccomplish.push(groupList[i].substr(6)); //חותך את השלמה_ ומשאיר שם המסלול המקורי
+                //if (groupList[i].startsWith("השלמה_")) {
+                //    groupListWithAccomplish.push(groupList[i].substr(6)); //חותך את השלמה_ ומשאיר שם המסלול המקורי
+                //    //groupListWithAccomplish.push(groupList[i]);
+                //}
+                if (groupList[i].startsWith("0") || groupList[i].startsWith("1") || groupList[i].startsWith("2")) {
+                    groupListWithAccomplish.push(groupList[i].substr(11)); //חותך את השלמה_ ומשאיר שם המסלול המקורי
                     //groupListWithAccomplish.push(groupList[i]);
                 }
             }
@@ -1355,10 +1370,13 @@
                     refreshParent();
                 })
             }
-                else {
+            else {
+                //var dateNow = DateTime.Today.ToString("dd-MM-yyyy");
+                var currentDate = new Date();
+                var dateNow = currentDate.getDate() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getFullYear();
                     swal({
                         title: '!קבוצת השלמה נוצרה',
-                        text: 'החלקים שבחרת להוסיף נוספו לקבוצה: השלמה_' + $('#groupsID option:selected').text(),
+                        text: 'החלקים שבחרת להוסיף נוספו לקבוצה: ' + dateNow + '_' + $('#groupsID option:selected').text(),
                         type: 'success',
                         icon: 'info',
                         buttons: 'אישור'
