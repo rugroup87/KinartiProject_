@@ -310,6 +310,14 @@
     <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
 
+
+    <script type="text/javascript">
+        function ShowErr() {
+            alert('show');
+        }
+
+    </script>
+
     <script>
         $(document).ready(function () {
             StatusArr = [];
@@ -565,8 +573,10 @@
         });
 
         function updateSuccessStatus() {
+            alert('suc')
         }
         function errorUpdateStatus() {
+            alert('error')
         }
 
         //רענון הטבלה כששומרים רשומה

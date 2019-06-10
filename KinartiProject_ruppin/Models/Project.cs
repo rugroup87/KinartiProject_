@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+//using System.Web.UI;
 using System.Linq;
 using System.Web;
 using System.Data;
 using System.Globalization;
+using System.Web.UI;
 
 namespace KinartiProject_ruppin.Models
 {
@@ -143,6 +145,15 @@ namespace KinartiProject_ruppin.Models
         {
             DBServices dbs = new DBServices();
             List<Project> lp = new List<Project>();
+            //ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "AlertBox", "alert('Your Message');", true);
+            //HttpResponse.Write("<script>alert('Called from code-behind directly!');</script>");
+            //Response.Write("<script>alert('Called from code-behind directly!');</script>");
+            //HttpContext.Current.Response.Write("<script>alert('Called from code-behind directly!');</script>");
+            //var page = HttpContext.Current.CurrentHandler as Page;
+            //string jscript = "<script>alert('YOUR BUTTON HAS BEEN CLICKED')</script>";
+            //System.Type t = this.GetType();
+            //page.ClientScript.RegisterStartupScript(t, "k", jscript);
+
             lp = dbs.GetAllProject();
             return lp;
         }

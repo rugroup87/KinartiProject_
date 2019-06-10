@@ -27,6 +27,7 @@ namespace KinartiProject_ruppin.Models
         private static bool Hituh_ThreadIsSleeping = false;
         private static bool shiuf_ThreadIsSleeping = false;
         private static bool Nisur_ThreadIsSleeping = false;
+        private static bool LastPartFinish = false;
 
         public BarCode()
         {
@@ -41,33 +42,39 @@ namespace KinartiProject_ruppin.Models
             TempObj data = (TempObj)o;
             Thread.Sleep(data.PartTimeAvg * 60000);
             DBServices dbs = new DBServices();
-            dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName, data.GroupName, data.CategoryType, data.CategoryTime, data.PartTimeAvg);
-            switch (data.StationName)
+            //return "Thread Activated";
+            
+            if (!LastPartFinish)
             {
-                case "CNC":
-                    cnc_ThreadIsSleeping = false;
-                    break;
-                case "צבע 1":
-                    color1_ThreadIsSleeping = false;
-                    break;
-                case "צבע 2":
-                    color2_ThreadIsSleeping = false;
-                    break;
-                case "הדבקה":
-                    Adbaka_ThreadIsSleeping = false;
-                    break;
-                case "חיתוך":
-                    Hituh_ThreadIsSleeping = false;
-                    break;
-                case "שיוף":
-                    shiuf_ThreadIsSleeping = false;
-                    break;
-                case "ניסור":
-                    Nisur_ThreadIsSleeping = false;
-                    break;
-                default:
-                    break;
             }
+            //    dbs.UpdateStatusWaitingForMachine(data.PartBarCode, data.NextGroupStationName, data.GroupName, data.CategoryType, data.CategoryTime, data.PartTimeAvg);
+            //    switch (data.StationName)
+            //    {
+            //        case "CNC":
+            //            cnc_ThreadIsSleeping = false;
+            //            break;
+            //        case "צבע 1":
+            //            color1_ThreadIsSleeping = false;
+            //            break;
+            //        case "צבע 2":
+            //            color2_ThreadIsSleeping = false;
+            //            break;
+            //        case "הדבקה":
+            //            Adbaka_ThreadIsSleeping = false;
+            //            break;
+            //        case "חיתוך":
+            //            Hituh_ThreadIsSleeping = false;
+            //            break;
+            //        case "שיוף":
+            //            shiuf_ThreadIsSleeping = false;
+            //            break;
+            //        case "ניסור":
+            //            Nisur_ThreadIsSleeping = false;
+            //            break;
+            //        default:
+            //            break;
+            //    }
+            
         }
 
 
@@ -80,6 +87,7 @@ namespace KinartiProject_ruppin.Models
             //  בהמשך אפשר אולי יהיה אפשר לרכז את זה בשאילתה 1 או 2 ולשים את זה לתוך משתנים של הקלאס הזה של סריקה
             DBServices dbs = new DBServices();
             string CurrentGroupPositionNo = null;
+            string NextGroupStationNo = null;
             string NextGroupStationName = null;
             string PrevGroupStationName = null;
             int Nexttemp = 1;
@@ -113,15 +121,20 @@ namespace KinartiProject_ruppin.Models
                     PrevGroupStationName = dbs.GetNextGroupStationName(CurrentGroupPositionNo, PartBarCode);
                 }
             }
+            else
+            {
+                //צריך לראות מה עושים אם הוא המיקום הנוכחי הוא ריק או לא קיים
+            }
                      
             int TotalStationCount = dbs.GetTotalStationCount(PartBarCode);
             int partCount = dbs.GetpartCount(PartBarCode);
             int ScannedPartCount = dbs.GetScannedPartCount(PartBarCode);
 
-            //הפונקציה הזאת לא יכולה להיות פה - רק במקרה שהכן יש מסלול הבא... צריך לבדוק
-            string NextGroupStationNo = dbs.GetNextGroupStationNo(Nexttemp.ToString(), PartBarCode);
-            NextGroupStationName = dbs.GetNextGroupStationName(Nexttemp.ToString(), PartBarCode);
-             
+                //הפונקציה הזאת לא יכולה להיות פה - רק במקרה שהכן יש מסלול הבא... צריך לבדוק
+                NextGroupStationNo = dbs.GetNextGroupStationNo(Nexttemp.ToString(), PartBarCode);
+                NextGroupStationName = dbs.GetNextGroupStationName(Nexttemp.ToString(), PartBarCode);
+            
+
 
             string CategoryType = dbs.GetCategoryType(StationName);
 
@@ -135,6 +148,11 @@ namespace KinartiProject_ruppin.Models
 
                 if (partCount == ScannedPartCount)
                 {
+
+                    //if(dbs.CheckIfFinishScan())
+                    //{
+
+                    //}
                     // השאילתה מביאה לנו את החציון של חלקים במכונה
                     PartTimeAvg = dbs.GetMedianTimeForPart(PartBarCode, GroupName, CurrentDate);
 
@@ -178,7 +196,8 @@ namespace KinartiProject_ruppin.Models
             }
             else
             {
-                ////////////////////////////////////////////////////////אני פה!!!!!!//////////////////////////////////////////////////////////////
+                ///////////////////// את החלק הזה יש אפשרות להוריד...משום שכבר יש 2 סריקות לחלק אחרון!!!!!!//////////////////////////////////////////////////////////////
+                // חלק חדש שנסרק בתחנה חדשה
                 if (ClickedStationNo == NextGroupStationNo && partCount == ScannedPartCount)
                 {
                     bool FinishThread = false;
@@ -281,6 +300,37 @@ namespace KinartiProject_ruppin.Models
                     else
                     {
                         throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה.");
+                    }
+                    if(ClickedStationNo == CurrentGroupStationNo && partCount == ScannedPartCount)
+                    {
+                        LastPartFinish = true;
+                        switch (StationName)
+                        {
+                            case "CNC":
+                                    cnc.Abort();
+                                break;
+                            case "צבע 1":
+                                    color1.Abort();
+                                break;
+                            case "צבע 2":
+                                    color2.Abort();
+                                break;
+                            case "הדבקה":
+                                    Adbaka.Abort();
+                                break;
+                            case "חיתוך":
+                                    Hituh.Abort();
+                                break;
+                            case "שיוף":
+                                    shiuf.Abort();
+                                break;
+                            case "ניסור":
+                                    Nisur.Abort();
+                                break;
+                            default:
+                                break;
+                        }
+                        dbs.UpdateStatusWaitingForMachine(PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime, PartTimeAvg);
                     }
                 }
             }

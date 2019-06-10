@@ -44,13 +44,21 @@
 
         function ScanSuccessPart(data) {
             //swal(data, "success");
-            alert("ok");
+            if (data == 'Thread Activated') {
+                alert("Did you finish last part?");
+            }
+            
+            else {
+                alert("ok");
+            }
             return false;
         }
 
-        function errorScanPart(data) {
+        function errorScanPart(err) {
             //swal("Error: ", data.responseJSON.ExceptionMessage, "error");     
-            alert("No");
+            //alert("No");
+            var er = eval("(" + err.responseText + ")");
+            swal("Error: " + er.ExceptionMessage);
             return false;
         }
 
