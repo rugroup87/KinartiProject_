@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <style>
 
 
@@ -39,6 +39,13 @@
             margin-right: 4%;
         }
 
+        div.dt-buttons {
+            /*position: fixed;
+            top: 0;
+            right: 0;*/
+            padding-left: 5%;
+        }
+
         .TopMenuContainer {
             padding: 0px /*auto*/;
             margin: 0px auto;
@@ -55,7 +62,7 @@
             }
 
             .logo-box img {
-                    height: 70px;
+                height: 70px;
                 display: block;
             }
 
@@ -274,55 +281,54 @@
                 text-align: right;
                 border-top: 1px solid #e5e5e5;
             }
-
         }
 
-            .modal-title {
-                margin: 0;
-                line-height: 1.42857143;
-                text-align: center;
-            }
+        .modal-title {
+            margin: 0;
+            line-height: 1.42857143;
+            text-align: center;
+        }
 
-            #mainH_form, #secondH_form {
-                display: inline-block;
-                padding-right: 2%;
-            }
+        #mainH_form, #secondH_form {
+            display: inline-block;
+            padding-right: 2%;
+        }
 
-            #ProjName {
-                text-align: center;
-                color: #000000;
-                text-shadow: 0 0px 2px #000000;
-                font-size: 20px;
-                font-family: monospace;
-            }
+        #ProjName {
+            text-align: center;
+            color: #000000;
+            text-shadow: 0 0px 2px #000000;
+            font-size: 20px;
+            font-family: monospace;
+        }
 
-            #containerID {
-                margin: 0px;
-                padding-right: 20px;
-                width: 102%;
-            }
+        #containerID {
+            margin: 0px;
+            padding-right: 20px;
+            width: 102%;
+        }
 
-            #example {
-                width: 100%;
-            }
+        #example {
+            width: 100%;
+        }
 
-            .dt-buttons{
-                margin-left: 50px;
-            }
+        /*.dt-buttons {
+            margin-left: 50px;
+        }*/
 
-            /*This is For the Edit button location*/
-            /*a.dt-button.buttons-selected-formAddToExistGroup {
+        /*This is For the Edit button location*/
+        /*a.dt-button.buttons-selected-formAddToExistGroup {
                 margin-left: 80px;
             }*/
-            /*-----------------------------Side Menu Style--------------------------------*/
-            @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
-            @import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
+        /*-----------------------------Side Menu Style--------------------------------*/
+        @import url(//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css);
+        @import url(https://fonts.googleapis.com/css?family=Titillium+Web:300);
 
-        .fa-2x {
+        i.fa-2x {
             font-size: 2em;
         }
 
-        .fa {
+        i.fa {
             position: relative;
             display: table-cell;
             width: 60px;
@@ -630,13 +636,22 @@
             color: #dc2a2a;
         }
         /*this is for the icons style - space between them*/
-        .fa, .fas {
+        i.fa, .fas {
             margin-right: 20%;
         }
 
         /*בתוך טופס של הוספת לקבוצה - שם הקבוצה לוקח את כל רוחב הטופס ומתחתיו הטבלת חלקים*/
         #readyGroups {
             float: none;
+        }
+
+        #icons {
+            margin: 0px;
+            width: 0px;
+            height: 0px;
+            vertical-align: unset;
+            color: #111;
+            font-size: small;
         }
     </style>
 
@@ -650,6 +665,16 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
+    <!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>"-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>-->
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
 
     <script>
 
@@ -690,7 +715,7 @@
             $(document).on("click", ".main-menu ul li span", function () {
                 //צריך לשים לב אם אנחנו שוב מקבלים של קבוצה ב-2 מילים ואז אולי צריך לחתוך את זה
                 console.log($(this).id);
-                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id")) + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum') ;
+                uriGroupParts = "../api/GetGroupParts?groupName=" + ($(this).attr("id")) + "&projectNum=" + urlParams.get('ProjectNum') + "&itemNum=" + urlParams.get('ItemNum');
                 ajaxCall("GET", uriGroupParts, "", GetSuccessGroupParts, ErrorGetGroupParts);
                 console.log($(this).text());
             });
@@ -749,11 +774,11 @@
                 $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
             });
 
-            //בלחיצת כפתור "הוסף לקבוצה קיימת" 
+            //בלחיצת כפתור "הוסף לקבוצה קיימת"
             $(document).on("click", "#addToExistGroupButton", function () {
                 $("#formIDaddToExistGroup").submit(addPartToExistGroup);
             });
-            
+
         });
 
         //רענון הטבלה כששומרים רשומה
@@ -780,8 +805,7 @@
         }
         function ErrorDeletePartFromGroup() { }
 
-        function SuccessUpdateGroupEstTime()
-        {
+        function SuccessUpdateGroupEstTime() {
             refreshParent()
             //$("#altEditor-modal").remove();
             //צריך לעשות פה סוואל
@@ -824,7 +848,7 @@
             }
             str += "</tbody></table>"
             str += "<div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style = 'padding-top:7px;' > <button type='button' data-content='remove' class='btn btn-default' id='DeleteGroup' data-dismiss='modal'>מחק קבוצה</button></div ></form ></pre ></div >\
-                <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='refreshWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
+                    <div class='modal-footer'><button type='button' data-content='remove' class='btn btn-default' id='refreshWindowsButton' data-dismiss='modal'>סגור</button><button type='button' data-content='remove' class='btn btn-primary' id='SaveGroupChanges'>שמור שינויים</button></div></div ></div ></div > ";
 
             $('#containerID').append(str);
         }
@@ -840,24 +864,20 @@
             str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span style='color: #f9f9f9;' class='unclickable nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
-            for (var i = 0; i < Data.Glist.length; i++)
-            {
+            for (var i = 0; i < Data.Glist.length; i++) {
                 // כרגע זה יעבוד עם עוד לולאה שתרוץ על המכונות ותבדוק כל קבוצה לאיזה מכונה היא שייכת וככה תביא לו את השם
                 // בהמשך רצוי להכניס את ערכי התכנות המספר שלהם לתוך ג'יסון שהמפתח יהיה המספר מכונה והערך שלו יהיה השם של התחנה
-                for (var k = 0; k < Data.mlist.length; k++)
-                {
-                    if (Data.Glist[i].CurrentGroupStation == Data.mlist[k].MachineNum)
-                    {
+                for (var k = 0; k < Data.mlist.length; k++) {
+                    if (Data.Glist[i].CurrentGroupStation == Data.mlist[k].MachineNum) {
                         str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "   כעת ב - " + Data.mlist[k].MachineName + "</span></a></li>"
                         ok = false;
                         break;
                     }
                 }
-                if (ok)
-                {
+                if (ok) {
                     str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "  תרם התחיל- </span></a></li>"
                 }
-                
+
             }
             str += "</ul>"
             $('.main-menu').append(str);
@@ -1071,7 +1091,7 @@
                     //}
                     {
                         extend: 'selected', // Bind to Selected row
-                        text: 'צור קבוצה',
+                        text: '<i id="icons" class="fa fa-puzzle-piece"></i>&nbsp;צור קבוצה',
                         name: 'formCreateNewGroup',  // do not change name
                         action: function (nButton, oConfig, oFlash) {
                             formCreateNewGroup(oConfig);
@@ -1079,10 +1099,30 @@
                     },
                     {
                         extend: 'selected', // Bind to Selected row
-                        text: 'הוספה לקבוצה קיימת',
+                        text: '<i id="icons" class="fa fa-plus"></i>&nbsp;הוספה לקבוצה קיימת',
                         name: 'formAddToExistGroup',      // do not change name
                         action: function (nButton, oConfig, oFlash) {
                             formAddToExistGroup(oConfig);
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i id="icons" class="fa fa-print"></i>&nbsp;ייצוא',
+                        title: $("#ProjName").text(),
+                        exportOptions: {
+                            columns: [0,1,2,5,6,7,8,9,10,11,12,13]
+                        },
+                        customize: function (win) {
+                            $(win.document.body)
+                                .css('font-size', '8px')
+                                .css('direction', 'rtl')
+                                .prepend(
+                                    '<img src="Logo.jpg" style="position:absolute; top:0; left:0;" />'
+                                );
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
                         }
                     }
                 ]
@@ -1260,7 +1300,7 @@
         function errorGetRoute() {
         }
 
-        ////תפיסת לחיצת כפתור הוספה לקבוצה ופתיחת חלון חדש לטופס 
+        ////תפיסת לחיצת כפתור הוספה לקבוצה ופתיחת חלון חדש לטופס
         function formAddToExistGroup(dt) {
             //    תפיסת השורות שאותן רוצים לערוך
             data_rows = dt.rows({ selected: true });
@@ -1306,7 +1346,7 @@
                     //groupListWithAccomplish.push(groupList[i]);
                 }
             }
-            
+
             for (var i = 0; i < groupList.length; i++) { //ריצה על כל המסלולים הקיימים
                 var accomplishGroup = true;
                 for (var j = 0; j < groupListWithAccomplish.length; j++) { //מסלולים שיש להם כבר השלמה
@@ -1316,7 +1356,7 @@
                     }
                 }
                 if (accomplishGroup) { //תכניס לרשימת בחירה רק את אלו שעם השם המקורי
-                    strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";              
+                    strReadyGroups += "<option value='" + i + "'>" + groupList[i] + "</option>";
                 }
                 //if (accomplishGroup) {
                 //    strReadyGroups += "<option value='" + i + "'>השלמה_" + groupList[i] + "</option>";
@@ -1356,7 +1396,7 @@
             return false;
 
         }
-        
+
         function SuccessAddPartToExistGroup(checkAccomplishGroup) {
             //במידה ולא יצרנו קבוצה השלמה
             if (!checkAccomplishGroup) {
@@ -1374,18 +1414,18 @@
                 //var dateNow = DateTime.Today.ToString("dd-MM-yyyy");
                 var currentDate = new Date();
                 var dateNow = currentDate.getDate() + '-' + (currentDate.getMonth() + 1) + '-' + currentDate.getFullYear();
-                    swal({
-                        title: '!קבוצת השלמה נוצרה',
-                        text: 'החלקים שבחרת להוסיף נוספו לקבוצה: ' + dateNow + '_' + $('#groupsID option:selected').text(),
-                        type: 'success',
-                        icon: 'info',
-                        buttons: 'אישור'
-                    }).then(function (result) {
-                        refreshParent();
-                    })
-                }
+                swal({
+                    title: '!קבוצת השלמה נוצרה',
+                    text: 'החלקים שבחרת להוסיף נוספו לקבוצה: ' + dateNow + '_' + $('#groupsID option:selected').text(),
+                    type: 'success',
+                    icon: 'info',
+                    buttons: 'אישור'
+                }).then(function (result) {
+                    refreshParent();
+                })
+            }
 
-            
+
         }
 
         function ErrorAddPartToExistGroup(err) {
