@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.1.2/css/buttons.dataTables.min.css" />  <!--dataTables.buttons-->
     <link rel="stylesheet" href="https://cdn.datatables.net/select/1.1.2/css/select.dataTables.min.css" />  <!--dataTables.select-->
     <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.0.2/css/responsive.dataTables.min.css" />  <!--dataTables.responsive-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--This Is The Menu CSS-->
 
     <style>
@@ -25,17 +26,36 @@
         }
 
         .container {
-            padding: 0 ;
+            padding: 0;
             /*max-width: 960px;*/
             margin: 0 auto;
         }
+
+        div.dt-buttons {
+            /*position: fixed;
+            top: 0;
+            right: 0;*/
+            padding-left: 5%;
+        }
+
+        /*.centeredHeader{
+            text-align: center;
+            font-size: xx-large;
+        }*/
+
+        /*#buttonPDF {
+            border-radius: 10px;
+            border-width: 3px;
+            margin-right: 85%;
+            font-weight: bolder;
+        }*/
 
         .logo-box {
             float: left;
             margin-right: 20px;
         }
 
-        .logo-box a {
+            .logo-box a {
                 outline: none;
                 display: block;
             }
@@ -88,9 +108,10 @@
             nav a:hover {
                 color: #43a4f7;
             }
+
                 nav a:hover:after {
-                width: 100%;
-            }
+                    width: 100%;
+                }
 
         @media screen and (max-width: 660px) {
             header {
@@ -186,15 +207,17 @@
                 width: 600px;
                 margin: 20px auto;
             }
+
             .col-sm-3 {
                 width: 100%;
             }
+
             .modal-content {
                 -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 box-shadow: 0 5px 150px rgba(0,0,0,.5);
             }
         }
-        
+
         button.close {
             -webkit-appearance: none;
             padding-left: 10px;
@@ -207,6 +230,7 @@
             .col-md-3 {
                 width: 50%;
             }
+
             .container {
                 width: 100%;
             }
@@ -227,7 +251,7 @@
 
         .modal-body {
             background-color: #f0f0f0;
-            height: 500px;
+            /*height: 500px;*/
             position: relative;
             padding: 15px;
         }
@@ -287,15 +311,14 @@
         }
 
         /*This is For the Edit button location*/
-        a.dt-button.buttons-selected {
+        /*a.dt-button.buttons-selected {
             margin-left: 80px;
-        }
+        }*/
 
         /*make unclickable label with this id*/
         .unclickable {
             pointer-events: none;
         }
-
     </style>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -306,6 +329,17 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+
+
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
+    <!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>"-->
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>-->
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
     <script src="https://cdn.datatables.net/plug-ins/1.10.19/sorting/datetime-moment.js"></script>
     <script src="../Scripts/ajaxCalls.js"></script>
@@ -327,6 +361,7 @@
             uri = "../api/status?relateTo=" + statusRelateTo;
             ajaxCall("GET", uri, "", getSuccessStatus, errorStatus);
             todayDate = new Date().toISOString().split('T')[0];
+            dataTableData = [];
         });
 
         function getSuccessStatus(statusArr) {
@@ -342,7 +377,7 @@
         function initDates(fullData) {
             if (fullData !== null) {
                 var jsDate = new Date(fullData);
-                jsDate = jsDate.getDate() + "/" + (jsDate.getMonth() + 1) + "/" + jsDate.getFullYear();                
+                jsDate = jsDate.getDate() + "/" + (jsDate.getMonth() + 1) + "/" + jsDate.getFullYear();
                 if (jsDate == "1/1/1900") {
                     return ("");
                 }
@@ -353,6 +388,7 @@
         }
 
         function getSuccessProject(projectList) {
+            dataTableData = projectList;
             var columnDefs = [
                 {
                     title: "מס' פרוייקט",
@@ -364,96 +400,82 @@
                     "className": "dt-center",
                     "targets": "_all"
                 }, {
-                title: "שם",
-                data: 'ProjectName',
-                width: '15%',
-                render: function (data, type, row, meta) {
-                    return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + data + ">" + data + '</a>'
-                },
-                "className": "dt-center",
-                "targets": "_all"
-            }, {
-                title: "ת. תחילת ייצור",
-                data: 'ProdStartDate',
-                width: '15%',
-                defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all",
+                    title: "שם",
+                    data: 'ProjectName',
+                    width: '15%',
+                    render: function (data, type, row, meta) {
+                        return '<a href=Item.html?ProjectNum=' + row.ProjectNum + "&ProjectName=" + data + ">" + data + '</a>'
+                    },
+                    "className": "dt-center",
+                    "targets": "_all"
+                }, {
+                    title: "ת. תחילת ייצור",
+                    data: 'ProdStartDate',
+                    width: '15%',
+                    defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
                     render: function (data) {
                         //initDates(data);
-                        if (data !== null && data !=='1900-01-01T00:00:00') {
-                        var javascriptProdStartDate = new Date(data);
-                        //אם שעה מלאה עם ארבע ספרות למשל 10:27
-                        if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes() != 0) {
-                            javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "  " +
-                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                        if (data !== null && data !== '1900-01-01T00:00:00') {
+                            var javascriptProdStartDate = new Date(data);
+                            //אם שעה מלאה עם ארבע ספרות למשל 10:27
+                            if (javascriptProdStartDate.getHours() != 0 && javascriptProdStartDate.getMinutes() != 0) {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            //אם השעה חצות בדיוק נהפוך את זה מ 0:0 ל 00:00
+                            else if (javascriptProdStartDate.getHours() == 0) {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:0" + javascriptProdStartDate.getMinutes() + "  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            //אם השעה היא חצות וכמה דקות נהפוך את זה מ 0:32 ל 00:32
+                            else if (javascriptProdStartDate.getMinutes() == 0) {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:" + javascriptProdStartDate.getMinutes() + "0  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            // אם הדקות 0 נוסיף אפס שיהיה בדקות 00
+                            else {
+                                javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "0  " +
+                                    javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
+                            }
+                            if (javascriptProdStartDate == "00:00 1/1/1900") {
+                                return ("");
+                            }
+                            return javascriptProdStartDate;
+                        } else {
+                            return "";
                         }
-                        //אם השעה חצות בדיוק נהפוך את זה מ 0:0 ל 00:00
-                        else if (javascriptProdStartDate.getHours() == 0) {
-                            javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:0" + javascriptProdStartDate.getMinutes() + "  " +
-                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                        }
-                        //אם השעה היא חצות וכמה דקות נהפוך את זה מ 0:32 ל 00:32
-                        else if (javascriptProdStartDate.getMinutes() == 0) {
-                            javascriptProdStartDate = javascriptProdStartDate.getHours() + "0:" + javascriptProdStartDate.getMinutes() + "0  " +
-                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                        }
-                        // אם הדקות 0 נוסיף אפס שיהיה בדקות 00
-                        else {
-                            javascriptProdStartDate = javascriptProdStartDate.getHours() + ":" + javascriptProdStartDate.getMinutes() + "0  " +
-                                javascriptProdStartDate.getDate() + "/" + (javascriptProdStartDate.getMonth() + 1) + "/" + javascriptProdStartDate.getFullYear();
-                        }
-                        if (javascriptProdStartDate == "00:00 1/1/1900") {
-                            return ("");
-                        }
-                        return javascriptProdStartDate;
-                    } else {
-                        return "";
                     }
-                }
-            }, {
-                title: "ת. אספקה",
-                data: 'SupplyDate',
-                width: '10%',
-                defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all",
+                }, {
+                    title: "ת. אספקה",
+                    data: 'SupplyDate',
+                    width: '10%',
+                    defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
                     render: function (data) {
                         return initDates(data);
                     }
-            }, {
-                title: "סטטוס פרוייקט",
-                data: 'ProjectStatus',
-                width: '15%',
-                defaultContent: "",
-                "className": "dt-center",
-                id: "ProjectStatus",
+                }, {
+                    title: "סטטוס פרוייקט",
+                    data: 'ProjectStatus',
+                    width: '15%',
+                    defaultContent: "",
+                    "className": "dt-center",
+                    id: "ProjectStatus",
                     "targets": "_all",
                     render: function (data) { return createSelect(data); }
-                    //function (data, type, full, meta) {
-                    //    if (type === 'filter' || type === 'sort') {
-                    //        var api = new $.fn.dataTable.Api(meta.settings);
-                    //        var td = api.cell({ row: meta.row, column: meta.col }).node();
-                    //        var $input = $('select, input', td);
-                    //        if ($input.length && $input.is('select')) {
-                    //            data = $('option:selected', $input).text();
-                    //        } else {
-                    //            data = $input.val();
-                    //        }
-                    //    }
-
-                    //    return data;
-                    //}                
-            }, {
-                title: "הערות",
-                data: 'Comment',
-                width: '25%',
-                defaultContent: "",
-                "className": "dt-center",
-                "targets": "_all",
-                //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
+                }, {
+                    title: "הערות",
+                    data: 'Comment',
+                    width: '25%',
+                    defaultContent: "",
+                    "className": "dt-center",
+                    "targets": "_all",
+                    //הצגה בטבלה של חלק מההערה ולא את כולה כדי שהשורה לא תתרחב
                     render: function (data, type, row) {
-                        if (data==null || data == 'null') {
+                        if (data == null || data == 'null') {
                             return '';
                         }
                         else {
@@ -465,12 +487,12 @@
                             }
                         }
                     }
-            }, {
-                title: "ת. כניסה לעבודה",
-                data: 'ProdEntranceDate',
-                width: '10%',
-                defaultContent: "",
-                "className": "dt-center",
+                }, {
+                    title: "ת. כניסה לעבודה",
+                    data: 'ProdEntranceDate',
+                    width: '10%',
+                    defaultContent: "",
+                    "className": "dt-center",
                     "targets": "_all",
                     render: function (data) {
                         return initDates(data);
@@ -487,13 +509,14 @@
                     "processing": "Processing...",
                     "info": "מציג _END_ מתוך _TOTAL_ שורות",
                     //"infoPostFix": "עמודות",
+                    //"buttons": 'pdf',
                     "paginate":
                     {
                         "previous": "הקודם",
                         "next": "הבא",
                     }
                 },
-                data: projectList,
+                data: dataTableData,
                 columns: columnDefs,
                 //"fixedColumns": true,
                 //scrollX: true,
@@ -502,26 +525,39 @@
                 //responsive: true,
                 altEditor: true,     // Enable altEditor
                 buttons: [
-                //    {
-                //    text: 'Add',
-                //    name: 'add'        // do not change name
-                //},
-                {
+                    {
                     extend: 'selected', // Bind to Selected row
-                    text: 'עריכת רשומה',
+                    text: '<i class="fa fa-pencil"></i>&nbsp;עריכת רשומה',
                     name: 'editForm',  // do not change name
                     action: function (nButton, oConfig, oFlash) {
                         editForm(oConfig);
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="fa fa-print"></i>&nbsp;ייצוא',
+                        title: 'רשימת פרוייקטים',
+                        exportOptions: {
+                            columns: [0, 1, 2, 3, 5, 6]
+                        },
+                        customize: function (win) {
+                            $(win.document.body)
+                                .css('font-size', '14px')
+                                .css('direction', 'rtl')
+                                .prepend(
+                                    '<img src="https://commondatastorage.googleapis.com/easy/images/UserPics/2608608_1527707898756.jpg" style="height:70px; position:absolute; top:0; left:0; opacity: 0.3;"/>'
+                                );
+
+                            $(win.document.body).find('table')
+                                .addClass('compact')
+                                .css('font-size', 'inherit');
+                        }
                     }
-                }
-                //{
-                //    extend: 'selected', // Bind to Selected row
-                //    text: 'Delete',
-                //    name: 'delete'      // do not change name
-                    //}
                 ]
             });
             myTable.select.info(false)
+
+
         }
 
         $(document).on("click", "#checkbox", function (e) {
@@ -545,7 +581,7 @@
             swal("Error: " + err);
         }
 
-        // the function creates a dropdown list box of ProjectStatus  
+        // the function creates a dropdown list box of ProjectStatus
         function createSelect(selItem) {
             var sel = "<select>";
             for (var i = 0; i < StatusArr.length; ++i) {
@@ -605,7 +641,7 @@
                 Comment: $("#commentID").val()
             }
             ajaxCall("PUT", "../api/project/UpdateProject", JSON.stringify(Project), successUpdatesProject, errorUpdatesProject);
-            
+
         });
 
         //בהצלחת שמירת טופס עריכה
@@ -619,9 +655,9 @@
                 buttons: false
             })
             setTimeout(function () {
-                refreshParent(); 
+                refreshParent();
             }, 2000);
-            
+
         }
 
         function errorUpdatesProject() {
@@ -636,8 +672,10 @@
             var prodStartDateForm = dateToForm(new Date(data_row.ProdStartDate));
             var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
             var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
-       
+
             var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' name='setTodaysDate' id='prodStartDateID' placeholder='ת. תחילת ייצור' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='setTodaysDate' placeholder='ת. אספקה' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class=' unclickable form-control  form-control-sm' value='" + data_row.ProjectStatus + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='unclickable form-control  form-control-sm' value= '" + prodEntranceDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
+            //var str2 = "<button type='button' id='buttonPDF' onclick='ExportPDF'>PDF</button>";
+            //$('.export').append(str2);
             $('#containerID').append(str);
         }
 
@@ -664,8 +702,24 @@
             else {
                 return (formDate.getFullYear() + "-" + month + "-" + day)
             }
-            
+
         }
+
+
+                //$(document).on("click", "#buttonPDF", function () {
+                //    //console.log(myTable.data().length);
+                //    //console.log(myTable.data()[0]);
+                //    //console.log(dataTableData);
+                //    ajaxCall("POST", "../api/ExportingPDF", dataTableData, exportPDF, errorExportPDF);
+                //})
+
+                //function exportPDF() {
+                //    return;
+                //}
+
+                //function errorExportPDF(err) {
+                //    swal("Error: " + err);
+                //}
 
     </script>
 </head>
@@ -689,7 +743,7 @@
         </div>
     </header>
     <br />
-
+    <!--<div class="export"><button id='buttonPDF'>PDF</button></div>-->
     <div class="container" id="containerID">
         <input id="checkbox" type="checkbox" style="margin-right:30px;" checked>
         <label>הראה בנוסף פרויקטים שהסתיימו</label>

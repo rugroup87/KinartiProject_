@@ -1459,7 +1459,7 @@ public class DBServices
         StringBuilder sbDecreasePartCount = new StringBuilder();
         StringBuilder sbDecreaseGroupCountFromItem = new StringBuilder();
 
-
+        //אולי בשם קבוצה לשים נאל ולא מרכאות ריקות
         sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '', partStatus='חלק טרם נסרק' WHERE barcode in(");
         for (int i = 0; i < (barcodes.Length - 1); i++)
         {
@@ -2374,9 +2374,9 @@ public class DBServices
 
 
     //מחזירה מחרוזת "בתהליך" במידה ועברנו תחנה 1 במסלול
-    public string CheckGroupPosition(string groupRouteName)
+    public string CheckGroupPosition(float projectNum, string itemNum, string groupName, string currentGroupStation)
     {
-        string returnedGroup = "inProgress";
+        string returnedGroup = "atStart";
         SqlConnection con;
 
         try
@@ -2391,8 +2391,8 @@ public class DBServices
         }
         try
         {
-            //String selectSTR = "SELECT currentGroupStation FROM Groups where currentGroupStation IS NULL OR currentGroupStation = (SELECT machineNum FROM StationInRoute WHERE routeName = '" + groupRouteName + "' AND position = 1)";
-            String selectSTR = "SELECT currentGroupStation FROM Groups where currentGroupStation NOT IN (SELECT machineNum FROM StationInRoute WHERE routeName = '" + groupRouteName + "' AND position NOT IN(1))";
+            //SELECT currentGroupStation FROM Groups WHERE projectNum = 111.1 AND itemNum = 'N1' AND groupName = '07-06-2019_alexxxxx' AND currentGroupStation IS NOT NULL
+            String selectSTR = "SELECT currentGroupStation FROM Groups WHERE projectNum ='" + projectNum + "' AND itemNum ='" + itemNum + "' AND groupName ='" + groupName + "' AND currentGroupStation IS NOT NULL";
             SqlCommand cmd = new SqlCommand(selectSTR, con);
 
             SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
@@ -2551,11 +2551,11 @@ public class DBServices
 
         StringBuilder sb = new StringBuilder();
         StringBuilder sb2 = new StringBuilder();
-
+        string dateNow = DateTime.Today.ToString("dd-MM-yyyy");
         // use a string builder to create the dynamic string
-        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}','{7}')", groupInfo.ProjectNum, groupInfo.ItemNum, "השלמה_" + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups", 0);
+        sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}', '{4}', '{5}', '{6}','{7}')", groupInfo.ProjectNum, groupInfo.ItemNum, dateNow + '_' + groupInfo.GroupName, groupInfo.GroupRouteName, partNumToAddArr.Length.ToString(), groupInfo.GroupStatus, "Groups", 0);
         String prefix = "INSERT INTO Groups (projectNum, itemNum, groupName, routeName, partCount, groupStatus, relateTO,scannedPartsCount) ";
-        String prefix2 = " Update Part SET groupName='השלמה_" + groupInfo.GroupName + "' WHERE projectNum ='" + groupInfo.ProjectNum + "' AND itemNum ='" + groupInfo.ItemNum + "' AND partNum IN(";
+        String prefix2 = " Update Part SET groupName='" + dateNow + '_' + groupInfo.GroupName + "' WHERE projectNum ='" + groupInfo.ProjectNum + "' AND itemNum ='" + groupInfo.ItemNum + "' AND partNum IN(";
         for (int i = 0; i < partNumToAddArr.Length; i++)
         {
             sb2.AppendFormat("'" + partNumToAddArr[i] + "'");

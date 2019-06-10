@@ -97,10 +97,10 @@ namespace KinartiProject_ruppin.Models
         {
             DBServices dbs = new DBServices();
             Group groupInfo = dbs.GetSpecificGroup(groupName, projectNum, itemNum);
-            string groupPosition = dbs.CheckGroupPosition(groupInfo.GroupRouteName);
+            string groupPosition = dbs.CheckGroupPosition(groupInfo.ProjectNum, groupInfo.ItemNum, groupInfo.GroupName, groupInfo.CurrentGroupStation);
             int numAffected;
             //אם הקבוצה נמצאת בתחנה מתקדמת במסלול
-            if (groupPosition == "inProgress")
+            if (groupPosition != "atStart")
             {
                 numAffected = dbs.AccomplishGroup(groupInfo, partNumToAddArr);
                 //במידה ויצרנו קבוצת השלמה נחזיר אמת
