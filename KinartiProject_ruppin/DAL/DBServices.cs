@@ -1460,7 +1460,7 @@ public class DBServices
         StringBuilder sbDecreaseGroupCountFromItem = new StringBuilder();
 
         //אולי בשם קבוצה לשים נאל ולא מרכאות ריקות
-        sbDeletePartFromGroup.AppendFormat("UPDATE Part SET groupName = '', partStatus='חלק טרם נסרק' WHERE barcode in(");
+        sbDeletePartFromGroup.AppendFormat("UPDATE Part SET lastScanDate = NULL, groupName = NULL, partStatus='חלק טרם נסרק' WHERE barcode in(");
         for (int i = 0; i < (barcodes.Length - 1); i++)
         {
             sbDeletePartFromGroup.AppendFormat("'{0}',", barcodes[i]);
