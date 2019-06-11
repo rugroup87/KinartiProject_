@@ -558,7 +558,7 @@
 </div>\
 <div class='modal-footer'>\
 <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
-<input type='submit' data-content='remove' class='btn btn-primary' id='createNewRouteButton' value='עדכן מסלול'/>\
+<input type='submit' data-content='remove' class='btn btn-primary' id='UpdateExistingRouteButton' value='עדכן מסלול'/>\
 </div>\
 </form></div></div></div>";
             $('#containerID').append(str);
@@ -675,6 +675,43 @@
             return false;
         }
 
+       
+        $(document).on("click", "#UpdateExistingRouteButton", function () {
+            $("#formID").submit(UpdateExistingRoute);
+        });
+
+        function UpdateExistingRoute() {
+            sendStationArr = [];
+            for (var i = 1; i < $("select").length; i++) {
+                id = "#" + i + " option:selected";
+                MachineNum = $(id).val();
+                sendStationArr.push(MachineNum);
+            }
+            Route = { // Note that the name of the fields must be identical to the names of the properties of the object in the server
+                RouteName: $("#chooseRoute option:selected").text(),
+                StationArr: sendStationArr
+            }
+            ajaxCall("POST", "../api/Route/UpdateRoute", JSON.stringify(Route), successUpdateRoute, errorUpdateRoute)
+            return false;
+        }
+
+        function successUpdateRoute() {
+            swal({
+                title: '!מסלול עודכן',
+                text: 'תחנות המסלול נשמרו',
+                type: 'success',
+                icon: 'success',
+                buttons: 'אישור'
+            }).then(function (result) {
+                refreshParent();
+            })
+        }
+
+        function errorUpdateRoute() {
+        }
+
+
+
         //בחזרה מהדאטה בייס עם שם מסלול כשקיים וערך ריק אחרת
         function successCheckRoute(data) {
             //כשאין שם מסלול כזה זה הערך שיחזור
@@ -767,21 +804,11 @@
             </ul>
         </div>
     </div>
-    <!--<div id="secoundHeader">
-        <ul class="snip1217">
-            <li>
-                <a id="updateRouteButton" href="#">עדכן מסלול קיים</a>
-            </li>
-            <li><a id="createRoute" href="#">צור מסלול חדש</a></li>
-        </ul>
-    </div>-->
+
     <div id="bodyRoute">
-        <!--<div class="rightPage">-->
         <div class="titleRadioContainer">
             <p><u><b>בחר מסלול מהרשימה</b></u></p>
-            <!--<div class="containerRadioButtons"></div>-->
         </div>
-        <!--<div class="middleBody">-->            
             <div class="containerRadioButtons"></div>
             <div class="history-tl-container"></div>
     </div>

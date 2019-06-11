@@ -988,7 +988,9 @@ public class DBServices
         for (int i = 0; i < route.StationArr.Length; i++)
         {
             var pos = i + 1;
-            sbMachineNum.AppendFormat(" update StationInRoute SET machineNum={0} where routeName='{1}' and position={2}", route.StationArr[i], route.RouteName, pos);
+            string machineNum = Convert.ToString(route.StationArr[i]);
+            machineNum += machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum;
+            sbMachineNum.AppendFormat(" update StationInRoute SET machineNum={0} where routeName='{1}' and position={2}", machineNum, route.RouteName, pos);
 
         }
         command = sbMachineNum.ToString();
@@ -1242,7 +1244,9 @@ public class DBServices
         command = sbRouteName.ToString() + sbStationArr.ToString() + " values";
         for (int i = 1; i <= r.StationArr.Length; i++)
         {
-            sbStationArrInsert.AppendFormat(" ('{0}',{1},{2})", r.RouteName, r.StationArr[i - 1], i);
+            string machineNum = Convert.ToString(r.StationArr[i - 1]);
+            machineNum += machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum + machineNum;
+            sbStationArrInsert.AppendFormat(" ('{0}',{1},{2})", r.RouteName, machineNum, i);
             if (i < r.StationArr.Length)
             {
                 sbStationArrInsert.Append(",");
