@@ -859,12 +859,13 @@
         function GetSuccessGroups(Data) {
 
             var str = "<ul>";
-            ok = true;
             // Addint the groups to the side menu
             str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span style='color: #f9f9f9;' class='unclickable nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
             for (var i = 0; i < Data.Glist.length; i++) {
+                ok = true;
+
                 // כרגע זה יעבוד עם עוד לולאה שתרוץ על המכונות ותבדוק כל קבוצה לאיזה מכונה היא שייכת וככה תביא לו את השם
                 // בהמשך רצוי להכניס את ערכי התכנות המספר שלהם לתוך ג'יסון שהמפתח יהיה המספר מכונה והערך שלו יהיה השם של התחנה
                 for (var k = 0; k < Data.mlist.length; k++) {
@@ -875,7 +876,7 @@
                     }
                 }
                 if (ok) {
-                    str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "  תרם התחיל- </span></a></li>"
+                    str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "  טרם התחיל- </span></a></li>"
                 }
 
             }
@@ -1074,7 +1075,10 @@
                     {
                         "previous": "הקודם",
                         "next": "הבא",
-                    }
+                    },
+                    "emptyTable": "כל החלקים שוייכו לקבוצות",
+                    "infoEmpty": "",
+
                 },
                 data: partList,
                 columns: columnDefs,
