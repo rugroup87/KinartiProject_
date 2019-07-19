@@ -771,15 +771,45 @@
 
             //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
             $(document).on("click", "#createNewGroupButton", function () {
-                $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
+                if (data_rows.data().length) {
+                    $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
+                }
+                else {
+                    swal({
+                        title: 'אין חלקים להוספה!',
+                        text: 'כל חלקי הפריט חולקו לקבוצות',
+                        type: 'success',
+                        icon: 'info',
+                        buttons: 'אישור'
+                    }).then(function (result) {
+                        refreshParent();
+                        })
+                    return false;
+                }
             });
 
             //בלחיצת כפתור "הוסף לקבוצה קיימת"
             $(document).on("click", "#addToExistGroupButton", function () {
-                $("#formIDaddToExistGroup").submit(addPartToExistGroup);
+
+                if (data_rows.data().length) {
+                    $("#formIDaddToExistGroup").submit(addPartToExistGroup);
+                }
+                else {
+                    swal({
+                        title: 'אין חלקים להוספה!',
+                        text: 'כל חלקי הפריט חולקו לקבוצות',
+                        type: 'success',
+                        icon: 'info',
+                        buttons: 'אישור'
+                    }).then(function (result) {
+                        refreshParent();
+                        })
+                    return false;
+                }
             });
 
         });
+
 
         //רענון הטבלה כששומרים רשומה
         function refreshParent() {
@@ -1120,6 +1150,7 @@
                             $(win.document.body)
                                 .css('font-size', '8px')
                                 .css('direction', 'rtl')
+                                .css('size', 'landscape')
                                 .prepend(
                                 '<img src="https://commondatastorage.googleapis.com/easy/images/UserPics/2608608_1527707898756.jpg" style="height:70px; position:absolute; top:0; left:0; opacity: 0.3;"/>'
                                 );
