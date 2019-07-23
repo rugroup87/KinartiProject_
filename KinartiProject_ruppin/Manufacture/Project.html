@@ -334,8 +334,6 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
-
-
     <!--<script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
     <!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
     <script src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
@@ -493,7 +491,7 @@
                         }
                     }
                 }, {
-                    title: "ת. כניסה לעבודה",
+                    title: "גמר פריקה בהנדסה",
                     data: 'ProdEntranceDate',
                     width: '10%',
                     defaultContent: "",
@@ -531,11 +529,11 @@
                 altEditor: true,     // Enable altEditor
                 buttons: [
                     {
-                    extend: 'selected', // Bind to Selected row
-                    text: '<i class="fa fa-pencil"></i>&nbsp;עריכת רשומה',
-                    name: 'editForm',  // do not change name
-                    action: function (nButton, oConfig, oFlash) {
-                        editForm(oConfig);
+                        extend: 'selected', // Bind to Selected row
+                        text: '<i class="fa fa-pencil"></i>&nbsp;עריכת רשומה',
+                        name: 'editForm',  // do not change name
+                        action: function (nButton, oConfig, oFlash) {
+                            editForm(oConfig);
                         }
                     },
                     {
@@ -549,6 +547,7 @@
                             $(win.document.body)
                                 .css('font-size', '14px')
                                 .css('direction', 'rtl')
+                                .css('size', 'landscape')
                                 .prepend(
                                     '<img src="https://commondatastorage.googleapis.com/easy/images/UserPics/2608608_1527707898756.jpg" style="height:70px; position:absolute; top:0; left:0; opacity: 0.3;"/>'
                                 );
@@ -614,10 +613,16 @@
         });
 
         function updateSuccessStatus() {
-            alert('suc')
+            window.location.reload();
         }
         function errorUpdateStatus() {
-            alert('error')
+            swal({
+                title: 'אירעה שגיאה',
+                text: 'נסה שנית במועד מאוחר יותר',
+                type: 'info',
+                timer: 2000,
+                buttons: false
+            })
         }
 
         //רענון הטבלה כששומרים רשומה
@@ -678,9 +683,51 @@
             var supplyDateForm = dateToForm(new Date(data_row.SupplyDate));
             var prodEntranceDateForm = dateToForm(new Date(data_row.ProdEntranceDate));
 
-            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' name='setTodaysDate' id='prodStartDateID' placeholder='ת. תחילת ייצור' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='setTodaysDate' placeholder='ת. אספקה' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class=' unclickable form-control  form-control-sm' value='" + data_row.ProjectStatus + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. כניסה לעבודה'>תאריך כניסה לעבודה:</label> <input type='date' id='prodEntranceDateID' name='ת. כניסה לעבודה' placeholder='ת. כניסה לעבודה' style='overflow:hidden' class='unclickable form-control  form-control-sm' value= '" + prodEntranceDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
-            //var str2 = "<button type='button' id='buttonPDF' onclick='ExportPDF'>PDF</button>";
-            //$('.export').append(str2);
+            var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'><div class='modal-dialog'> <div class='modal-content'> <div class='modal-header'> <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button><h3 class='modal-title'>עריכת רשומה</h3><h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4><h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4></div> <div class='modal-body'> <pre> <form name='altEditor-form' role='form'><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label> <input type='date' name='setTodaysDate' id='prodStartDateID' placeholder='ת. תחילת ייצור' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='ת. אספקה'>תאריך אספקה:</label> <input type='date' id='supplyDateID' name='setTodaysDate' placeholder='ת. אספקה' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label> <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class=' unclickable form-control  form-control-sm' value='" + data_row.ProjectStatus + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='גמר פריקה בהנדסה'>גמר פריקה בהנדסה:</label> <input type='date' id='prodEntranceDateID' name='גמר פריקה בהנדסה' placeholder='גמר פריקה בהנדסה' style='overflow:hidden' class='unclickable form-control  form-control-sm' value= '" + prodEntranceDateForm + "'> </div><div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'> <label for='הערות'>הערות:</label> <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea> </div> </div> </form> </pre> </div> <div class='modal-footer'> <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button> <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button> </div> </div> </div> </div></div>";
+
+            //var str = "<div class='modal fade in' id='altEditor-modal' tabindex='-1' role='dialog' style='display: block; padding-left: 17px;'>\
+            //           <div class='modal-dialog'>\
+            //           <div class='modal-content'>\
+            //               <div class='modal-header'>\
+            //                    <button id='closeWindowsX' type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>×</span></button>\
+            //                    <h3 class='modal-title'>עריכת רשומה</h3>\
+            //                    <h4 class='modal-title' id='hProjNum'>" + data_row.ProjectNum + "</h4>\
+            //                    <h4 class='modal-title' id='hProjName'> " + data_row.ProjectName + "</h4>\
+            //               </div>\
+            //               <div class='modal-body'>\
+            //                    <pre>\
+            //                    <form name='altEditor-form' role='form'>\
+            //                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //                            <label for='ת. תחילת ייצור'>תאריך תחילת ייצור:</label>\
+            //                            <input type='date' name='setTodaysDate' id='prodStartDateID' placeholder='ת. תחילת ייצור' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + prodStartDateForm + "'>\
+            //                        </div>\
+            //                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //                            <label for='ת. אספקה'>תאריך אספקה:</label>\
+            //                            <input type='date' id='supplyDateID' name='setTodaysDate' placeholder='ת. אספקה' min='" + todayDate + "' style='overflow:hidden' class='form-control  form-control-sm' value='" + supplyDateForm + "'>\
+            //                        </div>\
+            //                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //                            <label for='סטטוס פרוייקט'>סטטוס פרוייקט:</label>\
+            //                            <input type='text' id='projectStatusID' name='סטטוס פרוייקט' placeholder='סטטוס פרוייקט' style='overflow:hidden' class=' unclickable form-control  form-control-sm' value='" + data_row.ProjectStatus + "'>\
+            //                        </div>\
+            //                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //                            <label for='גמר פריקה בהנדסה'>גמר פריקה בהנדסה:</label>\
+            //                            <input type='date' id='prodEntranceDateID' name='גמר פריקה בהנדסה' placeholder='גמר פריקה בהנדסה' style='overflow:hidden' class='unclickable form-control  form-control-sm' value= '" + prodEntranceDateForm + "'>\
+            //                        </div>\
+            //                        <div class='form-group col-sm-3 col-md-3 col-lg-3 text-right' style='padding-top:7px;'>\
+            //                            <label for='הערות'>הערות:</label>\
+            //                            <textarea rows='3' cols='50' id='commentID' name='הערות' placeholder='הערות' style='overflow:hidden' class='form-control  form-control-sm'>" + data_row.Comment + "</textarea>\
+            //                        </div>\
+            //                    </form>\
+            //                    </pre>\
+            //                </div>\
+            //                <div class='modal-footer'>\
+            //                    <button type='button' data-content='remove' class='btn btn-default' id='closeWindowsButton' data-dismiss='modal'>סגור</button>\
+            //                    <button type='button' data-content='remove' class='btn btn-primary' id='saveEditForm'>שמור שינויים</button>\
+            //               </div>\
+            //            </div>\
+            //            </div>\
+            //            </div>";
+
             $('#containerID').append(str);
         }
 
@@ -711,20 +758,20 @@
         }
 
 
-                //$(document).on("click", "#buttonPDF", function () {
-                //    //console.log(myTable.data().length);
-                //    //console.log(myTable.data()[0]);
-                //    //console.log(dataTableData);
-                //    ajaxCall("POST", "../api/ExportingPDF", dataTableData, exportPDF, errorExportPDF);
-                //})
+                    //$(document).on("click", "#buttonPDF", function () {
+                    //    //console.log(myTable.data().length);
+                    //    //console.log(myTable.data()[0]);
+                    //    //console.log(dataTableData);
+                    //    ajaxCall("POST", "../api/ExportingPDF", dataTableData, exportPDF, errorExportPDF);
+                    //})
 
-                //function exportPDF() {
-                //    return;
-                //}
+                    //function exportPDF() {
+                    //    return;
+                    //}
 
-                //function errorExportPDF(err) {
-                //    swal("Error: " + err);
-                //}
+                    //function errorExportPDF(err) {
+                    //    swal("Error: " + err);
+                    //}
 
     </script>
 </head>
@@ -738,7 +785,7 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="http://localhost:3000/#/dashboard">דשבורדים</a></li>
+                    <li><a href="http://proj.ruppin.ac.il/bgroup87/prod/index.html">דשבורדים</a></li>
                     <li><a href="Project.html">פרוייקטים</a></li>
                     <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
                     <li><a href="RouteMainPage.html">מסלולים</a></li>
