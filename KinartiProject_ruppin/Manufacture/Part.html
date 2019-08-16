@@ -770,15 +770,45 @@
 
             //בלחיצת כפתור "צור קבוצה" הכנסת הפרטים שבטופס קבוצה חדשה לתוך הדי.בי שלנו
             $(document).on("click", "#createNewGroupButton", function () {
-                $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
+                if (data_rows.data().length) {
+                    $("#formIDcreateNewGroup").submit(inserNewGroupToDB);
+                }
+                else {
+                    swal({
+                        title: 'אין חלקים להוספה!',
+                        text: 'כל חלקי הפריט חולקו לקבוצות',
+                        type: 'success',
+                        icon: 'info',
+                        buttons: 'אישור'
+                    }).then(function (result) {
+                        refreshParent();
+                        })
+                    return false;
+                }
             });
 
             //בלחיצת כפתור "הוסף לקבוצה קיימת"
             $(document).on("click", "#addToExistGroupButton", function () {
-                $("#formIDaddToExistGroup").submit(addPartToExistGroup);
+
+                if (data_rows.data().length) {
+                    $("#formIDaddToExistGroup").submit(addPartToExistGroup);
+                }
+                else {
+                    swal({
+                        title: 'אין חלקים להוספה!',
+                        text: 'כל חלקי הפריט חולקו לקבוצות',
+                        type: 'success',
+                        icon: 'info',
+                        buttons: 'אישור'
+                    }).then(function (result) {
+                        refreshParent();
+                        })
+                    return false;
+                }
             });
 
         });
+
 
         //רענון הטבלה כששומרים רשומה
         function refreshParent() {
@@ -858,12 +888,13 @@
         function GetSuccessGroups(Data) {
 
             var str = "<ul>";
-            ok = true;
             // Addint the groups to the side menu
             str += "<li style='border-bottom: 3px solid #43a4f7;'><i class='fa fa-sitemap fa-2x'></i> <span style='color: #f9f9f9;' class='unclickable nav-text'> קבוצות מוכנות </span></li>";
             var temp = "#";
 
             for (var i = 0; i < Data.Glist.length; i++) {
+                ok = true;
+
                 // כרגע זה יעבוד עם עוד לולאה שתרוץ על המכונות ותבדוק כל קבוצה לאיזה מכונה היא שייכת וככה תביא לו את השם
                 // בהמשך רצוי להכניס את ערכי התכנות המספר שלהם לתוך ג'יסון שהמפתח יהיה המספר מכונה והערך שלו יהיה השם של התחנה
                 for (var k = 0; k < Data.mlist.length; k++) {
@@ -874,7 +905,7 @@
                     }
                 }
                 if (ok) {
-                    str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "  תרם התחיל- </span></a></li>"
+                    str += "<li class='has-subnav'> <a href=" + temp + "> <i class='fa fa-hammer fa - 2x'></i> <span id='" + Data.Glist[i].GroupName + "' class='nav-text'>" + Data.Glist[i].GroupName + "  טרם התחיל- </span></a></li>"
                 }
 
             }
@@ -1073,7 +1104,10 @@
                     {
                         "previous": "הקודם",
                         "next": "הבא",
-                    }
+                    },
+                    "emptyTable": "כל החלקים שוייכו לקבוצות",
+                    "infoEmpty": "",
+
                 },
                 data: partList,
                 columns: columnDefs,
@@ -1115,6 +1149,7 @@
                             $(win.document.body)
                                 .css('font-size', '8px')
                                 .css('direction', 'rtl')
+                                .css('size', 'landscape')
                                 .prepend(
                                 '<img src="https://commondatastorage.googleapis.com/easy/images/UserPics/2608608_1527707898756.jpg" style="height:70px; position:absolute; top:0; left:0; opacity: 0.3;"/>'
                                 );
@@ -1443,7 +1478,7 @@
             </div>
             <nav class="TopMenu">
                 <ul>
-                    <li><a href="http://localhost:3000/#/dashboard">דשבורדים</a></li>
+                    <li><a href="http://proj.ruppin.ac.il/bgroup87/test1/index.html">דשבורדים</a></li>
                     <li><a href="Project.html">פרוייקטים</a></li>
                     <li><a href="Item.html?ProjectNum=all">פריטים</a></li>
                     <li><a href="RouteMainPage.html">מסלולים</a></li>
