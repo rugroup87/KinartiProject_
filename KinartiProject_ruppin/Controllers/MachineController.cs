@@ -10,7 +10,8 @@ namespace KinartiProject_ruppin.Controllers
 {
     public class MachineController : ApiController
     {
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/Machine")]
         public IEnumerable<Machine> Get()
         {
@@ -18,7 +19,8 @@ namespace KinartiProject_ruppin.Controllers
             return m.GetAllMachines();
         }
 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/GetMachinesCurrentdetails")]
         public List<TempObjForDashboard> GetMachinesCurrentdetails()
         {

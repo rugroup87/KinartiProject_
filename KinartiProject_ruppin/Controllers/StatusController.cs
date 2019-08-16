@@ -11,7 +11,8 @@ namespace KinartiProject_ruppin.Controllers
     public class StatusController : ApiController
     {
 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/status")]
         public string[] Get(string relateTo)
         {

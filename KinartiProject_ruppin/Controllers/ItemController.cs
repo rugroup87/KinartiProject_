@@ -8,7 +8,8 @@ namespace KinartiProject_ruppin.Controllers
 {
     public class ItemController : ApiController
     {
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/GetProjectItems")]
         public IEnumerable<Item> Get(string ProjectNum)
         {

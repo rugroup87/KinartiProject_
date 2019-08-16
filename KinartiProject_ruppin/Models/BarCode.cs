@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Globalization;
+using System.Text;
 
 namespace KinartiProject_ruppin.Models
 {
@@ -39,9 +40,9 @@ namespace KinartiProject_ruppin.Models
         //int PartTimeAvg, string PartBarCode, string NextGroupStationName
         private static void ExecuteInForeground(object o)
         {
-            TempObj data = (TempObj)o;
-            Thread.Sleep(data.PartTimeAvg * 60000);
-            DBServices dbs = new DBServices();
+            //TempObj data = (TempObj)o;
+            //Thread.Sleep(data.PartTimeAvg * 60000);
+            //DBServices dbs = new DBServices();
             //return "Thread Activated";
             
             if (!LastPartFinish)
@@ -79,7 +80,7 @@ namespace KinartiProject_ruppin.Models
 
 
 
-        public String ScanPart(string PartBarCode, string StationName, string CurrentDate)
+        public object ScanPart(string PartBarCode, string StationName, string CurrentDate)
         {
             //השדה של הסטיישן ניים שאני מקבל הוא לצורך ולידציה שנעשה בהמשך שהוא סרק את החלק במקום הנכון
 
@@ -94,7 +95,7 @@ namespace KinartiProject_ruppin.Models
             int Prevtemp = 0;
             int CategoryTime = 0;
             int PartTimeAvg = 0;
-            
+
 
             string ScannedPartStatus = dbs.GetScannedPartStatus(PartBarCode);
             string ClickedStationNo = dbs.GetClickedStationNo(StationName);
@@ -104,7 +105,7 @@ namespace KinartiProject_ruppin.Models
 
 
 
-            if (String.IsNullOrEmpty(GroupName)) 
+            if (String.IsNullOrEmpty(GroupName))
             {
                 throw new UndifinedGroupForThisPart("שגיאה!!! בוצע נסיון סריקה לחלק שאינו משוייך לקבוצה קיימת. ");
             }
@@ -125,15 +126,15 @@ namespace KinartiProject_ruppin.Models
             {
                 //צריך לראות מה עושים אם הוא המיקום הנוכחי הוא ריק או לא קיים
             }
-                     
+
             int TotalStationCount = dbs.GetTotalStationCount(PartBarCode);
             int partCount = dbs.GetpartCount(PartBarCode);
             int ScannedPartCount = dbs.GetScannedPartCount(PartBarCode);
 
-                //הפונקציה הזאת לא יכולה להיות פה - רק במקרה שהכן יש מסלול הבא... צריך לבדוק
-                NextGroupStationNo = dbs.GetNextGroupStationNo(Nexttemp.ToString(), PartBarCode);
-                NextGroupStationName = dbs.GetNextGroupStationName(Nexttemp.ToString(), PartBarCode);
-            
+            //הפונקציה הזאת לא יכולה להיות פה - רק במקרה שהכן יש מסלול הבא... צריך לבדוק
+            NextGroupStationNo = dbs.GetNextGroupStationNo(Nexttemp.ToString(), PartBarCode);
+            NextGroupStationName = dbs.GetNextGroupStationName(Nexttemp.ToString(), PartBarCode);
+
 
 
             string CategoryType = dbs.GetCategoryType(StationName);
@@ -148,147 +149,146 @@ namespace KinartiProject_ruppin.Models
 
                 if (partCount == ScannedPartCount)
                 {
-
-                    //if(dbs.CheckIfFinishScan())
-                    //{
-
-                    //}
                     // השאילתה מביאה לנו את החציון של חלקים במכונה
                     PartTimeAvg = dbs.GetMedianTimeForPart(PartBarCode, GroupName, CurrentDate);
 
                     // פותחים פרוסס חדש ומחכים את הזמן החציוני שלוקח לחלק לעבוד במכונה,
                     // ושם בסוף הזמן נעדכן את הסטטוסים והזמנים וכל מה שצריך
+
                     TempObj tempObj = new TempObj(PartTimeAvg, PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime, StationName);
-                    switch (StationName)
-                    {
-                        case "CNC":
-                            cnc_ThreadIsSleeping = true;
-                            cnc.Start(tempObj);
-                            break;
-                        case "צבע 1":
-                            color1_ThreadIsSleeping = true;
-                            color1.Start(tempObj);
-                            break;
-                        case "צבע 2":
-                            color2_ThreadIsSleeping = true;
-                            color2.Start(tempObj);
-                            break;
-                        case "הדבקה":
-                            Adbaka_ThreadIsSleeping = true;
-                            Adbaka.Start(tempObj);
-                            break;
-                        case "חיתוך":
-                            Hituh_ThreadIsSleeping = true;
-                            Hituh.Start(tempObj);
-                            break;
-                        case "שיוף":
-                            shiuf_ThreadIsSleeping = true;
-                            shiuf.Start(tempObj);
-                            break;
-                        case "ניסור":
-                            Nisur_ThreadIsSleeping = true;
-                            Nisur.Start(tempObj);
-                            break;
-                        default:
-                            break;
-                    } 
+
+                    //switch (StationName)
+                    //{
+                    //    case "CNC":
+                    //        cnc_ThreadIsSleeping = true;
+                    //        cnc.Start(tempObj);
+                    //        break;
+                    //    case "צבע 1":
+                    //        color1_ThreadIsSleeping = true;
+                    //        color1.Start(tempObj);
+                    //        break;
+                    //    case "צבע 2":
+                    //        color2_ThreadIsSleeping = true;
+                    //        color2.Start(tempObj);
+                    //        break;
+                    //    case "הדבקה":
+                    //        Adbaka_ThreadIsSleeping = true;
+                    //        Adbaka.Start(tempObj);
+                    //        break;
+                    //    case "חיתוך":
+                    //        Hituh_ThreadIsSleeping = true;
+                    //        Hituh.Start(tempObj);
+                    //        break;
+                    //    case "שיוף":
+                    //        shiuf_ThreadIsSleeping = true;
+                    //        shiuf.Start(tempObj);
+                    //        break;
+                    //    case "ניסור":
+                    //        Nisur_ThreadIsSleeping = true;
+                    //        Nisur.Start(tempObj);
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
                 }
             }
             else
             {
                 ///////////////////// את החלק הזה יש אפשרות להוריד...משום שכבר יש 2 סריקות לחלק אחרון!!!!!!//////////////////////////////////////////////////////////////
                 // חלק חדש שנסרק בתחנה חדשה
-                if (ClickedStationNo == NextGroupStationNo && partCount == ScannedPartCount)
+                string temp;
+                //temp.("ממתין ל- {0} בעגלה",NextGroupStationName);
+                if (ClickedStationNo == NextGroupStationNo && partCount == ScannedPartCount /*&& ScannedPartStatus == temp*/)
                 {
-                    bool FinishThread = false;
+                    //bool FinishThread = false;
                     CategoryTime = GetNewCategoryTime(PartBarCode, StationName, CurrentDate, GroupName, CategoryType);
 
-                    switch (PrevGroupStationName)
-                    {
-                        case "CNC":
-                            if (cnc_ThreadIsSleeping)
-                            {
-                                cnc.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        case "צבע 1":
-                            if (color1_ThreadIsSleeping)
-                            {
-                                color1.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        case "צבע 2":
-                            if (color2_ThreadIsSleeping)
-                            {
-                                color2.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        case "הדבקה":
-                            if (Adbaka_ThreadIsSleeping)
-                            {
-                                Adbaka.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        case "חיתוך":
-                            if (Hituh_ThreadIsSleeping)
-                            {
-                                Hituh.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        case "שיוף":
-                            if (shiuf_ThreadIsSleeping)
-                            {
-                                shiuf.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        case "ניסור":
-                            if (Nisur_ThreadIsSleeping)
-                            {
-                                Nisur.Abort();
-                            }
-                            else
-                            {
-                                FinishThread = true;
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    //switch (PrevGroupStationName)
+                    //{
+                    //    case "CNC":
+                    //        if (cnc_ThreadIsSleeping)
+                    //        {
+                    //            cnc.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    case "צבע 1":
+                    //        if (color1_ThreadIsSleeping)
+                    //        {
+                    //            color1.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    case "צבע 2":
+                    //        if (color2_ThreadIsSleeping)
+                    //        {
+                    //            color2.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    case "הדבקה":
+                    //        if (Adbaka_ThreadIsSleeping)
+                    //        {
+                    //            Adbaka.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    case "חיתוך":
+                    //        if (Hituh_ThreadIsSleeping)
+                    //        {
+                    //            Hituh.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    case "שיוף":
+                    //        if (shiuf_ThreadIsSleeping)
+                    //        {
+                    //            shiuf.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    case "ניסור":
+                    //        if (Nisur_ThreadIsSleeping)
+                    //        {
+                    //            Nisur.Abort();
+                    //        }
+                    //        else
+                    //        {
+                    //            FinishThread = true;
+                    //        }
+                    //        break;
+                    //    default:
+                    //        break;
+                    //}
 
-                    if (!FinishThread)
-                    {
+                    //if (!FinishThread)
+                    //{
                         dbs.PartScannedInNewStation(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);
                         // שים לב בבניה של הפונקציה הזאת לוודא שהוא מכניס נכון איפה שהעברית שם כי המילה סי-אן-סי בדיבי ושם נראים קצת שונה
-                    }
-                    else
-                    {
-                        dbs.PartScannedInNewStationAfterThread(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);
+                    //}
+                    //else
+                    //{
+                        //dbs.PartScannedInNewStationAfterThread(PartBarCode, NextGroupStationNo, StationName, CurrentDate, CategoryTime, CategoryType);
                         //לאפס את הזמני סריקות של כל החלקים
-                    }
+                    //}
                 }
                 else
                 {
@@ -297,45 +297,46 @@ namespace KinartiProject_ruppin.Models
                         //סריקה של חלק ראשון בקבוצה מסויימת שעדיין לא התחילה ייצור
                         dbs.FirstScanPartOfGroup(PartBarCode, StationName, CurrentDate, NextGroupStationNo, ++ScannedPartCount);
                     }
-                    else
-                    {
-                        throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה.");
-                    }
-                    if(ClickedStationNo == CurrentGroupStationNo && partCount == ScannedPartCount)
+                    if (ClickedStationNo == CurrentGroupStationNo && partCount == ScannedPartCount)
                     {
                         LastPartFinish = true;
                         switch (StationName)
                         {
                             case "CNC":
-                                    cnc.Abort();
+                                cnc.Abort();
                                 break;
                             case "צבע 1":
-                                    color1.Abort();
+                                color1.Abort();
                                 break;
                             case "צבע 2":
-                                    color2.Abort();
+                                color2.Abort();
                                 break;
                             case "הדבקה":
-                                    Adbaka.Abort();
+                                Adbaka.Abort();
                                 break;
                             case "חיתוך":
-                                    Hituh.Abort();
+                                Hituh.Abort();
                                 break;
                             case "שיוף":
-                                    shiuf.Abort();
+                                shiuf.Abort();
                                 break;
                             case "ניסור":
-                                    Nisur.Abort();
+                                Nisur.Abort();
                                 break;
                             default:
                                 break;
                         }
                         dbs.UpdateStatusWaitingForMachine(PartBarCode, NextGroupStationName, GroupName, CategoryType, CategoryTime, PartTimeAvg);
                     }
+                    else
+                    {
+                        throw new PartScannedInWrongStation("שגיאה!!! בוצע נסיון סריקה של חלק במכונה לא נכונה.");
+                    }
+
                 }
             }
-            
-            return "Scanned Successfuly";
+
+            return new { LastPartFinish, PartTimeAvg };
         }
 
         public int GetNewCategoryTime(string PartBarCode, string StationName, string CurrentDate, string GroupName, string CategoryType)

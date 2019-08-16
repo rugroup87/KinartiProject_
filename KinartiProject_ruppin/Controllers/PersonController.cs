@@ -11,7 +11,8 @@ namespace KinartiProject_ruppin.Controllers
 {
     public class PersonController : ApiController
     {
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/persons")]
         public string Get(string department, string password)
         {

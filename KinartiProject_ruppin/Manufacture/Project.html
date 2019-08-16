@@ -335,6 +335,7 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
 
+    <link rel="shortcut icon" href="../favicon.ico">
 
     <!--<script src="https://code.jquery.com/jquery-3.3.1.js"></script>-->
     <!--<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
@@ -516,10 +517,10 @@
                     //"infoPostFix": "עמודות",
                     //"buttons": 'pdf',
                     "paginate":
-                    {
-                        "previous": "הקודם",
-                        "next": "הבא",
-                    }
+                        {
+                            "previous": "הקודם",
+                            "next": "הבא",
+                        }
                 },
                 data: dataTableData,
                 columns: columnDefs,
@@ -531,11 +532,11 @@
                 altEditor: true,     // Enable altEditor
                 buttons: [
                     {
-                    extend: 'selected', // Bind to Selected row
-                    text: '<i class="fa fa-pencil"></i>&nbsp;עריכת רשומה',
-                    name: 'editForm',  // do not change name
-                    action: function (nButton, oConfig, oFlash) {
-                        editForm(oConfig);
+                        extend: 'selected', // Bind to Selected row
+                        text: '<i class="fa fa-pencil"></i>&nbsp;עריכת רשומה',
+                        name: 'editForm',  // do not change name
+                        action: function (nButton, oConfig, oFlash) {
+                            editForm(oConfig);
                         }
                     },
                     {
@@ -550,7 +551,7 @@
                                 .css('font-size', '14px')
                                 .css('direction', 'rtl')
                                 .prepend(
-                                    '<img src="https://commondatastorage.googleapis.com/easy/images/UserPics/2608608_1527707898756.jpg" style="height:70px; position:absolute; top:0; left:0; opacity: 0.3;"/>'
+                                '<img src="https://commondatastorage.googleapis.com/easy/images/UserPics/2608608_1527707898756.jpg" style="height:70px; position:absolute; top:0; left:0; opacity: 0.3;"/>'
                                 );
 
                             $(win.document.body).find('table')
@@ -711,20 +712,20 @@
         }
 
 
-                //$(document).on("click", "#buttonPDF", function () {
-                //    //console.log(myTable.data().length);
-                //    //console.log(myTable.data()[0]);
-                //    //console.log(dataTableData);
-                //    ajaxCall("POST", "../api/ExportingPDF", dataTableData, exportPDF, errorExportPDF);
-                //})
+                                //$(document).on("click", "#buttonPDF", function () {
+                                //    //console.log(myTable.data().length);
+                                //    //console.log(myTable.data()[0]);
+                                //    //console.log(dataTableData);
+                                //    ajaxCall("POST", "../api/ExportingPDF", dataTableData, exportPDF, errorExportPDF);
+                                //})
 
-                //function exportPDF() {
-                //    return;
-                //}
+                                //function exportPDF() {
+                                //    return;
+                                //}
 
-                //function errorExportPDF(err) {
-                //    swal("Error: " + err);
-                //}
+                                //function errorExportPDF(err) {
+                                //    swal("Error: " + err);
+                                //}
 
     </script>
 </head>

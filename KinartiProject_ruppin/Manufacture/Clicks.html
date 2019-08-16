@@ -26,6 +26,9 @@
     <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
     <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script><!--sweet alerts 2-->
+    <script src="sweetalert2.min.js"></script> <!--sweet alerts 2-->
+    <link rel="stylesheet" href="sweetalert2.min.css"> <!--sweet alerts 2-->
     <script src="../Scripts/My_Scripts.js"></script>
 
     <script>
@@ -41,24 +44,56 @@
             });
         });
 
-
+        
         function ScanSuccessPart(data) {
             //swal(data, "success");
-            if (data == 'Thread Activated') {
-                alert("Did you finish last part?");
-            }
             
-            else {
-                alert("ok");
+            //if (data == 'Thread Activated') {
+            if (data.LastPartFinish) {
+
+                //Interval = setInterval(alertFunc, (data.PartTimeAvg * 60000), "First parameter", "Second parameter");
+                //swal("Did you finish last part?");
+                
             }
+            else {
+                swal("Scanned Successfuly");
+            }
+
             return false;
         }
 
+        //function alertFunc(param1, param2) {
+
+        //    swal({
+        //        title: "לא לשכוח !!!",
+        //        text: "יש צורך לבצע סריקה נוספת של החלק האחרון",
+        //        icon: "warning",
+        //        buttons: true,
+        //        dangerMode: false,
+        //    })
+        //        .then((willDelete) => {
+        //            if (willDelete) {
+        //                swal("Poof! Your imaginary file has been deleted!", {
+        //                    icon: "success",
+        //                });
+        //            } else {
+        //                swal("Your imaginary file is safe!", {
+        //                    icon: "success",
+        //                });
+        //            }
+        //        });
+        //}
+
+        //function myStopFunction() {
+        //    clearInterval(myVar);
+        //}
+
         function errorScanPart(err) {
-            //swal("Error: ", data.responseJSON.ExceptionMessage, "error");     
+            //swal("Error: ", data.responseJSON.ExceptionMessage, "error");
             //alert("No");
             var er = eval("(" + err.responseText + ")");
             swal("Error: " + er.ExceptionMessage);
+
             return false;
         }
 

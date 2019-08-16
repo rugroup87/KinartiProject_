@@ -20,7 +20,8 @@ namespace KinartiProject_ruppin.Controllers
         //    return partList;
         //}
 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/GetPartFromItem")]
         public IEnumerable<Part> Get(float projectNum, string itemNum)
         {
@@ -31,7 +32,8 @@ namespace KinartiProject_ruppin.Controllers
         }
 
 
-        [HttpPut]
+        //[HttpPut]
+        [RequireHttps]
         [Route("api/part")]
         public void Put(Objectdata oData)
         {

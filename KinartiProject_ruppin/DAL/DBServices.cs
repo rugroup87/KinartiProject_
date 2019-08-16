@@ -1528,13 +1528,15 @@ public class DBServices
         StringBuilder sbUpdatePartStatus = new StringBuilder();
         StringBuilder sbUpdateGroupScannedParts = new StringBuilder();
         StringBuilder sbUpdateProjectStartTime = new StringBuilder();
+        StringBuilder sbUpdateItemStatus = new StringBuilder();
 
         // use a string builder to create the dynamic string
         sbUpdatePartStatus.AppendFormat("UPDATE Part SET partStatus = '{0}', lastScanDate = '{1}' WHERE barcode = '{2}'", StationName, CurrentDate, PartBarCode);
         sbUpdateGroupScannedParts.AppendFormat(" UPDATE G SET G.scannedPartsCount = {0}, G.groupStatus = '{1}', G.currentGroupStation = '{2}' FROM dbo.Groups AS G INNER JOIN dbo.Part AS P  ON G.groupName = P.groupName WHERE barcode = '{3}' AND G.itemNum = P.itemNum AND G.projectNum = P.projectNum", ScannedPartCount, StationName, NextGroupStationNo, PartBarCode);
-        sbUpdateProjectStartTime.AppendFormat(" UPDATE Pr SET Pr.prodStartDate = '{0}' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}' AND Pr.projectNum = P.projectNum", CurrentDate, PartBarCode);
+        sbUpdateProjectStartTime.AppendFormat(" UPDATE Pr SET Pr.prodStartDate = '{0}', Pr.projectStatus = 'בעבודה' FROM dbo.Project AS Pr INNER JOIN dbo.Part AS P ON Pr.projectNum = P.projectNum WHERE barcode = '{1}' AND Pr.projectNum = P.projectNum", CurrentDate, PartBarCode);
+        sbUpdateItemStatus.AppendFormat(" UPDATE i SET i.itemStatus = 'בעבודה' FROM dbo.item AS i INNER JOIN dbo.Parts AS p ON i.projectNum = p.projectNum where WHERE p.barcode = '{0}' AND i.projectNum = p.projectNum AND i.itemNum = p.itemNum", PartBarCode);
 
-        command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString() + sbUpdateProjectStartTime.ToString();
+        command = sbUpdatePartStatus.ToString() + sbUpdateGroupScannedParts.ToString() + sbUpdateProjectStartTime.ToString() + sbUpdateItemStatus.ToString();
         return command;
     }
 
@@ -1777,7 +1779,7 @@ public class DBServices
         // שם את כל החלקים בסטטוס ממתין לתחנה הבאה  
         sbUpdateAllPartStatus.AppendFormat("UPDATE p SET p.partStatus = 'ממתין ל- {0} בעגלה' FROM dbo.Part p WHERE p.groupName IN (SELECT p.groupName from dbo.Part p WHERE p.barcode = '{1}') AND p.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{2}') AND p.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{3}')", NextGroupStationName, PartBarCode, PartBarCode, PartBarCode);
         //  מעדכן את הקטגוריה בזמן העדכני ביותר ושם את הסטטוס של הקבוצה לממתין לתחנה הבאה
-        sbUpdateGroupStatus.AppendFormat("UPDATE g SET groupStatus = 'ממתין ל- {0} בעגלה', g.Current" + CategoryType + "Time = {1} FROM dbo.groups g WHERE g.groupName = '{2}' AND g.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{3}') AND g.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{4}')", NextGroupStationName, (CategoryTime + PartTimeAvg), GroupName, PartBarCode, PartBarCode);
+        sbUpdateGroupStatus.AppendFormat("UPDATE g SET groupStatus = 'ממתין ל- {0} בעגלה', g.scannedPartsCount = '0', g.Current" + CategoryType + "Time = {1} FROM dbo.groups g WHERE g.groupName = '{2}' AND g.itemNum IN (SELECT p.itemNum from dbo.Part p WHERE p.barcode = '{3}') AND g.projectNum IN (SELECT p.projectNum from dbo.Part p WHERE p.barcode = '{4}')", NextGroupStationName, (CategoryTime + PartTimeAvg), GroupName, PartBarCode, PartBarCode);
 
         command = sbUpdateGroupStatus.ToString() + sbUpdateAllPartStatus.ToString() + sbUpdateCurrentCategoryTime.ToString();
 

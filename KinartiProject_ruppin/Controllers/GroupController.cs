@@ -13,7 +13,8 @@ namespace KinartiProject_ruppin.Controllers
 {
     public class GroupController : ApiController
     {
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/Groups")]//מחזירה את כל הקבוצות של כל הפרוייקטים מבסיס הנתונים
         public IEnumerable<Group> Get()
         {
@@ -24,7 +25,8 @@ namespace KinartiProject_ruppin.Controllers
         }
 
 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/GetGroupParts")]
         public object Get(string GroupName, string projectNum, string itemNum)
         {
@@ -36,7 +38,8 @@ namespace KinartiProject_ruppin.Controllers
             return new {parts, group, routes};  
         }
 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/GetGroups")]// מחזיר את הקבוצות השייכות לפרוייקט ופריט מסויים
         public object Get(string projectNum, string itemNum)
         {
@@ -50,7 +53,8 @@ namespace KinartiProject_ruppin.Controllers
         }
 
         //אובייקט לדשבורד 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/GetGroupsFromAllProject")]
         public object Get(string projectNum)
         {
@@ -66,7 +70,7 @@ namespace KinartiProject_ruppin.Controllers
             return new { ItemList, Glist, mlist };
         }
 
-
+        [RequireHttps]
         public int Post([FromBody]Group group)
         {
             Item I = new Item();
@@ -74,7 +78,8 @@ namespace KinartiProject_ruppin.Controllers
             return group.InsertNewGroup(group, itemGroupCount);
         }
 
-        [HttpPost]
+        //[HttpPost]
+        [RequireHttps]
         [Route("api/AddingPartToExistGroup")]
         public int AddingPartToExistGroup([FromBody] dynamic partsToGroup)
         {
@@ -88,7 +93,8 @@ namespace KinartiProject_ruppin.Controllers
 
         }
 
-        [HttpPut]
+        //[HttpPut]
+        [RequireHttps]
         [Route("api/UpdateGroupEstTime")]
         public void UpdateGroupEstTime(string prepTime, string carpTime, string paintTime, string projectNum,string itemNum, string groupName)
         {
@@ -96,7 +102,8 @@ namespace KinartiProject_ruppin.Controllers
             G.UpdateGroupEstTime(prepTime, carpTime, paintTime, projectNum, itemNum, groupName);
         }
 
-        [HttpPut]
+        //[HttpPut]
+        [RequireHttps]
         [Route("api/DeletePartFromGroup")]
         public string DeletePartFromGroup(string partBarcode, string PartCount, string projectNum, string itemNum, string GroupName)
         {
@@ -104,7 +111,8 @@ namespace KinartiProject_ruppin.Controllers
             return G.DeletePartFromGroup(partBarcode, Convert.ToInt32(PartCount), projectNum, itemNum,GroupName);
         }
 
-        [HttpPut]
+        //[HttpPut]
+        [RequireHttps]
         [Route("api/DeleteGroup")]
         public void DeleteGroup([FromBody] dynamic deletG)
         {

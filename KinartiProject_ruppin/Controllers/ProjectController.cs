@@ -11,7 +11,8 @@ namespace KinartiProject_ruppin.Controllers
     public class ProjectController : ApiController
     {
 
-        [HttpGet]
+        //[HttpGet]
+        [RequireHttps]
         [Route("api/project")]
         public IEnumerable<Project> Get()
         {
@@ -21,7 +22,8 @@ namespace KinartiProject_ruppin.Controllers
             return projectList;
         }
 
-        [HttpPut]
+        //[HttpPut]
+        [RequireHttps]
         [Route("api/project")]
         public void Put(Objectdata oData)
         {
@@ -29,7 +31,8 @@ namespace KinartiProject_ruppin.Controllers
             p.StatusChange(oData);
         }
 
-        [HttpPut]
+        //[HttpPut]
+        [RequireHttps]
         public void UpdateProject([FromBody]Project p)
         {
             p.UpdateProject();

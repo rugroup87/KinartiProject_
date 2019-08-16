@@ -3,6 +3,9 @@
     <head>
         <meta charset="utf-8" />
         <title></title>
+
+
+
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"><!--This is for the Icons-->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
@@ -18,6 +21,8 @@
         <script src="https://cdn.datatables.net/responsive/2.0.2/js/dataTables.responsive.min.js"></script>  <!--dataTables.responsive-->
         <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
         <script src="js/altEditor/dataTables.altEditor.free.js"></script>  <!--dataTables.altEditor-->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 
         <style>
             body {
@@ -171,54 +176,31 @@
         </style>
 
         <script>
-
             $(document).ready(function () {
 
-                $(document).on("click", "button", function () {
-                    var BarCodeNumber = $('#' + this.className).val();
-
-                    uriBarcode = "../api/ScanPart?PartBarCode=" + BarCodeNumber + "&StationName=" + this.id + "&CurrentDate=" + GetCurrentDate();
-                    ajaxCall("PUT", uriBarcode, "", ScanSuccessPart, errorScanPart);
-                    //$("#" + this.id).unbind("click");
-                    return false;
-                });
+                swal({
+                    title: "לא לשכוח !!!",
+                    text: "יש צורך לבצע סריקה נוספת של החלק האחרון",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: false,
+                })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            swal("Poof! Your imaginary file has been deleted!", {
+                                icon: "success",
+                            });
+                        } else {
+                            swal("Your imaginary file is safe!", {
+                                icon: "success",
+                            });
+                        }
+                    });
             });
-
-            function ScanSuccessPart(data) {
-                //swal(data, "success");
-                alert("ok")
-                return false;
-            }
-
-            function errorScanPart(data) {
-                swal("Error: ", data.responseJSON.ExceptionMessage, "error");
-                //alert("No")
-                return false;
-            }
         </script>
     </head>
     <body>
 
-        <input type="text" id="CNC" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="CNC" id="CNC">CNC</button>
-
-        <input type="text" id="Cut" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="Cut" id="חיתוך">חיתוך</button>
-
-        <input type="text" id="Color1" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="Color1" id="צבע 1">צבע 1</button>
-
-        <input type="text" id="Color2" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="Color2" id="צבע 2">צבע 2</button>
-
-        <input type="text" id="contagion" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="contagion" id="הדבקה">הדבקה</button>
-
-        <input type="text" id="Shave" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="Shave" id="שיוף">שיוף</button>
-
-        <input type="text" id="Saw" placeholder="הכנס מספר בר-קוד" oninvalid="this.setCustomValidity('אין בר-קוד ריק')" oninput="setCustomValidity('')" required />
-        <button type="button" class="Saw" id="ניסור">ניסור</button>
 
     </body>
     </html>
